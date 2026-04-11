@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom'
 
 const nav = [
   { href: '#hero', label: 'الرئيسية' },
-  { href: '#about', label: 'من نحن' },
-  { href: '#services', label: 'الخدمات' },
+  { href: '#about', label: 'رؤيتنا' },
+  { href: '#services', label: 'المميزات الذكية' },
   { href: '#contact', label: 'اتصل بنا' },
 ]
 
@@ -13,10 +13,10 @@ export default function LandingHeader() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <div className="flex items-center gap-2">
           <span
-            className="inline-block h-10 w-10 rotate-45 border-2 border-gold bg-gold/20"
+            className="inline-block h-10 w-10 rotate-45 border-2 border-gold bg-gold/20 mx-3"
             aria-hidden
           />
-          <span className="text-lg font-bold text-white">NextVenture OS</span>
+          <span className="text-lg font-bold text-white">فكرة  TECH</span>
         </div>
         <nav className="hidden items-center gap-6 md:flex">
           {nav.map((item) => (

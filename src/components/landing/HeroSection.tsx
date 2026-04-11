@@ -25,20 +25,21 @@ export default function HeroSection() {
           className="mb-5 inline-flex items-center gap-2 rounded-full border border-gold/35 bg-gold/10 px-4 py-1.5 text-xs font-semibold text-gold/95 opacity-0 animate-fade-in-up"
           style={{ animationDelay: '0s', animationFillMode: 'forwards' }}
         >
-          ✦ مدعوم بوكيل الذكاء الاصطناعي • أسيوط
+          ✦ معاك نظام إنذار ذكي بيحميك من الخسارة.
         </span>
         <h1
           className="mb-4 animate-fade-in-up text-3xl font-extrabold leading-tight text-white opacity-0 md:text-5xl"
-          style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}
+          style={{ animationDelay: '0.1s', animationFillMode: 'forwards',lineHeight: '1.3' }}
         >
-          منظومة التخطيط الذكي للمشاريع
+           دليلك الذكي من أول الفكرة لحد نجاح المشروع
         </h1>
         <p
           className="mx-auto mb-8 max-w-2xl animate-fade-in-up text-base leading-relaxed text-white/85 opacity-0 md:text-lg"
           style={{ animationDelay: '0.25s', animationFillMode: 'forwards' }}
         >
-          NextVenture OS يجمع بين الذكاء الاصطناعي والبيانات المحلية لرواد الأعمال في
-          أسيوط وصعيد مصر — لتحويل فكرتك إلى خطة قابلة للتنفيذ بثقة واحترافية.
+          {
+            'منصة بتستخدم ذكاء اصطناعي مربوط بمعلومات حقيقية عن السوق عشان تحول حلمك لواقع. إحنا مش بس بنعملك دراسة جدوى، إحنا بنرسم لك "خريطة طريق" وبنراقب معاك مشروعك لحظة بلحظة عشان نضمن إنك ماشي صح.'
+          }
         </p>
         <div
           className="flex flex-wrap items-center justify-center gap-3 opacity-0 animate-fade-in-up"
@@ -48,13 +49,13 @@ export default function HeroSection() {
             to="/app/step1"
             className="rounded-xl bg-gold px-6 py-3 text-sm font-bold text-nile-dark shadow-lg transition-transform hover:scale-[1.02]"
           >
-            ابدأ الآن مجاناً
+            ابدأ رحلتك مجاناً ←
           </Link>
           <a
-            href="#about"
-            className="rounded-xl border-2 border-white/50 px-6 py-3 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10"
+            href="#services"
+            className="rounded-xl border-2 border-sky-400/55 bg-sky-950/35 px-6 py-3 text-sm font-semibold text-sky-100 shadow-sm transition-colors hover:border-sky-300 hover:bg-sky-900/45"
           >
-            اعرف أكثر
+            اكتشف الرادار الذكي
           </a>
         </div>
         <div
@@ -62,13 +63,13 @@ export default function HeroSection() {
           style={{ animationDelay: '0.55s', animationFillMode: 'forwards' }}
         >
           {[
-            { v: '+50', l: 'شريك خبير' },
-            { v: '95%', l: 'نسبة نجاح' },
-            { v: '+500', l: 'مشروع ناجح' },
+            { v: '+10', l: 'دراسة جدوى' },
+            { v: '95%', l: 'دقة في توقعات السوق' },
+            { v: '+50', l: 'خبير استشاري محلي (Expert Bridge)' },
           ].map((s) => (
-            <div key={s.l} className="text-center">
+            <div key={s.l} className="max-w-[11rem] text-center">
               <div className="text-2xl font-black text-gold md:text-3xl">{s.v}</div>
-              <div className="text-xs font-medium text-white/70">{s.l}</div>
+              <div className="text-xs font-medium leading-snug text-white/70">{s.l}</div>
             </div>
           ))}
         </div>

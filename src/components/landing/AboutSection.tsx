@@ -1,36 +1,107 @@
-const stats = [
-  { v: '500+', l: 'مشروع' },
-  { v: '95%', l: 'نسبة نجاح' },
-  { v: '50+', l: 'شريك' },
+import { Brain, MapPin, Users } from 'lucide-react'
+
+
+
+const highlights = [
+  {
+    icon: Brain,
+    title: 'ذكاء مربوط بمصادر رسمية',
+    desc: 'RAG على وثائق الغرف والجهات في مصر لتقليل التخمين.',
+  },
+  {
+    icon: Users,
+    title: 'جسر للخبراء المحليين',
+    desc: 'مراجعة بشرية عند الحاجة — لا نتركك وحدك أمام الأرقام.',
+  },
+  {
+    icon: MapPin,
+    title: 'مصمم لأسيوط والصعيد',
+    desc: 'سياق محلي حقيقي، ليس قوالب مستوردة.',
+  },
 ]
 
 export default function AboutSection() {
   return (
-    <section id="about" className="bg-white px-4 py-16 md:py-20">
-      <div className="mx-auto max-w-4xl text-center">
-        <h2 className="mb-2 text-2xl font-bold text-nile md:text-3xl">من نحن</h2>
-        <p className="mb-8 text-gold">شريكك في رحلة ريادة الأعمال</p>
-        <div className="rounded-2xl border border-divider bg-offwhite/80 p-6 shadow-sm md:p-10">
-          <p className="text-base leading-8 text-body/90">
-            نقدّم منظومة متكاملة لدراسات الجدوى، أبحاث السوق، والتخطيط المالي — مدعومة
-            بـ RAG على وثائق الغرف التجارية والمصادر الرسمية في مصر، مع جسر بشري
-            للخبراء عند الحاجة. مصممة خصيصاً لسياق أسيوط والصعيد.
+    <section
+      id="about"
+      className="relative overflow-hidden bg-gradient-to-b from-white via-offwhite to-white px-4 py-16 md:py-24"
+    >
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-gold/40 to-transparent"
+        aria-hidden
+      />
+      <div className="relative mx-auto max-w-6xl">
+        <div className="mb-10 text-center md:mb-14">
+          <h2 className="text-2xl font-bold text-nile md:text-3xl">رؤيتنا</h2>
+          <p className="mt-2 text-base font-medium text-gold md:text-lg">
+            شريكك في رحلة ريادة الأعمال
           </p>
         </div>
-        <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
-          {stats.map((s, i) => (
+
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="space-y-6">
+            <p className="text-lg font-semibold leading-relaxed text-nile md:text-xl">
+              نقدّم منظومة متكاملة لدراسات الجدوى، أبحاث السوق، والتخطيط المالي — مدعومة
+              بـ RAG على وثائق الغرف التجارية والمصادر الرسمية في مصر، مع جسر بشري
+              للخبراء عند الحاجة.
+            </p>
+            <p className="text-base leading-8 text-body/85">
+              مصممة خصيصاً لسياق أسيوط والصعيد، لتكون قراراتك مبنية على بيانات يمكن
+              الدفاع عنها أمام الممولين والشركاء.
+            </p>
+
+            <ul className="space-y-4 pt-2">
+              {highlights.map(({ icon: Icon, title, desc }) => (
+                <li
+                  key={title}
+                  className="flex gap-4 rounded-2xl border border-divider bg-white/90 p-4 shadow-sm transition-shadow hover:shadow-md"
+                >
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-nile/8 text-nile">
+                    <Icon className="h-6 w-6" strokeWidth={1.75} aria-hidden />
+                  </span>
+                  <div>
+                    <h3 className="font-bold text-nile">{title}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-body/80">{desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
             <div
-              key={s.l}
-              className="animate-fade-in-up opacity-0"
-              style={{
-                animationDelay: `${0.2 + i * 0.15}s`,
-                animationFillMode: 'forwards',
-              }}
-            >
-              <div className="text-3xl font-black text-nile">{s.v}</div>
-              <div className="text-sm text-slateMuted">{s.l}</div>
+              className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-gold/25 via-nile/15 to-nile-dark/25 blur-2xl"
+              aria-hidden
+            />
+            <div className="relative overflow-hidden rounded-[1.75rem] border border-gold/25 bg-nile-dark shadow-2xl ring-1 ring-white/10">
+              <img
+                src="https://cdn.completeaitraining.com/news_images/rga-forecasts-agi-will-replace-fragmented-insurance-ai-systems-by-2033_2026-04-08.jpg"
+                alt="لوحة بصرية تمثل النمو والتخطيط وذكاء المنصة"
+                className="h-auto w-full object-cover"
+                width={800}
+                height={560}
+                loading="lazy"
+                decoding="async"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-nile-dark/80 via-transparent to-transparent" />
+              <div className="absolute bottom-0 right-0 left-0 p-5 text-right">
+                <p className="text-sm font-bold text-white drop-shadow md:text-base">
+                  من الفكرة إلى خطة قابلة للتنفيذ
+                </p>
+                <p className="mt-1 text-xs text-white/85 md:text-sm">
+                  بيانات موثقة • متابعة ذكية • خبراء بجانبك
+                </p>
+              </div>
             </div>
-          ))}
+            <div
+              className="absolute -left-2 top-8 hidden h-14 w-14 rotate-12 rounded-xl border border-gold/40 bg-gold/15 md:block"
+              aria-hidden
+            />
+            <div
+              className="absolute -right-1 bottom-24 hidden h-10 w-10 rounded-full border border-white/25 bg-white/10 md:block"
+              aria-hidden
+            />
+          </div>
         </div>
       </div>
     </section>

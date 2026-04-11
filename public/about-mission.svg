@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" role="img" aria-labelledby="title desc">
+  <title id="title">AC1G *JC  1-D) EF 'DAC1) %DI 'DF,'-</title>
+  <desc id="desc">13E *H6J-J E,1/: FEH .1J7) H0C'! '57F'9J (#DH'F 'D9D'E)</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1B4C8C"/>
+      <stop offset="55%" stop-color="#0D2F5E"/>
+      <stop offset="100%" stop-color="#0a2347"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C9A05D" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#e8c77b" stop-opacity="0.85"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="800" height="560" rx="32" fill="url(#bg)"/>
+  <circle cx="620" cy="120" r="140" fill="#C9A05D" fill-opacity="0.08"/>
+  <circle cx="140" cy="420" r="180" fill="#fff" fill-opacity="0.04"/>
+  <!-- Abstract city / growth -->
+  <path d="M120 380h80v120h-80z M230 320h70v180h-70z M330 350h95v150h-95z M450 280h85v220h-85z M570 300h110v200h-110z" fill="#fff" fill-opacity="0.07" stroke="#C9A05D" stroke-opacity="0.35" stroke-width="2"/>
+  <!-- Chart line -->
+  <path d="M140 420 Q260 360 380 390 T620 280 T720 200" fill="none" stroke="url(#gold)" stroke-width="5" stroke-linecap="round" filter="url(#glow)"/>
+  <circle cx="720" cy="200" r="10" fill="#C9A05D"/>
+  <!-- AI nodes -->
+  <g fill="none" stroke="#C9A05D" stroke-opacity="0.5" stroke-width="1.5">
+    <path d="M480 140h90v56h-90z"/>
+    <circle cx="525" cy="168" r="14" fill="#C9A05D" fill-opacity="0.25" stroke="none"/>
+  </g>
+  <text x="400" y="520" text-anchor="middle" fill="#fff" fill-opacity="0.35" font-family="system-ui,sans-serif" font-size="13" font-weight="600">NextVenture OS · #3JH7</text>
+</svg>
