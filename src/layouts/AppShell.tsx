@@ -1,28 +1,28 @@
-import type { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import { User } from 'lucide-react'
-import { AIFloatingBubble } from './AIFloatingBubble'
+import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { User } from "lucide-react";
+import { AIFloatingBubble } from "./AIFloatingBubble";
 //import { BottomStatusBar } from './BottomStatusBar'
 
 const STEPS = [
-  { n: 1, path: '/app/step1', label: 'مركز أبحاث السوق' },
-  { n: 2, path: '/app/step2', label: 'تفاصيل المشروع' },
-  { n: 3, path: '/app/step3', label: 'مخرجات الجدوى' },
-  { n: 4, path: '/app/step4', label: 'الهوية البصرية' },
-  { n: 5, path: '/app/step5', label: 'لوحة التحكم' },
-] as const
+  { n: 1, path: "/app/step1", label: "مركز أبحاث السوق" },
+  { n: 2, path: "/app/step2", label: "تفاصيل المشروع" },
+  { n: 3, path: "/app/step3", label: "مخرجات الجدوى" },
+  { n: 4, path: "/app/step4", label: "الهوية البصرية" },
+  { n: 5, path: "/app/step5", label: "لوحة التحكم" },
+] as const;
 
 type AppShellProps = {
-  activeStep: 1 | 2 | 3 | 4 | 5
-  progressPercent: number
-  bottomStepLabel: string
-  aiTip: string
-  aiPulseKey?: number
-  mainScrollable?: boolean
-  hideBottomBar?: boolean
-  rightPanel?: ReactNode
-  children: ReactNode
-}
+  activeStep: 1 | 2 | 3 | 4 | 5;
+  progressPercent: number;
+  bottomStepLabel: string;
+  aiTip: string;
+  aiPulseKey?: number;
+  mainScrollable?: boolean;
+  hideBottomBar?: boolean;
+  rightPanel?: ReactNode;
+  children: ReactNode;
+};
 
 export function AppShell({
   activeStep,
@@ -36,7 +36,7 @@ export function AppShell({
   children,
 }: AppShellProps) {
   console.log(mainScrollable);
-  console.log(bottomStepLabel , hideBottomBar);
+  console.log(bottomStepLabel, hideBottomBar);
 
   return (
     <div
@@ -50,32 +50,30 @@ export function AppShell({
               className="inline-block h-9 w-9 rotate-45 border-2 border-gold bg-gold/20"
               aria-hidden
             />
-            <div>
-              <div className="text-xs font-medium text-white/70">NextVenture</div>
-              <div className="text-sm font-bold leading-tight">OS</div>
-            </div>
+            <span className="text-lg font-bold text-white">فكرة TECH</span>
           </Link>
         </div>
         <nav className="flex-1 space-y-1 overflow-y-auto px-2 py-4">
           {STEPS.map((s) => {
-            const allDone = activeStep === 5 && progressPercent >= 100
-            const active = s.n === activeStep && !allDone
-            const done = s.n < activeStep || allDone
-            return (
+            const allDone = activeStep === 5 && progressPercent >= 100;
+            const active = s.n === activeStep && !allDone;
+            const done = s.n < activeStep || allDone;
+            return active ? (
               <Link
                 key={s.n}
                 to={s.path}
-                className={`block rounded-lg px-3 py-2.5 text-sm transition-colors ${active
-                    ? 'border-r-4 border-gold bg-white/10 font-semibold text-white'
-                    : done
-                      ? 'font-medium text-gold hover:bg-white/5'
-                      : 'text-slateMuted hover:bg-white/5 hover:text-white/90'
-                  }`}
+                className="block rounded-lg px-3 py-2.5 text-sm transition-colors border-r-4 border-gold bg-white/10 font-semibold text-white"
               >
-                <span className="text-xs text-white/50">{s.n}.</span>{' '}
-                {s.label}
+                <span className="text-xs text-white/50">{s.n}.</span> {s.label}
               </Link>
-            )
+            ) : (
+              <div
+                key={s.n}
+                className={`block rounded-lg px-3 py-2.5 text-sm ${done ? "text-gold" : "text-slateMuted/50"} cursor-not-allowed ${done ? "" : ""}`}
+              >
+                <span className="text-xs text-white/50">{s.n}.</span> {s.label}
+              </div>
+            );
           })}
         </nav>
         <div className="border-t border-white/15 px-4 py-3">
@@ -102,17 +100,13 @@ export function AppShell({
       </aside>
 
       <div className="relative flex min-w-0 flex-1 flex-row">
-        <main
-          className={`min-w-0 flex-1 overflow-y-auto `}
-        >
-          {children}
-        </main>
-        
+        <main className={`min-w-0 flex-1 overflow-y-auto `}>{children}</main>
+
         {rightPanel}
       </div>
 
       <AIFloatingBubble tip={aiTip} pulseKey={aiPulseKey} />
       {/* {!hideBottomBar && <BottomStatusBar stepLabel={bottomStepLabel} />} */}
     </div>
-  )
+  );
 }

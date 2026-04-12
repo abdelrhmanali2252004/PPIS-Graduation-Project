@@ -1,23 +1,30 @@
-import { useEffect, useState } from 'react'
-import { Download, Share2 } from 'lucide-react'
-import FeasibilityLoading from './FeasibilityLoading'
+import { useEffect, useState } from "react";
+import { Download, Share2 } from "lucide-react";
+import FeasibilityLoading from "./FeasibilityLoading";
 
 const TABS = [
-  { id: 'summary', label: 'الملخص التنفيذي' },
-  { id: 'market', label: 'تحليل السوق' },
-  { id: 'financial', label: 'التوقعات المالية' },
-  { id: 'tech', label: 'المتطلبات التقنية' },
-] as const
+  { id: "summary", label: "الملخص التنفيذي" },
+  { id: "market", label: "تحليل السوق" },
+  { id: "financial", label: "التوقعات المالية" },
+  { id: "tech", label: "المتطلبات التقنية" },
+] as const;
 
-export type TabId = (typeof TABS)[number]['id']
+export type TabId = (typeof TABS)[number]["id"];
 
 function KpiArc({ pct, color }: { pct: number; color: string }) {
-  const r = 36
-  const c = 2 * Math.PI * r
-  const offset = c - (pct / 100) * c
+  const r = 36;
+  const c = 2 * Math.PI * r;
+  const offset = c - (pct / 100) * c;
   return (
     <svg width="88" height="88" viewBox="0 0 88 88" className="shrink-0">
-      <circle cx="44" cy="44" r={r} fill="none" stroke="#E5E7EB" strokeWidth="8" />
+      <circle
+        cx="44"
+        cy="44"
+        r={r}
+        fill="none"
+        stroke="#E5E7EB"
+        strokeWidth="8"
+      />
       <circle
         cx="44"
         cy="44"
@@ -31,16 +38,16 @@ function KpiArc({ pct, color }: { pct: number; color: string }) {
         transform="rotate(-90 44 44)"
       />
     </svg>
-  )
+  );
 }
 
 function SparklineGold() {
-  const pts = '4,32 18,28 32,18 46,22 60,10 74,14 88,6'
+  const pts = "4,32 18,28 32,18 46,22 60,10 74,14 88,6";
   return (
     <svg width="92" height="40" viewBox="0 0 92 40" className="text-gold">
       <path d={`M${pts}`} fill="none" stroke="currentColor" strokeWidth="2" />
     </svg>
-  )
+  );
 }
 
 function RiskSegments() {
@@ -50,14 +57,21 @@ function RiskSegments() {
       <div className="h-full flex-1 rounded bg-warning" />
       <div className="h-full flex-1 rounded bg-divider" />
     </div>
-  )
+  );
 }
 
 function DonutChart() {
   return (
     <div className="relative mx-auto h-40 w-40">
       <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
-        <circle cx="50" cy="50" r="40" fill="none" stroke="#E5E7EB" strokeWidth="16" />
+        <circle
+          cx="50"
+          cy="50"
+          r="40"
+          fill="none"
+          stroke="#E5E7EB"
+          strokeWidth="16"
+        />
         <circle
           cx="50"
           cy="50"
@@ -93,34 +107,39 @@ function DonutChart() {
         شرائح
       </div>
     </div>
-  )
+  );
 }
 
 type FeasibilityContentProps = {
-  tab: TabId
-  onTabChange: (tab: TabId) => void
-}
+  tab: TabId;
+  onTabChange: (tab: TabId) => void;
+};
 
-export default function FeasibilityContent({ tab, onTabChange }: FeasibilityContentProps) {
-  const [isGenerating, setIsGenerating] = useState(true)
+export default function FeasibilityContent({
+  tab,
+  onTabChange,
+}: FeasibilityContentProps) {
+  const [isGenerating, setIsGenerating] = useState(true);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      setIsGenerating(false)
-    }, 5000)
+      setIsGenerating(false);
+    }, 5000);
 
-    return () => window.clearTimeout(timeoutId)
-  }, [])
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   if (isGenerating) {
-    return <FeasibilityLoading />
+    return <FeasibilityLoading />;
   }
 
   return (
     <div className="px-8 py-8 pb-16 font-cairo md:px-10" dir="rtl">
       <header className="mb-6 flex flex-col gap-4 border-b border-divider pb-6 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-xl font-bold text-body md:text-2xl">مخرجات دراسة الجدوى</h1>
+          <h1 className="text-xl font-bold text-body md:text-2xl">
+            مخرجات دراسة الجدوى
+          </h1>
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <span className="rounded-full bg-nile/10 px-3 py-1 text-xs font-semibold text-nile">
               مشروع: مطعم أسيوط النموذجي
@@ -177,7 +196,9 @@ export default function FeasibilityContent({ tab, onTabChange }: FeasibilityCont
             type="button"
             onClick={() => onTabChange(t.id)}
             className={`rounded-t-lg px-4 py-2 text-sm font-semibold transition-colors ${
-              tab === t.id ? 'bg-nile text-white' : 'text-slateMuted hover:bg-offwhite'
+              tab === t.id
+                ? "bg-nile text-white"
+                : "text-slateMuted hover:bg-offwhite"
             }`}
           >
             {t.label}
@@ -186,21 +207,25 @@ export default function FeasibilityContent({ tab, onTabChange }: FeasibilityCont
       </div>
 
       <div className="rounded-2xl border border-divider bg-white p-6 shadow-sm">
-        {tab === 'summary' && (
+        {tab === "summary" && (
           <div className="space-y-4">
             <p className="text-sm leading-7 text-body/90">
-              المشروع يظهر توافقاً قوياً مع طلب المستهلك في مناطق متوسطة الكثافة بأسيوط، مع
-              نقاط قوة في التسعير والوصول.
+              المشروع يظهر توافقاً قوياً مع طلب المستهلك في مناطق متوسطة الكثافة
+              بأسيوط، مع نقاط قوة في التسعير والوصول.
             </p>
             <p className="text-sm leading-7 text-body/90">
-              التوقعات المالية للسنة الأولى تدعم التعادل في الشهر ٩–١١ عند استيفاء افتراضات
-              الإشغال المرصودة.
+              التوقعات المالية للسنة الأولى تدعم التعادل في الشهر ٩–١١ عند
+              استيفاء افتراضات الإشغال المرصودة.
             </p>
             <p className="text-sm leading-7 text-body/90">
               يُنصح بمراجعة تكلفة التشغيل مع خبير بشري قبل التمويل الخارجي.
             </p>
             <div className="flex flex-wrap gap-2">
-              {['طلب مؤكد على القطاع', 'هامش مساهمة جيد', 'مخاطر تنظيمية منخفضة'].map((x) => (
+              {[
+                "طلب مؤكد على القطاع",
+                "هامش مساهمة جيد",
+                "مخاطر تنظيمية منخفضة",
+              ].map((x) => (
                 <span
                   key={x}
                   className="rounded-full bg-success/15 px-3 py-1 text-xs font-semibold text-success"
@@ -212,7 +237,7 @@ export default function FeasibilityContent({ tab, onTabChange }: FeasibilityCont
           </div>
         )}
 
-        {tab === 'market' && (
+        {tab === "market" && (
           <div>
             <div className="mb-6 overflow-x-auto">
               <table className="w-full min-w-[320px] text-right text-sm">
@@ -225,9 +250,9 @@ export default function FeasibilityContent({ tab, onTabChange }: FeasibilityCont
                 </thead>
                 <tbody>
                   {[
-                    ['أ', 'شرق', 'سعر'],
-                    ['ب', 'غرب', 'خدمة'],
-                    ['ج', 'جديدة أسيوط', 'علامة'],
+                    ["أ", "شرق", "سعر"],
+                    ["ب", "غرب", "خدمة"],
+                    ["ج", "جديدة أسيوط", "علامة"],
                   ].map((row) => (
                     <tr key={row[0]} className="border-b border-divider/80">
                       <td className="py-2">{row[0]}</td>
@@ -238,7 +263,9 @@ export default function FeasibilityContent({ tab, onTabChange }: FeasibilityCont
                 </tbody>
               </table>
             </div>
-            <p className="mb-3 text-center text-xs font-semibold text-nile">توزيع الشرائح</p>
+            <p className="mb-3 text-center text-xs font-semibold text-nile">
+              توزيع الشرائح
+            </p>
             <div className="flex flex-col items-center gap-2 md:flex-row md:justify-center md:gap-8">
               <DonutChart />
               <ul className="text-xs text-body/80">
@@ -249,14 +276,15 @@ export default function FeasibilityContent({ tab, onTabChange }: FeasibilityCont
                   <span className="h-2 w-2 rounded-full bg-gold" /> شباب
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-success" /> سياح داخلي
+                  <span className="h-2 w-2 rounded-full bg-success" /> سياح
+                  داخلي
                 </li>
               </ul>
             </div>
           </div>
         )}
 
-        {tab === 'financial' && (
+        {tab === "financial" && (
           <div>
             <div className="mb-6 overflow-x-auto">
               <table className="w-full min-w-[400px] text-right text-sm">
@@ -270,9 +298,9 @@ export default function FeasibilityContent({ tab, onTabChange }: FeasibilityCont
                 </thead>
                 <tbody>
                   {[
-                    ['الإيرادات', '820', '940', '1,050'],
-                    ['مصاريف تشغيل', '610', '680', '720'],
-                    ['صافي الربح', '120', '180', '240'],
+                    ["الإيرادات", "820", "940", "1,050"],
+                    ["مصاريف تشغيل", "610", "680", "720"],
+                    ["صافي الربح", "120", "180", "240"],
                   ].map((r) => (
                     <tr key={r[0]} className="border-b border-divider">
                       {r.map((c) => (
@@ -285,24 +313,26 @@ export default function FeasibilityContent({ tab, onTabChange }: FeasibilityCont
                 </tbody>
               </table>
             </div>
-            <p className="mb-2 text-xs text-slateMuted">نسب مساهمة الإيراد (تقريبي)</p>
+            <p className="mb-2 text-xs text-slateMuted">
+              نسب مساهمة الإيراد (تقريبي)
+            </p>
             <div className="flex h-8 w-full overflow-hidden rounded-lg">
-              <div className="bg-nile" style={{ width: '45%' }} />
-              <div className="bg-gold" style={{ width: '30%' }} />
-              <div className="bg-success" style={{ width: '25%' }} />
+              <div className="bg-nile" style={{ width: "45%" }} />
+              <div className="bg-gold" style={{ width: "30%" }} />
+              <div className="bg-success" style={{ width: "25%" }} />
             </div>
           </div>
         )}
 
-        {tab === 'tech' && (
+        {tab === "tech" && (
           <ul className="space-y-3">
             {[
-              ['نظام نقاط بيع', 'مطلوب'],
-              ['ربط مخزون', 'مطلوب'],
-              ['تطبيق توصيل', 'اختياري'],
-              ['كاميرات مراقبة', 'مطلوب'],
-              ['Wi-Fi للزبائن', 'اختياري'],
-              ['نسخ احتياطي سحابي', 'مطلوب'],
+              ["نظام نقاط بيع", "مطلوب"],
+              ["ربط مخزون", "مطلوب"],
+              ["تطبيق توصيل", "اختياري"],
+              ["كاميرات مراقبة", "مطلوب"],
+              ["Wi-Fi للزبائن", "اختياري"],
+              ["نسخ احتياطي سحابي", "مطلوب"],
             ].map(([name, tag]) => (
               <li
                 key={name}
@@ -311,9 +341,9 @@ export default function FeasibilityContent({ tab, onTabChange }: FeasibilityCont
                 <span className="text-sm font-medium">{name}</span>
                 <span
                   className={`rounded px-2 py-0.5 text-xs font-bold ${
-                    tag === 'مطلوب'
-                      ? 'bg-nile/10 text-nile'
-                      : 'bg-slateMuted/15 text-slateMuted'
+                    tag === "مطلوب"
+                      ? "bg-nile/10 text-nile"
+                      : "bg-slateMuted/15 text-slateMuted"
                   }`}
                 >
                   {tag}
@@ -340,8 +370,10 @@ export default function FeasibilityContent({ tab, onTabChange }: FeasibilityCont
         >
           تواصل مع خبير الآن
         </button>
-        <p className="text-xs text-white/60">متاح للاستشارة: الأحد–الخميس ١٠ ص – ٦ م</p>
+        <p className="text-xs text-white/60">
+          متاح للاستشارة: الأحد–الخميس ١٠ ص – ٦ م
+        </p>
       </section>
     </div>
-  )
+  );
 }

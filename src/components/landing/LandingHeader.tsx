@@ -1,13 +1,74 @@
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { User } from "lucide-react";
 
 const nav = [
-  { href: '#hero', label: 'الرئيسية' },
-  { href: '#about', label: 'رؤيتنا' },
-  { href: '#services', label: 'المميزات الذكية' },
-  { href: '#contact', label: 'اتصل بنا' },
-]
+  { href: "#hero", label: "الرئيسية" },
+  { href: "#about", label: "رؤيتنا" },
+  { href: "#services", label: "خدماتنا" },
+  { href: "#contact", label: "اتصل بنا" },
+];
 
 export default function LandingHeader() {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return !!localStorage.getItem("ideaTechSession");
+  });
+  const userName = (() => {
+    const session = localStorage.getItem("ideaTechSession");
+    if (session) {
+      const userData = localStorage.getItem("ideaTechUser");
+      if (userData) {
+        try {
+          const user = JSON.parse(userData);
+          return user.name || "مستخدم";
+        } catch {
+          return "مستخدم";
+        }
+      }
+    }
+    return "";
+  })();
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        showDropdown &&
+        !(event.target as Element).closest(".profile-dropdown")
+      ) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showDropdown]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("ideaTechSession");
+    navigate("/", { replace: true });
+    setIsLoggedIn(false);
+    setShowDropdown(false);
+  };
+
+  const handleMenuClick = (action: string) => {
+    setShowDropdown(false);
+    switch (action) {
+      case "profile":
+        // TODO: Navigate to profile page
+        break;
+      case "feasibility":
+        navigate("/app/step3");
+        break;
+      case "dashboard":
+        navigate("/app/step5");
+        break;
+      case "logout":
+        handleLogout();
+        break;
+    }
+  };
   return (
     <header className="sticky top-0 z-30 border-b border-white/10 bg-nile shadow-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
@@ -16,7 +77,7 @@ export default function LandingHeader() {
             className="inline-block h-10 w-10 rotate-45 border-2 border-gold bg-gold/20 mx-3"
             aria-hidden
           />
-          <span className="text-lg font-bold text-white">فكرة  TECH</span>
+          <span className="text-lg font-bold text-white">فكرة TECH</span>
         </div>
         <nav className="hidden items-center gap-6 md:flex">
           {nav.map((item) => (
@@ -30,20 +91,67 @@ export default function LandingHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <Link
-            to="/login"
-            className="rounded-lg border border-white/40 px-3 py-2 text-sm font-medium text-white transition-colors hover:border-gold hover:text-gold"
-          >
-            تسجيل الدخول
-          </Link>
-          <Link
-            to="/register"
-            className="rounded-lg bg-gold px-3 py-2 text-sm font-bold text-nile-dark transition-opacity hover:opacity-90"
-          >
-            إنشاء حساب
-          </Link>
+          {isLoggedIn ? (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowDropdown(!showDropdown)}
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
+              >
+                <span>مرحباً {userName}</span>
+                <User className="h-4 w-4" />
+              </button>
+              {showDropdown && (
+                <div className="profile-dropdown absolute right-0 top-full mt-2 w-48 rounded-lg border border-white/20 bg-nile py-2 shadow-lg">
+                  <button
+                    type="button"
+                    onClick={() => handleMenuClick("profile")}
+                    className="block w-full px-4 py-2 text-right text-sm text-white hover:bg-white/10"
+                  >
+                    تعديل البروفايل
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleMenuClick("feasibility")}
+                    className="block w-full px-4 py-2 text-right text-sm text-white hover:bg-white/10"
+                  >
+                    صفحة مخرجات الجدوى
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleMenuClick("dashboard")}
+                    className="block w-full px-4 py-2 text-right text-sm text-white hover:bg-white/10"
+                  >
+                    لوحة التحكم
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleMenuClick("logout")}
+                    className="block w-full px-4 py-2 text-right text-sm text-white hover:bg-white/10"
+                  >
+                    تسجيل الخروج
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="rounded-lg border border-white/40 px-3 py-2 text-sm font-medium text-white transition-colors hover:border-gold hover:text-gold"
+              >
+                تسجيل الدخول
+              </Link>
+              <Link
+                to="/register"
+                className="rounded-lg bg-gold px-3 py-2 text-sm font-bold text-nile-dark transition-opacity hover:opacity-90"
+              >
+                إنشاء حساب
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
-  )
+  );
 }
