@@ -88,15 +88,6 @@ export function AppShell({
             />
           </div>
         </div>
-        <div className="flex items-center gap-2 border-t border-white/15 px-4 py-4">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
-            <User className="h-5 w-5 text-gold" />
-          </div>
-          <div className="min-w-0 text-sm">
-            <div className="truncate font-medium">رائد أعمال</div>
-            <div className="truncate text-xs text-white/60">أسيوط، مصر</div>
-          </div>
-        </div>
       </aside>
 
       <div className="relative flex min-w-0 flex-1 flex-row">

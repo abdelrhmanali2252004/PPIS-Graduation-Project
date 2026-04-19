@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
@@ -19,9 +19,10 @@ export default function App() {
       <Route path="/app/step2" element={<ProjectWizard />} />
       <Route path="/app/step3" element={<FeasibilityOutput />} />
       <Route path="/app/step4" element={<BrandingWizard />} />
-      <Route path="/app/step5" element={<ExecutiveDashboard />} />
-      <Route path="/dashboard/user" element={<ExecutiveDashboard />} />
+      <Route path="/app/step5" element={<Navigate to="/dashboard/user/projects" replace />} />
+      <Route path="/dashboard/user" element={<Navigate to="/dashboard/user/projects" replace />} />
+      <Route path="/dashboard/user/*" element={<ExecutiveDashboard />} />
       <Route path="/dashboard/admin" element={<AdminDashboard />} />
     </Routes>
-  )
+  ) 
 }

@@ -1,4 +1,5 @@
-import { Download, Calendar, Lock } from 'lucide-react'
+import { Download, Calendar } from 'lucide-react'
+import { useState } from 'react'
 
 function KpiGauge({ pct }: { pct: number }) {
   const r = 32
@@ -146,27 +147,21 @@ export function AlertsPanel() {
     </aside>
   )
 }
+const TABS = [
+  { id: "summary", label: "الملخص التنفيذي" },
+  { id: "market", label: "تحليل السوق" },
+  { id: "financial", label: "التوقعات المالية" },
+  { id: "tech", label: "المتطلبات التقنية" },
+] as const;
 
-export function DashboardBottomBar() {
-  return (
-    <div
-      dir="rtl"
-      className="fixed bottom-0 left-0 right-0 z-40 flex h-10 items-center justify-between border-t border-divider bg-white px-4 text-xs text-slateMuted shadow-[0_-2px_10px_rgba(0,0,0,0.04)]"
-    >
-      <span className="font-medium text-gold">✦ Magic</span>
-      <span className="font-semibold text-success">الخطوة ٥ من ٥ — اكتمل المشروع 🎉</span>
-      <span className="flex items-center gap-1">
-        <Lock className="h-3.5 w-3.5" />
-        اتصال مشفّر
-      </span>
-    </div>
-  )
-}
+export type TabId = (typeof TABS)[number]["id"];
+
 
 export default function ExecutiveDashboardContent() {
+  const [tab, setTab] = useState<TabId>('summary')
+
   return (
     <div className="relative pb-14">
-      <DashboardBottomBar />
       <div className="overflow-y-auto px-6 py-8 pb-20 font-cairo lg:px-10" dir="rtl">
         <header className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <h1 className="text-xl font-bold text-body md:text-2xl">لوحة التحكم الاستراتيجية</h1>
@@ -260,6 +255,171 @@ export default function ExecutiveDashboardContent() {
           </div>
         </div>
 
+        <div className="mb-8 flex flex-wrap gap-2 border-b border-divider pb-2">
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => setTab(t.id)}
+            className={`rounded-t-lg px-4 py-2 text-sm font-semibold transition-colors ${
+              tab === t.id
+                ? "bg-nile text-white"
+                : "text-slateMuted hover:bg-offwhite"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="rounded-2xl border border-divider bg-white p-6 shadow-sm my-5">
+        {tab === "summary" && (
+          <div className="space-y-4">
+            <p className="text-sm leading-7 text-body/90">
+              المشروع يظهر توافقاً قوياً مع طلب المستهلك في مناطق متوسطة الكثافة
+              بأسيوط، مع نقاط قوة في التسعير والوصول.
+            </p>
+            <p className="text-sm leading-7 text-body/90">
+              التوقعات المالية للسنة الأولى تدعم التعادل في الشهر ٩–١١ عند
+              استيفاء افتراضات الإشغال المرصودة.
+            </p>
+            <p className="text-sm leading-7 text-body/90">
+              يُنصح بمراجعة تكلفة التشغيل مع خبير بشري قبل التمويل الخارجي.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                "طلب مؤكد على القطاع",
+                "هامش مساهمة جيد",
+                "مخاطر تنظيمية منخفضة",
+              ].map((x) => (
+                <span
+                  key={x}
+                  className="rounded-full bg-success/15 px-3 py-1 text-xs font-semibold text-success"
+                >
+                  {x}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {tab === "market" && (
+          <div>
+            <div className="mb-6 overflow-x-auto">
+              <table className="w-full min-w-[320px] text-right text-sm">
+                <thead>
+                  <tr className="border-b border-divider text-slateMuted">
+                    <th className="pb-2">المنافس</th>
+                    <th className="pb-2">الموقع</th>
+                    <th className="pb-2">نقطة تميز</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ["أ", "شرق", "سعر"],
+                    ["ب", "غرب", "خدمة"],
+                    ["ج", "جديدة أسيوط", "علامة"],
+                  ].map((row) => (
+                    <tr key={row[0]} className="border-b border-divider/80">
+                      <td className="py-2">{row[0]}</td>
+                      <td className="py-2">{row[1]}</td>
+                      <td className="py-2">{row[2]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mb-3 text-center text-xs font-semibold text-nile">
+              توزيع الشرائح
+            </p>
+            <div className="flex flex-col items-center gap-2 md:flex-row md:justify-center md:gap-8">
+              <DonutChart />
+              <ul className="text-xs text-body/80">
+                <li className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-nile" /> عائلات
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-gold" /> شباب
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-success" /> سياح
+                  داخلي
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {tab === "financial" && (
+          <div>
+            <div className="mb-6 overflow-x-auto">
+              <table className="w-full min-w-[400px] text-right text-sm">
+                <thead>
+                  <tr className="bg-offwhite text-slateMuted">
+                    <th className="p-2">البند</th>
+                    <th className="p-2">السنة ١</th>
+                    <th className="p-2">السنة ٢</th>
+                    <th className="p-2">السنة ٣</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ["الإيرادات", "820", "940", "1,050"],
+                    ["مصاريف تشغيل", "610", "680", "720"],
+                    ["صافي الربح", "120", "180", "240"],
+                  ].map((r) => (
+                    <tr key={r[0]} className="border-b border-divider">
+                      {r.map((c) => (
+                        <td key={c} className="p-2">
+                          {c}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mb-2 text-xs text-slateMuted">
+              نسب مساهمة الإيراد (تقريبي)
+            </p>
+            <div className="flex h-8 w-full overflow-hidden rounded-lg">
+              <div className="bg-nile" style={{ width: "45%" }} />
+              <div className="bg-gold" style={{ width: "30%" }} />
+              <div className="bg-success" style={{ width: "25%" }} />
+            </div>
+          </div>
+        )}
+
+        {tab === "tech" && (
+          <ul className="space-y-3">
+            {[
+              ["نظام نقاط بيع", "مطلوب"],
+              ["ربط مخزون", "مطلوب"],
+              ["تطبيق توصيل", "اختياري"],
+              ["كاميرات مراقبة", "مطلوب"],
+              ["Wi-Fi للزبائن", "اختياري"],
+              ["نسخ احتياطي سحابي", "مطلوب"],
+            ].map(([name, tag]) => (
+              <li
+                key={name}
+                className="flex items-center justify-between rounded-lg border border-divider px-4 py-3"
+              >
+                <span className="text-sm font-medium">{name}</span>
+                <span
+                  className={`rounded px-2 py-0.5 text-xs font-bold ${
+                    tag === "مطلوب"
+                      ? "bg-nile/10 text-nile"
+                      : "bg-slateMuted/15 text-slateMuted"
+                  }`}
+                >
+                  {tag}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
         <section className="rounded-2xl border border-divider bg-white p-5 shadow-sm">
           <h3 className="mb-4 text-sm font-bold text-nile">تفاصيل تحليل المشروع</h3>
           <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-3">
@@ -307,4 +467,54 @@ export default function ExecutiveDashboardContent() {
       </div>
     </div>
   )
+}
+
+function DonutChart() {
+  return (
+    <div className="relative mx-auto h-40 w-40">
+      <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
+        <circle
+          cx="50"
+          cy="50"
+          r="40"
+          fill="none"
+          stroke="#E5E7EB"
+          strokeWidth="16"
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r="40"
+          fill="none"
+          stroke="#1B4C8C"
+          strokeWidth="16"
+          strokeDasharray="75 251"
+          strokeLinecap="butt"
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r="40"
+          fill="none"
+          stroke="#C9A05D"
+          strokeWidth="16"
+          strokeDasharray="55 251"
+          strokeDashoffset="-75"
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r="40"
+          fill="none"
+          stroke="#059669"
+          strokeWidth="16"
+          strokeDasharray="40 251"
+          strokeDashoffset="-130"
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-body">
+        شرائح
+      </div>
+    </div>
+  );
 }

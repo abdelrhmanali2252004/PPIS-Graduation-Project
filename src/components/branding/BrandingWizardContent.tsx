@@ -540,7 +540,7 @@ export default function BrandingWizardContent({
         ) : (
           <button
             type="button"
-            onClick={() => navigate("/app/step5")}
+            onClick={() => navigate("/dashboard/user/projects")}
             className="rounded-xl bg-gold px-6 py-2.5 text-sm font-bold text-nile-dark shadow-md"
           >
             إنهاء وانتقل للوحة التحكم ✓
