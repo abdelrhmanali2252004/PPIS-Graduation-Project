@@ -1,4 +1,5 @@
 import { Briefcase, Star, Crown, Square, Check } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const VIBES = [
@@ -124,6 +125,12 @@ export default function BrandingWizardContent({
   onNext,
 }: BrandingWizardContentProps) {
   const navigate = useNavigate();
+  const [brandName, setBrandName] = useState("");
+  const [tagline, setTagline] = useState("");
+  const [businessType, setBusinessType] = useState("");
+  const [audience, setAudience] = useState("");
+  const [logoStyle, setLogoStyle] = useState("mix");
+  const [symbolHint, setSymbolHint] = useState("");
   return (
     <div className="px-8 py-8 pb-20 font-cairo md:px-10" dir="rtl">
       <header className="mb-6">
@@ -131,12 +138,12 @@ export default function BrandingWizardContent({
           الخطوة الرابعة: الهوية بالذكاء الاصطناعي
         </h1>
         <p className="mt-1 text-sm text-slateMuted">
-          ٣ خطوات فرعية لبناء علامتك
+          أسئلة بسيطة لبناء هوية مشروعك
         </p>
       </header>
 
       <div className="mb-8 flex items-center justify-center gap-2">
-        {["الطابع البصري", "لوحة الألوان", "توليد الشعار"].map((label, i) => (
+        {["بيانات البراند", "الشخصية والألوان", "توليد الشعار"].map((label, i) => (
           <div key={label} className="flex items-center">
             <button
               type="button"
@@ -160,7 +167,7 @@ export default function BrandingWizardContent({
         ))}
       </div>
       <p className="mb-6 text-center text-xs text-slateMuted">
-        {["الطابع البصري", "لوحة الألوان", "توليد الشعار"][sub]}
+        {["بيانات البراند", "الشخصية والألوان", "توليد الشعار"][sub]}
       </p>
       <div
         className=""
@@ -170,36 +177,179 @@ export default function BrandingWizardContent({
         }}
       >
         {sub === 0 && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {VIBES.map((v) => {
-              const sel = vibe === v.id;
-              return (
-                <button
-                  key={v.id}
-                  type="button"
-                  onClick={() => onVibeChange(v.id)}
-                  className={`relative rounded-2xl border-2 p-5 text-right transition-all ${
-                    sel
-                      ? "border-nile bg-nile/5 shadow-md"
-                      : "border-divider bg-white hover:border-nile/30"
-                  }`}
-                >
-                  {sel && (
-                    <span className="absolute left-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-nile text-white">
-                      <Check className="h-4 w-4" />
-                    </span>
-                  )}
-                  <v.Icon className="mb-3 h-8 w-8 text-gold" />
-                  <div className="font-bold text-nile">{v.title}</div>
-                  <div className="text-xs text-slateMuted">{v.desc}</div>
-                </button>
-              );
-            })}
+          <div className="space-y-5">
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-body">
+                الاسم والشعار
+              </label>
+              <p className="text-xs text-slateMuted">
+                اكتب اسم مشروعك الذي تريد ظهوره في اللوجو، ويمكنك إضافة جملة
+                قصيرة كشعار.
+              </p>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <input
+                  type="text"
+                  value={brandName}
+                  onChange={(e) => setBrandName(e.target.value)}
+                  placeholder="مثال: بصمة ستور"
+                  className="w-full rounded-xl border border-divider bg-white px-3 py-2 text-sm"
+                />
+                <input
+                  type="text"
+                  value={tagline}
+                  onChange={(e) => setTagline(e.target.value)}
+                  placeholder="شعار اختياري: جودة في كل تفصيلة"
+                  className="w-full rounded-xl border border-divider bg-white px-3 py-2 text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-body">
+                نوع النشاط
+              </label>
+              <p className="text-xs text-slateMuted">
+                ما هو مجال عملك؟ مثل مطعم، تجارة ملابس، محل موبايلات، أو شركة
+                برمجة.
+              </p>
+              <input
+                type="text"
+                value={businessType}
+                onChange={(e) => setBusinessType(e.target.value)}
+                placeholder="اكتب نوع النشاط"
+                className="w-full rounded-xl border border-divider bg-white px-3 py-2 text-sm"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-body">
+                جمهورك مين؟
+              </label>
+              <p className="text-xs text-slateMuted">
+                مين أكثر ناس هتشترى منك؟
+              </p>
+              <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+                {[
+                  { id: "youth", label: "شباب" },
+                  { id: "kids", label: "أطفال" },
+                  { id: "business", label: "رجال أعمال" },
+                  { id: "all", label: "عامة الناس" },
+                ].map((a) => {
+                  const sel = audience === a.id;
+                  return (
+                    <button
+                      key={a.id}
+                      type="button"
+                      onClick={() => setAudience(a.id)}
+                      className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all ${
+                        sel
+                          ? "border-nile bg-nile text-white"
+                          : "border-divider bg-white text-body"
+                      }`}
+                    >
+                      {a.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-body">
+                علامة مميزة
+              </label>
+              <p className="text-xs text-slateMuted">
+                هل هناك رمز معين تريد ظهوره؟ مثل لمبة، سهم، ميزان، أو أي شكل
+                في بالك.
+              </p>
+              <input
+                type="text"
+                value={symbolHint}
+                onChange={(e) => setSymbolHint(e.target.value)}
+                placeholder="اكتب الرمز المقترح (اختياري)"
+                className="w-full rounded-xl border border-divider bg-white px-3 py-2 text-sm"
+              />
+            </div>
           </div>
         )}
 
         {sub === 1 && (
           <div className="space-y-4">
+            <div className="space-y-3 rounded-2xl border border-divider bg-white p-4">
+              <label className="block text-sm font-bold text-body">
+                روح البراند
+              </label>
+              <p className="text-xs text-slateMuted">
+                عايز اللوجو يحسس الناس بإيه؟
+              </p>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {VIBES.map((v) => {
+                  const sel = vibe === v.id;
+                  return (
+                    <button
+                      key={v.id}
+                      type="button"
+                      onClick={() => onVibeChange(v.id)}
+                      className={`relative rounded-2xl border-2 p-4 text-right transition-all ${
+                        sel
+                          ? "border-nile bg-nile/5 shadow-md"
+                          : "border-divider bg-white hover:border-nile/30"
+                      }`}
+                    >
+                      {sel && (
+                        <span className="absolute left-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-nile text-white">
+                          <Check className="h-4 w-4" />
+                        </span>
+                      )}
+                      <v.Icon className="mb-2 h-7 w-7 text-gold" />
+                      <div className="font-bold text-nile">{v.title}</div>
+                      <div className="text-xs text-slateMuted">{v.desc}</div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="space-y-2 rounded-2xl border border-divider bg-white p-4">
+              <label className="block text-sm font-bold text-body">
+                ستايل اللوجو
+              </label>
+              <p className="text-xs text-slateMuted">
+                اختار الشكل الأقرب لك.
+              </p>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                {[
+                  { id: "icon", label: "أيقونة ورمز" },
+                  { id: "text", label: "اسم بخط مميز" },
+                  { id: "mix", label: "ميكس بين الاثنين" },
+                ].map((style) => {
+                  const sel = logoStyle === style.id;
+                  return (
+                    <button
+                      key={style.id}
+                      type="button"
+                      onClick={() => setLogoStyle(style.id)}
+                      className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all ${
+                        sel
+                          ? "border-gold bg-gold/15 text-nile-dark"
+                          : "border-divider bg-white text-body"
+                      }`}
+                    >
+                      {style.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="space-y-2 rounded-2xl border border-divider bg-white p-4">
+              <label className="block text-sm font-bold text-body">
+                اختيار الألوان
+              </label>
+              <p className="text-xs text-slateMuted">
+                اختر لونك المفضل أو دع الذكاء الاصطناعي يختار الأنسب.
+              </p>
+            </div>
             {PALETTES.map((p) => {
               const sel = palette === p.id;
               return (
@@ -233,6 +383,17 @@ export default function BrandingWizardContent({
                 </button>
               );
             })}
+            <button
+              type="button"
+              onClick={() => onPaletteChange("ai")}
+              className={`w-full rounded-2xl border-2 px-4 py-3 text-right text-sm font-semibold transition-all ${
+                palette === "ai"
+                  ? "border-gold bg-gold/10 text-nile-dark"
+                  : "border-divider bg-white text-body"
+              }`}
+            >
+              خلّي الذكاء الاصطناعي يختار أفضل ألوان حسب نشاطك
+            </button>
             <p className="text-xs leading-relaxed text-slateMuted">
               ملاحظة WCAG 2026: تأكد من تباين النص الأساسي ≥ ٤.٥:١ على خلفيات
               فاتحة.

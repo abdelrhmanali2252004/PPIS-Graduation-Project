@@ -1,34 +1,186 @@
-import type { ReactElement } from 'react'
-import Question01Idea from './Question01Idea'
-import Question02Sector from './Question02Sector'
-import Question03Audience from './Question03Audience'
-import Question04Location from './Question04Location'
-import Question05Budget from './Question05Budget'
-import Question06Timeline from './Question06Timeline'
-import Question07Experience from './Question07Experience'
-import Question08TeamSize from './Question08TeamSize'
-import Question09Differentiation from './Question09Differentiation'
-import Question10PricingModel from './Question10PricingModel'
-import Question11SalesTarget from './Question11SalesTarget'
-import Question12Risks from './Question12Risks'
-import type { ProjectAnswerKey } from './types'
+import type { QuestionItem } from './types'
 
-export const QUESTION_ITEMS: Array<{
-  key: ProjectAnswerKey
-  Component: ({ value, onChange }: { value: string; onChange: (value: string) => void }) => ReactElement
-}> = [
-  { key: 'idea', Component: Question01Idea },
-  { key: 'sector', Component: Question02Sector },
-  { key: 'audience', Component: Question03Audience },
-  { key: 'location', Component: Question04Location },
-  { key: 'budget', Component: Question05Budget },
-  { key: 'timeline', Component: Question06Timeline },
-  { key: 'experience', Component: Question07Experience },
-  { key: 'teamSize', Component: Question08TeamSize },
-  { key: 'differentiation', Component: Question09Differentiation },
-  { key: 'pricingModel', Component: Question10PricingModel },
-  { key: 'monthlySalesTarget', Component: Question11SalesTarget },
-  { key: 'risks', Component: Question12Risks },
+export const QUESTION_ITEMS: QuestionItem[] = [
+  {
+    key: 'idea',
+    stage: 'المرحلة الأولى: الهوية',
+    title: 'إيه هي فكرة مشروعك؟',
+    helpText: 'اشرح حلمك ببساطة.',
+    inputType: 'textarea',
+    placeholder: 'اكتب وصف مختصر لفكرة المشروع...',
+    maxLength: 350,
+  },
+  {
+    key: 'sector',
+    stage: 'المرحلة الأولى: الهوية',
+    title: 'تصنيف نشاط المشروع الرئيسي؟',
+    inputType: 'options',
+    options: ['مطعم', 'تجارة', 'خدمات', 'تعليم', 'تقنية', 'صناعة'],
+  },
+  {
+    key: 'legalStatus',
+    stage: 'المرحلة الأولى: الهوية',
+    title: 'الوضع القانوني الحالي؟',
+    inputType: 'options',
+    options: ['مجرد فكرة', 'بدأت في التراخيص', 'مشروع شغال فعلا'],
+  },
+  {
+    key: 'audience',
+    stage: 'المرحلة الثانية: السوق والعملاء',
+    title: 'من هو العميل المستهدف؟',
+    inputType: 'options',
+    options: ['أفراد', 'شركات', 'ناس بتدور على التوفير', 'ناس بتدور على الرفاهية'],
+  },
+  {
+    key: 'geoScope',
+    stage: 'المرحلة الثانية: السوق والعملاء',
+    title: 'النطاق الجغرافي للنشاط؟',
+    inputType: 'options',
+    options: ['حي أو منطقة', 'محافظة', 'مصر كلها', 'خارج مصر'],
+  },
+  {
+    key: 'customerReason',
+    stage: 'المرحلة الثانية: السوق والعملاء',
+    title: 'ليه العميل هيختارك أنت بالذات؟',
+    inputType: 'options',
+    options: ['سعري أرخص', 'جودتي أعلى', 'خدمتي أسهل', 'معاملتي أحسن'],
+  },
+  {
+    key: 'marketState',
+    stage: 'المرحلة الثانية: السوق والعملاء',
+    title: 'حالة السوق اللي هتدخله؟',
+    inputType: 'options',
+    options: ['فكرة جديدة محدش عملها', 'سوق عليه طلب عالي', 'المنافسة فيه صعبة'],
+  },
+  {
+    key: 'competitors',
+    stage: 'المرحلة الثانية: السوق والعملاء',
+    title: 'مين منافسينك الأساسيين؟',
+    inputType: 'options',
+    options: ['شركات كبيرة', 'محلات مشابهة في المنطقة', 'مواقع أونلاين'],
+  },
+  {
+    key: 'deliveryChannel',
+    stage: 'المرحلة الثالثة: التشغيل والتنفيذ',
+    title: 'هتقدم منتجك للناس إزاي؟',
+    inputType: 'options',
+    options: ['محل أو مكتب', 'أونلاين', 'توصيل فقط', 'ميكس بين أكثر من قناة'],
+  },
+  {
+    key: 'revenueModel',
+    stage: 'المرحلة الثالثة: التشغيل والتنفيذ',
+    title: 'هتكسب فلوسك إزاي؟',
+    inputType: 'options',
+    options: ['بيع مباشر', 'اشتراكات', 'عمولة وسيط'],
+  },
+  {
+    key: 'acquisitionChannel',
+    stage: 'المرحلة الثالثة: التشغيل والتنفيذ',
+    title: 'هتوصل للناس إزاي؟',
+    inputType: 'options',
+    options: ['سوشيال ميديا', 'مندوبين مبيعات', 'إعلانات في الشارع', 'أكثر من طريقة'],
+  },
+  {
+    key: 'teamSize',
+    stage: 'المرحلة الثالثة: التشغيل والتنفيذ',
+    title: 'ناوي تبدأ بمشروع حجمه قد إيه؟',
+    helpText: 'اختر أقرب حجم للفريق عند البداية.',
+    inputType: 'options',
+    options: [
+      'لوحدي',
+      'فريق صغير جدا (2-5)',
+      'شركة صغيرة (6-20)',
+      'كيان كبير (أكثر من 20)',
+    ],
+  },
+  {
+    key: 'techNeed',
+    stage: 'المرحلة الثالثة: التشغيل والتنفيذ',
+    title: 'الاحتياج التكنولوجي؟',
+    inputType: 'options',
+    options: [
+      'بسيط (إكسيل + واتساب)',
+      'متوسط (موقع أو نظام تشغيل)',
+      'متقدم (تطبيق + ذكاء اصطناعي)',
+    ],
+  },
+  {
+    key: 'experience',
+    stage: 'المرحلة الثالثة: التشغيل والتنفيذ',
+    title: 'مستوى خبرة فريقك؟',
+    inputType: 'options',
+    options: ['مبتدئين', 'عندنا خبرة عملية', 'خبراء متخصصين'],
+  },
+  {
+    key: 'location',
+    stage: 'المرحلة الثالثة: التشغيل والتنفيذ',
+    title: 'سهولة تلاقي موظفين شاطرين؟',
+    inputType: 'options',
+    options: ['متوفرين', 'متوفرين لكن غاليين', 'نادرين وصعب نلاقيهم'],
+  },
+  {
+    key: 'budget',
+    stage: 'المرحلة الرابعة: التوقعات المالية',
+    title: 'رأس المال اللي هتبدأ بيه؟',
+    inputType: 'options',
+    options: ['أقل من 100 ألف', 'حتى 500 ألف', 'حتى 2 مليون', 'أكثر من 2 مليون'],
+  },
+  {
+    key: 'fundingSource',
+    stage: 'المرحلة الرابعة: التوقعات المالية',
+    title: 'هتجيب الفلوس منين؟',
+    inputType: 'options',
+    options: ['تحويشة شخصية', 'شركاء', 'قرض', 'مستثمرين'],
+  },
+  {
+    key: 'topExpense',
+    stage: 'المرحلة الرابعة: التوقعات المالية',
+    title: 'أكتر حاجة هتصرف فيها فلوس؟',
+    inputType: 'options',
+    options: ['إيجار', 'مرتبات', 'خامات', 'تسويق'],
+  },
+  {
+    key: 'pricingModel',
+    stage: 'المرحلة الرابعة: التوقعات المالية',
+    title: 'هتسعر منتجك بناء على إيه؟',
+    inputType: 'options',
+    options: ['التكلفة + هامش ربح', 'قريب من المنافسين', 'سعر أقل للدخول للسوق'],
+  },
+  {
+    key: 'monthlySalesTarget',
+    stage: 'المرحلة الرابعة: التوقعات المالية',
+    title: 'توقعك للأرباح الشهرية؟',
+    inputType: 'options',
+    options: ['أقل من 20 ألف', 'حتى 50 ألف', 'حتى 100 ألف', 'أكثر من 100 ألف'],
+  },
+  {
+    key: 'demandOutlook',
+    stage: 'المرحلة الخامسة: التوقعات والمخاطر',
+    title: 'شايف الطلب على فكرتك هيكون إزاي؟',
+    inputType: 'options',
+    options: ['ضعيف', 'متوسط', 'عالي جدا'],
+  },
+  {
+    key: 'seasonality',
+    stage: 'المرحلة الخامسة: التوقعات والمخاطر',
+    title: 'هل مشروعك مرتبط بمواسم معينة؟',
+    inputType: 'options',
+    options: ['شغال طول السنة', 'يرتبط بالمواسم والأعياد'],
+  },
+  {
+    key: 'risks',
+    stage: 'المرحلة الخامسة: التوقعات والمخاطر',
+    title: 'أكبر خطر ممكن يواجهك؟',
+    inputType: 'options',
+    options: ['تغير الأسعار', 'منافس قوي', 'مشاكل قانونية', 'نقص خامات'],
+  },
+  {
+    key: 'twoYearGoal',
+    stage: 'المرحلة الخامسة: التوقعات والمخاطر',
+    title: 'طموحك إيه بعد سنتين؟',
+    inputType: 'options',
+    options: ['فتح فروع جديدة', 'التوسع بنظام فرنشايز', 'السيطرة على السوق'],
+  },
 ]
 
 export type { ProjectAnswers, ProjectAnswerKey } from './types'

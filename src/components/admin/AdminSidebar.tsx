@@ -21,7 +21,7 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
           <ShieldCheck className="h-5 w-5 text-gold" />
           <span className="text-sm font-bold">Admin Panel</span>
         </div>
-        <p className="text-xs text-white/70">NextVenture OS</p>
+        <p className="text-xs text-white/70">فكرة TECH</p>
       </div>
 
       <nav className="space-y-2 p-3">
