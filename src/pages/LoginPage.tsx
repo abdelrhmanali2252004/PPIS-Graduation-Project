@@ -1,36 +1,27 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock } from "lucide-react";
+import { loginUser } from "../store/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.auth);
+  const [email, setEmail] = useState("hassan@app.com");
+  const [password, setPassword] = useState("123456");
 
-  const handleLogin = (event: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(null);
+    const action = await dispatch(
+      loginUser({
+        email: email.trim(),
+        password,
+      }),
+    );
 
-    const storedUser = localStorage.getItem("ideaTechUser");
-    if (!storedUser) {
-      setError("لا يوجد حساب مسجل. الرجاء إنشاء حساب أولاً.");
-      return;
-    }
-
-    try {
-      const user = JSON.parse(storedUser) as {
-        email: string;
-        password: string;
-      };
-      if (email.trim() === user.email && password === user.password) {
-        localStorage.setItem("ideaTechSession", user.email);
-        navigate("/app/step1", { replace: true });
-      } else {
-        setError("البريد الإلكتروني أو كلمة المرور غير صحيحة.");
-      }
-    } catch {
-      setError("حدث خطأ أثناء قراءة بيانات الحساب. الرجاء إعادة التسجيل.");
+    if (loginUser.fulfilled.match(action)) {
+      navigate("/dashboard/user", { replace: true });
     }
   };
 
@@ -121,9 +112,10 @@ export default function LoginPage() {
 
               <button
                 type="submit"
+                disabled={loading}
                 className="w-full rounded-xl bg-nile py-3 text-sm font-bold text-white shadow-md transition-opacity hover:opacity-95"
               >
-                دخول
+                {loading ? "جاري تسجيل الدخول..." : "دخول"}
               </button>
             </form>
 

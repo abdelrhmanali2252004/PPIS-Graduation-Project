@@ -1,34 +1,75 @@
-import { useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CloudUpload, Building2, Zap, Target, MapPin } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  createStep1Project,
+  uploadMarketResearchPdf,
+} from "../../store/slices/projectStepsSlice";
+import UploadFileComponent from "./UploadFileComponent";
+import RequestMarketComponent from "./RequestMarketComponent";
 
 export default function MarketResearchContent() {
+  const dispatch = useAppDispatch();
+  const { creatingStep1, projectId, error, uploadingMarketResearch, marketResearchError } = useAppSelector(
+    (state) => state.projectSteps,
+  );
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedOption, setSelectedOption] = useState<
     "upload" | "request" | null
   >(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const navigate = useNavigate();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = () => {
-    fileInputRef.current?.click();
-  };
+  useEffect(() => {
+    if (!projectId) {
+      void dispatch(createStep1Project());
+    }
+  }, [dispatch, projectId]);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && file.type === "application/pdf") {
-      setSelectedFile(file);
-      setSelectedOption("upload");
+
+
+
+  const handleNext = async () => {
+    if (!selectedFile) {
+      return;
+    }
+
+    const action = await dispatch(uploadMarketResearchPdf(selectedFile));
+    if (uploadMarketResearchPdf.fulfilled.match(action)) {
+      navigate("/app/step2");
     }
   };
 
-  const handleRequestStudy = () => {
-    setSelectedOption("request");
-  };
+  if (creatingStep1 && !projectId) {
+    return (
+      <div className="px-8 py-8 pb-14 font-cairo md:px-10" dir="rtl">
+        <div className="flex min-h-[320px] flex-col items-center justify-center rounded-2xl border border-divider bg-white text-center shadow-sm">
+          <div className="mb-4 h-10 w-10 animate-spin rounded-full border-4 border-nile/20 border-t-nile" />
+          <h2 className="text-lg font-bold text-body">جاري تجهيز مشروعك...</h2>
+          <p className="mt-2 text-sm text-slateMuted">
+            يتم الآن إنشاء المشروع الافتراضي للخطوة الأولى.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
-  const handleNext = () => {
-    navigate("/app/step2");
-  };
+  if (error && !projectId) {
+    return (
+      <div className="px-8 py-8 pb-14 font-cairo md:px-10" dir="rtl">
+        <div className="flex min-h-[320px] flex-col items-center justify-center rounded-2xl border border-red-100 bg-red-50 text-center">
+          <h2 className="text-lg font-bold text-red-700">{error}</h2>
+          <button
+            type="button"
+            onClick={() => void dispatch(createStep1Project())}
+            className="mt-4 rounded-xl bg-nile px-5 py-2.5 text-sm font-bold text-white"
+          >
+            إعادة المحاولة
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="px-8 py-8 pb-14 font-cairo md:px-10" dir="rtl">
       <header className="mb-6">
@@ -46,43 +87,12 @@ export default function MarketResearchContent() {
       </p>
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch">
-        <div
-          className="flex-1 rounded-2xl border border-divider bg-white p-6 shadow-sm"
-          style={{ borderTop: "4px solid #1B4C8C" }}
-        >
-          <span className="mb-3 inline-block rounded-full bg-nile/10 px-2 py-0.5 text-xs font-bold text-nile">
-            RAG Technology
-          </span>
-          <h2 className="mb-4 text-lg font-bold text-nile">
-            لديك ملفات بالفعل؟
-          </h2>
-          <div
-            className={`flex min-h-[200px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-4 py-8 transition-colors ${selectedOption === "upload" ? "border-nile bg-nile/5" : "border-nile/30 bg-offwhite/50 hover:border-nile/50"}`}
-            onClick={handleFileUpload}
-          >
-            <CloudUpload className="mb-3 h-10 w-10 text-nile/60" />
-            <p className="mb-2 text-center text-sm font-medium text-body">
-              {selectedFile
-                ? `تم اختيار: ${selectedFile.name}`
-                : "اسحب ملفات PDF هنا أو انقر للتحميل"}
-            </p>
-            <span className="rounded-md bg-nile/10 px-2 py-1 text-xs text-nile">
-              PDF فقط
-            </span>
-          </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".pdf"
-            onChange={handleFileChange}
-            className="hidden"
-          />
-          <p className="mt-4 text-xs leading-relaxed text-slateMuted">
-            يقرأ النظام تقارير الغرفة التجارية والعقود الممسوحة ضوئياً ويستخرج
-            الجداول والشروح للاستخدام في دراستك.
-          </p>
-        </div>
 
+        <UploadFileComponent
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+          onFileSelected={setSelectedFile}
+        />
         <div
           className="flex shrink-0 items-center justify-center px-2 lg:flex-col lg:py-0"
           aria-hidden
@@ -94,52 +104,26 @@ export default function MarketResearchContent() {
           <div className="hidden h-px flex-1 bg-divider lg:block lg:h-auto lg:w-px lg:flex-none" />
         </div>
 
-        <div
-          className="flex-1 rounded-2xl border border-divider bg-white p-6 shadow-sm"
-          style={{ borderTop: "4px solid #C9A05D" }}
-        >
-          <span className="mb-3 inline-block rounded-full bg-gold/15 px-2 py-0.5 text-xs font-bold text-nile-dark">
-            Team
-          </span>
-          <h2 className="mb-4 text-lg font-bold text-body">
-            أو، اطلب إعداد دراسة السوق
-          </h2>
-          <div className="mb-6 flex flex-wrap gap-4 text-sm">
-            <span className="flex items-center gap-2 text-body/90">
-              <Zap className="h-4 w-4 text-gold" /> سريع
-            </span>
-            <span className="flex items-center gap-2 text-body/90">
-              <Target className="h-4 w-4 text-gold" /> دقيق
-            </span>
-            <span className="flex items-center gap-2 text-body/90">
-              <MapPin className="h-4 w-4 text-gold" /> محلي
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={handleRequestStudy}
-            className={`mb-4 w-full rounded-xl py-3 text-sm font-bold shadow-md transition-opacity hover:opacity-95 ${selectedOption === "request" ? "bg-gradient-to-l from-gold to-gold/80 text-nile-dark ring-2 ring-gold/50" : "bg-gradient-to-l from-gold to-gold/80 text-nile-dark"}`}
-          >
-            اطلب دراسة السوق الآن
-          </button>
-          <div className="flex flex-wrap items-center gap-2 text-xs text-slateMuted">
-            <Building2 className="h-4 w-4" />
-            <span>تقدير التسليم: ٣–٥ أيام عمل</span>
-            <span className="rounded-md bg-nile/10 px-2 py-0.5 font-medium text-nile">
-              أسيوط
-            </span>
-          </div>
-        </div>
+       
+        <RequestMarketComponent selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
+
+
       </div>
 
-      {selectedOption && (
+      {selectedOption && selectedOption === "upload" && (
         <div className="mt-8 flex justify-center">
+          <div className="flex flex-col items-center gap-2">
           <button
             onClick={handleNext}
-            className="rounded-xl bg-nile px-8 py-3 text-sm font-bold text-white shadow-md transition-opacity hover:opacity-95"
+            disabled={!selectedFile || uploadingMarketResearch}
+            className="rounded-xl bg-nile px-8 py-3 text-sm font-bold text-white shadow-md transition-opacity hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            التالي
+            {uploadingMarketResearch ? "جاري الرفع..." : "التالي"}
           </button>
+          {marketResearchError ? (
+            <p className="text-sm font-semibold text-red-600">{marketResearchError}</p>
+          ) : null}
+          </div>
         </div>
       )}
     </div>

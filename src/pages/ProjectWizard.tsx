@@ -2,10 +2,13 @@ import { useState } from 'react'
 import ProjectWizardContent from '../components/project-wizard/ProjectWizardContent'
 import { QUESTION_ITEMS, type ProjectAnswers } from '../components/project-wizard/questions'
 import { AppShell } from '../layouts/AppShell'
+import { submitProjectWizard } from '../store/slices/projectWizardSlice'
+import { useAppDispatch } from '../store/hooks'
 
 const TOTAL_QUESTIONS = QUESTION_ITEMS.length
 
 export default function ProjectWizard() {
+  const dispatch = useAppDispatch()
   const [idx, setIdx] = useState(0)
   const step = idx + 1
   const [answers, setAnswers] = useState<ProjectAnswers>({
@@ -37,6 +40,14 @@ export default function ProjectWizard() {
   })
 
   const aiTip = `${QUESTION_ITEMS[idx]?.stage ?? 'المرحلة الأولى'} — ${QUESTION_ITEMS[idx]?.title ?? ''}`
+  const handleNext = async () => {
+    if (idx >= TOTAL_QUESTIONS - 1) {
+      await dispatch(submitProjectWizard(answers))
+      return
+    }
+
+    setIdx((i) => Math.min(TOTAL_QUESTIONS - 1, i + 1))
+  }
 
   return (
     <AppShell
@@ -52,7 +63,7 @@ export default function ProjectWizard() {
         answers={answers}
         onAnswerChange={(key, value) => setAnswers((prev) => ({ ...prev, [key]: value }))}
         onPrev={() => setIdx((i) => Math.max(0, i - 1))}
-        onNext={() => setIdx((i) => Math.min(TOTAL_QUESTIONS - 1, i + 1))}
+        onNext={handleNext}
         isLast={idx >= TOTAL_QUESTIONS - 1}
       />
     </AppShell>

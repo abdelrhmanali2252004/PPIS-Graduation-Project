@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
+import { TOKEN_STORAGE_KEY } from "../../api/client";
 
 const nav = [
   { href: "#hero", label: "الرئيسية" },
@@ -11,12 +12,11 @@ const nav = [
 
 export default function LandingHeader() {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return !!localStorage.getItem("ideaTechSession");
-  });
+  const readAuthState = () => Boolean(localStorage.getItem(TOKEN_STORAGE_KEY));
+  const [isLoggedIn, setIsLoggedIn] = useState(readAuthState);
   const userName = (() => {
-    const session = localStorage.getItem("ideaTechSession");
-    if (session) {
+    const hasToken = localStorage.getItem(TOKEN_STORAGE_KEY);
+    if (hasToken) {
       const userData = localStorage.getItem("ideaTechUser");
       if (userData) {
         try {
@@ -26,8 +26,8 @@ export default function LandingHeader() {
           return "مستخدم";
         }
       }
-    }
-    return "";
+    } 
+    return "مستخدم";
   })();
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -45,8 +45,21 @@ export default function LandingHeader() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showDropdown]);
 
+  useEffect(() => {
+    const syncAuthState = () => setIsLoggedIn(readAuthState());
+
+    syncAuthState();
+    window.addEventListener("focus", syncAuthState);
+    window.addEventListener("storage", syncAuthState);
+
+    return () => {
+      window.removeEventListener("focus", syncAuthState);
+      window.removeEventListener("storage", syncAuthState);
+    };
+  }, []);
+
   const handleLogout = () => {
-    localStorage.removeItem("ideaTechSession");
+    localStorage.removeItem(TOKEN_STORAGE_KEY);
     navigate("/", { replace: true });
     setIsLoggedIn(false);
     setShowDropdown(false);

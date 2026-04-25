@@ -1,53 +1,64 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { FolderKanban,  Plus, Settings, User } from 'lucide-react'
 import { NavLink, Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom'
 import ExecutiveDashboardContent, { AlertsPanel } from '../components/dashboard/ExecutiveDashboardContent'
+import { useAppDispatch, useAppSelector } from '../store/hooks'
+import { fetchUserProjects, type ProjectCard } from '../store/slices/userProjectsSlice'
+import { PROJECT_ID_STORAGE_KEY } from '../store/slices/projectStepsSlice'
 const USER_PAGES = [
   { id: 'profile', label: 'اعداداتي', Icon: Settings, to: '/dashboard/user/profile' },
   { id: 'projects', label: 'مشروعاتي', Icon: FolderKanban, to: '/dashboard/user/projects' },
 ] as const
 
-type ProjectCard = {
-  id: string
-  name: string
-  category: string
-  location: string
-  updatedAt: string
-}
-
-const DEMO_PROJECTS: ProjectCard[] = [
-  {
-    id: 'p-asyut-cafe',
-    name: 'مطعم أسيوط النموذجي',
-    category: 'مطاعم وكافيهات',
-    location: 'أسيوط',
-    updatedAt: 'اليوم - 11:20 AM',
-  },
-  {
-    id: 'p-retail-mini',
-    name: 'متجر سلة إكسبريس',
-    category: 'تجزئة غذائية',
-    location: 'القاهرة',
-    updatedAt: 'منذ يومين',
-  },
-]
-
 export default function ExecutiveDashboard() {
   const navigate = useNavigate()
-  const [projects, setProjects] = useState<ProjectCard[]>(DEMO_PROJECTS)
+  const dispatch = useAppDispatch()
+  const { projects, loading: projectsLoading, error: projectsError } = useAppSelector(
+    (state) => state.userProjects,
+  )
+  const sidebarUser = useMemo(() => {
+    const fallback = {
+      name: 'رائد أعمال',
+      email: 'No email',
+    }
+
+    const rawUser = localStorage.getItem('ideaTechUserData')
+    if (!rawUser) {
+      return fallback
+    }
+
+    try {
+      const parsedUser = JSON.parse(rawUser) as { name?: string; email?: string }
+
+      return {
+        name: parsedUser.name?.trim() || fallback.name,
+        email: parsedUser.email?.trim() || fallback.email,
+      }
+    } catch {
+      return fallback
+    }
+  }, [])
+
+  useEffect(() => {
+    void dispatch(fetchUserProjects())
+  }, [dispatch])
 
   function handleAddProject() {
-    const projectNumber = projects.length + 1
-    const newProject: ProjectCard = {
-      id: `p-new-${projectNumber}`,
-      name: `مشروع جديد ${projectNumber}`,
-      category: 'غير محدد',
-      location: 'غير محدد',
-      updatedAt: 'الآن',
-    }
-    setProjects((prev) => [newProject, ...prev])
-    navigate(`/dashboard/user/content/${newProject.id}`)
+    navigate('/app/step1')
   }
+
+  function handleOpenProject(project: ProjectCard) {
+    const normalizedStep = Number.isFinite(project.step)
+      ? Math.min(5, Math.max(1, Math.trunc(project.step)))
+      : 1
+
+    localStorage.setItem(PROJECT_ID_STORAGE_KEY, project.id)
+    navigate(`/app/step${normalizedStep}`)
+  }
+
+
+
+  
 
   return (
     <div dir="rtl" className="flex h-screen overflow-hidden bg-offwhite font-cairo">
@@ -78,8 +89,8 @@ export default function ExecutiveDashboard() {
             <User className="h-5 w-5 text-gold" />
           </div>
           <div className="min-w-0 text-sm">
-            <div className="truncate font-medium">رائد أعمال</div>
-            <div className="truncate text-xs text-white/60">أسيوط، مصر</div>
+            <div className="truncate font-medium">{sidebarUser.name}</div>
+            <div className="truncate text-xs text-white/60">{sidebarUser.email}</div>
           </div>
         </div>
       </aside>
@@ -90,7 +101,15 @@ export default function ExecutiveDashboard() {
             <Route path="/" element={<Navigate to="projects" replace />} />
             <Route
               path="projects"
-              element={<ProjectsPage projects={projects} onOpenProject={(projectId) => navigate(`/dashboard/user/content/${projectId}`)} onAddProject={handleAddProject} />}
+              element={
+                <ProjectsPage
+                  projects={projects}
+                  loading={projectsLoading}
+                  error={projectsError}
+                  onOpenProject={handleOpenProject}
+                  onAddProject={handleAddProject}
+                />
+              }
             />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="content" element={<ContentEmptyPage />} />
@@ -107,11 +126,15 @@ export default function ExecutiveDashboard() {
 
 function ProjectsPage({
   projects,
+  loading,
+  error,
   onOpenProject,
   onAddProject,
 }: {
   projects: ProjectCard[]
-  onOpenProject: (projectId: string) => void
+  loading: boolean
+  error: string | null
+  onOpenProject: (project: ProjectCard) => void
   onAddProject: () => void
 }) {
   return (
@@ -129,11 +152,42 @@ function ProjectsPage({
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {loading
+          ? Array.from({ length: 3 }).map((_, idx) => (
+              <div
+                key={`project-skeleton-${idx}`}
+                className="animate-pulse rounded-2xl border border-divider bg-white p-5 shadow-sm"
+              >
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="h-5 w-20 rounded-full bg-slate-200" />
+                  <div className="h-4 w-24 rounded bg-slate-100" />
+                </div>
+                <div className="mb-2 h-5 w-3/4 rounded bg-slate-200" />
+                <div className="h-4 w-1/2 rounded bg-slate-100" />
+              </div>
+            ))
+          : null}
+
+        {!loading && !error && projects.length === 0 ? (
+          <div className="rounded-2xl border border-divider bg-white p-6 text-center shadow-sm md:col-span-2 xl:col-span-3">
+            <h3 className="text-base font-bold text-body">لا توجد مشروعات حالياً</h3>
+            <p className="mt-2 text-sm text-slateMuted">
+              لم يتم العثور على بيانات مشروعات لهذا المستخدم.
+            </p>
+          </div>
+        ) : null}
+
+        {!loading && error ? (
+          <div className="rounded-2xl border border-red-100 bg-red-50 p-6 text-center md:col-span-2 xl:col-span-3">
+            <h3 className="text-base font-bold text-red-700">{error}</h3>
+          </div>
+        ) : null}
+
         {projects.map((project) => (
           <button
             key={project.id}
             type="button"
-            onClick={() => onOpenProject(project.id)}
+            onClick={() => onOpenProject(project)}
             className="rounded-2xl border border-divider bg-white p-5 text-right shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
           >
             <div className="mb-3 flex items-center justify-between">
