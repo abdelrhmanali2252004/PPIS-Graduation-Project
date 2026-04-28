@@ -8,7 +8,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { loading, error } = useAppSelector((state) => state.auth);
-  const [email, setEmail] = useState("hassan@app.com");
+  const [email, setEmail] = useState("abdo@app.com");
   const [password, setPassword] = useState("123456");
 
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
