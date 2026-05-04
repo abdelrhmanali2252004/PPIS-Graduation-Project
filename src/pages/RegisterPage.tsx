@@ -1,45 +1,52 @@
-import { useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { User, Mail, Phone, Lock } from "lucide-react";
+import { registerUser, clearAuthError } from "../store/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.auth);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
-  const handleRegister = (event: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    dispatch(clearAuthError());
+  }, [dispatch]);
+
+  const handleRegister = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(null);
+    setValidationError(null);
+    dispatch(clearAuthError());
 
     if (!name.trim() || !email.trim() || !phone.trim() || !password.trim()) {
-      setError("يرجى ملء جميع الحقول قبل إنشاء الحساب.");
+      setValidationError("يرجى ملء جميع الحقول قبل إنشاء الحساب.");
       return;
     }
 
-    const existingUser = localStorage.getItem("ideaTechUser");
-    const userData = {
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim(),
-      password,
-    };
+    const action = await dispatch(
+      registerUser({
+        name: name.trim(),
+        email: email.trim(),
+        password,
+        phoneNumber: phone.trim(),
+      }),
+    );
 
-    if (existingUser) {
-      const existing = JSON.parse(existingUser) as { email: string };
-      if (existing.email === email.trim()) {
-        setError(
-          "هذا البريد الإلكتروني مسجل بالفعل. استخدم بريدًا آخر أو سجّل الدخول.",
-        );
-        return;
+    if (registerUser.fulfilled.match(action)) {
+      if (action.payload.mode === "authenticated") {
+        navigate("/dashboard/user", { replace: true });
+      } else {
+        navigate("/login", { replace: true });
       }
     }
-
-    localStorage.setItem("ideaTechUser", JSON.stringify(userData));
-    navigate("/login", { replace: true });
   };
+
+  const displayError = validationError ?? error;
 
   return (
     <div dir="rtl" className="min-h-screen bg-offwhite font-cairo text-body">
@@ -118,17 +125,18 @@ export default function RegisterPage() {
                 </div>
               </label>
 
-              {error ? (
+              {displayError ? (
                 <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
-                  {error}
+                  {displayError}
                 </div>
               ) : null}
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-gold py-3 text-sm font-bold text-nile-dark shadow-md transition-opacity hover:opacity-95"
+                disabled={loading}
+                className="w-full rounded-xl bg-gold py-3 text-sm font-bold text-nile-dark shadow-md transition-opacity hover:opacity-95 disabled:opacity-60"
               >
-                إنشاء حساب
+                {loading ? "جاري إنشاء الحساب..." : "إنشاء حساب"}
               </button>
             </form>
 

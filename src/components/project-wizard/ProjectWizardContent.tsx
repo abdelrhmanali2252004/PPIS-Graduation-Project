@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import {
   QUESTION_ITEMS,
   type ProjectAnswerKey,
@@ -13,6 +12,8 @@ type ProjectWizardContentProps = {
   onPrev: () => void;
   onNext: () => void;
   isLast: boolean;
+  isSubmitting?: boolean;
+  submitError?: string | null;
 };
 
 export default function ProjectWizardContent({
@@ -23,13 +24,10 @@ export default function ProjectWizardContent({
   onPrev,
   onNext,
   isLast,
+  isSubmitting = false,
+  submitError = null,
 }: ProjectWizardContentProps) {
-  const navigate = useNavigate();
   const currentQuestion = QUESTION_ITEMS[idx];
-
-  const handleNavigate = () => {
-    navigate("/app/step3");
-  };
 
   return (
     <div
@@ -133,10 +131,19 @@ export default function ProjectWizardContent({
           )}
         </div>
 
+        {submitError ? (
+          <div
+            className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+            role="alert"
+          >
+            {submitError}
+          </div>
+        ) : null}
+
         <div className="mt-6 flex flex-wrap justify-between gap-3">
           <button
             type="button"
-            disabled={idx === 0}
+            disabled={idx === 0 || isSubmitting}
             onClick={onPrev}
             className="rounded-xl border border-divider px-5 py-2.5 text-sm font-semibold text-body disabled:opacity-40"
           >
@@ -145,7 +152,7 @@ export default function ProjectWizardContent({
           {!isLast ? (
             <button
               type="button"
-              disabled={!answers[currentQuestion.key]?.trim()}
+              disabled={!answers[currentQuestion.key]?.trim() || isSubmitting}
               onClick={onNext}
               className="rounded-xl bg-nile px-6 py-2.5 text-sm font-bold text-white shadow-md shadow-nile/25 disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -154,11 +161,13 @@ export default function ProjectWizardContent({
           ) : (
             <button
               type="button"
-              disabled={!answers[currentQuestion.key]?.trim()}
-              onClick={handleNavigate}
+              disabled={
+                !answers[currentQuestion.key]?.trim() || isSubmitting
+              }
+              onClick={onNext}
               className="rounded-xl bg-gold px-6 py-2.5 text-sm font-bold text-nile-dark shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              توليد دراسة الجدوى ✓
+              {isSubmitting ? "جاري الحفظ..." : "توليد دراسة الجدوى ✓"}
             </button>
           )}
         </div>

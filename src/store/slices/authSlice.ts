@@ -7,6 +7,17 @@ type LoginPayload = {
   password: string
 }
 
+type RegisterPayload = {
+  name: string
+  email: string
+  password: string
+  phoneNumber: string
+}
+
+type RegisterResult =
+  | { mode: 'authenticated'; data: LoginResponse }
+  | { mode: 'pending_login' }
+
 type AuthUser = {
   id: string
   email: string
@@ -65,6 +76,35 @@ export const loginUser = createAsyncThunk<
   }
 })
 
+export const registerUser = createAsyncThunk<
+  RegisterResult,
+  RegisterPayload,
+  { rejectValue: string }
+>('auth/registerUser', async (payload, { rejectWithValue }) => {
+  try {
+    const response = await apiClient.post<Partial<LoginResponse>>(
+      '/user/register',
+      payload,
+    )
+    const data = response.data
+    if (data.token && data.user) {
+      localStorage.setItem(TOKEN_STORAGE_KEY, data.token)
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(data.user))
+      return {
+        mode: 'authenticated',
+        data: { token: data.token, user: data.user },
+      }
+    }
+    return { mode: 'pending_login' }
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>
+    return rejectWithValue(
+      axiosError.response?.data?.message ??
+        'تعذر إنشاء الحساب. حاول مرة أخرى.',
+    )
+  }
+})
+
 export const logoutUser = createAsyncThunk('auth/logoutUser', async () => {
   localStorage.removeItem(TOKEN_STORAGE_KEY)
   localStorage.removeItem(USER_STORAGE_KEY)
@@ -98,6 +138,23 @@ const authSlice = createSlice({
         state.loading = false
         state.error = action.payload ?? 'Login failed. Please try again.'
         state.isAuthenticated = false
+      })
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false
+        if (action.payload.mode === 'authenticated') {
+          state.token = action.payload.data.token
+          state.user = action.payload.data.user
+          state.isAuthenticated = true
+        }
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false
+        state.error =
+          action.payload ?? 'تعذر إنشاء الحساب. حاول مرة أخرى.'
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.token = null

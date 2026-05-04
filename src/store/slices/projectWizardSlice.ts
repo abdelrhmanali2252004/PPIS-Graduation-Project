@@ -1,7 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios'
-import type { ProjectAnswers } from '../../components/project-wizard/questions'
+import {
+  projectAnswersToStep2List,
+  type ProjectAnswers,
+} from '../../components/project-wizard/questions'
 import { apiClient } from '../../api/client'
+
+type SubmitProjectWizardPayload = {
+  projectId: string
+  answers: ProjectAnswers
+}
 
 type ProjectWizardState = {
   loading: boolean
@@ -22,20 +30,23 @@ const initialState: ProjectWizardState = {
 
 export const submitProjectWizard = createAsyncThunk<
   SubmitProjectWizardResponse,
-  ProjectAnswers,
+  SubmitProjectWizardPayload,
   { rejectValue: string }
->('projectWizard/submit', async (answers, { rejectWithValue }) => {
+>('projectWizard/submit', async ({ projectId, answers }, { rejectWithValue }) => {
   try {
     const response = await apiClient.post<SubmitProjectWizardResponse>(
-      '/projects/wizard',
-      answers,
+      '/project/step2',
+      {
+        projectId,
+        answers: projectAnswersToStep2List(answers),
+      },
     )
     return response.data
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>
     return rejectWithValue(
       axiosError.response?.data?.message ??
-        'Could not submit project wizard. Please try again.',
+        'تعذر حفظ إجابات المشروع. حاول مرة أخرى.',
     )
   }
 })
@@ -66,7 +77,7 @@ const projectWizardSlice = createSlice({
         state.success = false
         state.error =
           action.payload ??
-          'Could not submit project wizard. Please try again later.'
+          'تعذر حفظ إجابات المشروع. حاول مرة أخرى.'
       })
   },
 })

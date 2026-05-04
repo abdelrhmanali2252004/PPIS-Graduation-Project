@@ -1,4 +1,4 @@
-import type { QuestionItem } from './types'
+import type { ProjectAnswers, QuestionItem } from './types'
 
 export const QUESTION_ITEMS: QuestionItem[] = [
   {
@@ -182,5 +182,10 @@ export const QUESTION_ITEMS: QuestionItem[] = [
     options: ['فتح فروع جديدة', 'التوسع بنظام فرنشايز', 'السيطرة على السوق'],
   },
 ]
+
+/** Ordered strings for `POST /project/step2` (one entry per `QUESTION_ITEMS` row). */
+export function projectAnswersToStep2List(answers: ProjectAnswers): string[] {
+  return QUESTION_ITEMS.map((item) => (answers[item.key] ?? '').trim())
+}
 
 export type { ProjectAnswers, ProjectAnswerKey } from './types'
