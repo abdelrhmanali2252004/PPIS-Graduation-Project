@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { createServiceRequest } from "../../store/slices/serviceRequestSlice";
+import { createStep1Project } from "../../store/slices/projectStepsSlice";
 
 type RequestMarketComponentProps = {
   setSelectedOption: (value: "upload" | "request" | null) => void;
@@ -16,11 +17,19 @@ export default function RequestMarketComponent({
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const { projectId } = useAppSelector((state) => state.projectSteps);
+  const { projectId, creatingStep1, error: step1Error } = useAppSelector(
+    (state) => state.projectSteps,
+  );
   const { creating, error } = useAppSelector((state) => state.serviceRequest);
 
-  const handleRequestStudy = () => {
+  const handleRequestStudy = async () => {
     setSelectedOption("request");
+    if (!projectId) {
+      const action = await dispatch(createStep1Project());
+      if (!createStep1Project.fulfilled.match(action)) {
+        return;
+      }
+    }
     setShowConfirmModal(true);
   };
 
@@ -73,11 +82,11 @@ export default function RequestMarketComponent({
         </div>
         <button
           type="button"
-          onClick={handleRequestStudy}
-          disabled={creating}
+          onClick={() => void handleRequestStudy()}
+          disabled={creating || creatingStep1}
           className={`mb-4 w-full rounded-xl py-3 text-sm font-bold shadow-md transition-opacity hover:opacity-95 ${selectedOption === "request" ? "bg-gradient-to-l from-gold to-gold/80 text-nile-dark ring-2 ring-gold/50" : "bg-gradient-to-l from-gold to-gold/80 text-nile-dark"}`}
         >
-          اطلب دراسة السوق الآن
+          {creatingStep1 ? "جاري تجهيز المشروع..." : "اطلب دراسة السوق الآن"}
         </button>
         <div className="flex flex-wrap items-center gap-2 text-xs text-slateMuted">
           <Building2 className="h-4 w-4" />
@@ -96,10 +105,8 @@ export default function RequestMarketComponent({
               هل تريد إرسال طلب دراسة السوق الآن؟
             </p>
 
-            {!projectId ? (
-              <p className="mt-3 text-xs font-semibold text-red-600">
-                لا يوجد رقم مشروع متاح حالياً. يرجى المحاولة مرة أخرى.
-              </p>
+            {!projectId && step1Error ? (
+              <p className="mt-3 text-xs font-semibold text-red-600">{step1Error}</p>
             ) : null}
 
             {error ? (

@@ -1,16 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import {
-  createStep1Project,
-  uploadMarketResearchPdf,
-} from "../../store/slices/projectStepsSlice";
+import { uploadMarketResearchPdf } from "../../store/slices/projectStepsSlice";
 import UploadFileComponent from "./UploadFileComponent";
 import RequestMarketComponent from "./RequestMarketComponent";
 
 export default function MarketResearchContent() {
   const dispatch = useAppDispatch();
-  const { creatingStep1, projectId, error, uploadingMarketResearch, marketResearchError } = useAppSelector(
+  const { uploadingMarketResearch, marketResearchError } = useAppSelector(
     (state) => state.projectSteps,
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -18,15 +15,6 @@ export default function MarketResearchContent() {
     "upload" | "request" | null
   >(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!projectId) {
-      void dispatch(createStep1Project());
-    }
-  }, [dispatch, projectId]);
-
-
-
 
   const handleNext = async () => {
     if (!selectedFile) {
@@ -38,37 +26,6 @@ export default function MarketResearchContent() {
       navigate("/app/step2");
     }
   };
-
-  if (creatingStep1 && !projectId) {
-    return (
-      <div className="px-8 py-8 pb-14 font-cairo md:px-10" dir="rtl">
-        <div className="flex min-h-[320px] flex-col items-center justify-center rounded-2xl border border-divider bg-white text-center shadow-sm">
-          <div className="mb-4 h-10 w-10 animate-spin rounded-full border-4 border-nile/20 border-t-nile" />
-          <h2 className="text-lg font-bold text-body">جاري تجهيز مشروعك...</h2>
-          <p className="mt-2 text-sm text-slateMuted">
-            يتم الآن إنشاء المشروع الافتراضي للخطوة الأولى.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error && !projectId) {
-    return (
-      <div className="px-8 py-8 pb-14 font-cairo md:px-10" dir="rtl">
-        <div className="flex min-h-[320px] flex-col items-center justify-center rounded-2xl border border-red-100 bg-red-50 text-center">
-          <h2 className="text-lg font-bold text-red-700">{error}</h2>
-          <button
-            type="button"
-            onClick={() => void dispatch(createStep1Project())}
-            className="mt-4 rounded-xl bg-nile px-5 py-2.5 text-sm font-bold text-white"
-          >
-            إعادة المحاولة
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="px-8 py-8 pb-14 font-cairo md:px-10" dir="rtl">

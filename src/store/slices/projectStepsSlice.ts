@@ -74,23 +74,32 @@ export const createStep1Project = createAsyncThunk<
 })
 
 export const uploadMarketResearchPdf = createAsyncThunk<
-  string,
+  { message: string; projectId: string | null },
   File,
   { rejectValue: string; state: { projectSteps: ProjectStepsState } }
 >('projectSteps/uploadMarketResearchPdf', async (file, { getState, rejectWithValue }) => {
-  const projectId = getState().projectSteps.projectId
-
-  if (!projectId) {
-    return rejectWithValue('لا يوجد رقم مشروع لإرسال ملف دراسة السوق.')
-  }
+  const existingProjectId = getState().projectSteps.projectId
 
   const formData = new FormData()
-  formData.append('projectId', projectId)
+  if (existingProjectId) {
+    formData.append('projectId', existingProjectId)
+  }
   formData.append('pdf', file)
 
   try {
     const response = await apiClient.post<{ message?: string }>('project/market-research', formData)
-    return response.data.message ?? 'market research stored successfuly'
+    const data = response.data as Record<string, unknown>
+    const fromResponse = extractProjectId(data)
+    const projectId = fromResponse ?? existingProjectId ?? null
+
+    if (projectId) {
+      localStorage.setItem(PROJECT_ID_STORAGE_KEY, projectId)
+    }
+
+    const message =
+      typeof data?.message === 'string' ? data.message : 'market research stored successfuly'
+
+    return { message, projectId }
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>
     return rejectWithValue(
@@ -137,8 +146,11 @@ const projectStepsSlice = createSlice({
         state.uploadingMarketResearch = true
         state.marketResearchError = null
       })
-      .addCase(uploadMarketResearchPdf.fulfilled, (state) => {
+      .addCase(uploadMarketResearchPdf.fulfilled, (state, action) => {
         state.uploadingMarketResearch = false
+        if (action.payload.projectId) {
+          state.projectId = action.payload.projectId
+        }
       })
       .addCase(uploadMarketResearchPdf.rejected, (state, action) => {
         state.uploadingMarketResearch = false
