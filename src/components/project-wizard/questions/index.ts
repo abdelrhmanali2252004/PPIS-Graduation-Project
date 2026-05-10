@@ -2,6 +2,15 @@ import type { ProjectAnswers, QuestionItem } from './types'
 
 export const QUESTION_ITEMS: QuestionItem[] = [
   {
+    key: 'idea_name',
+    stage: 'المرحلة الأولى: الهوية',
+    title: 'ما هو اسم مشروعك ؟',
+    helpText: 'اكتب اسم مشروعك بطريقة واضحة ومباشرة.',
+    inputType: 'textarea',
+    placeholder: 'اكتب اسم مشروعك بطريقة واضحة ومباشرة...',
+    maxLength: 100,
+  },
+  {
     key: 'idea',
     stage: 'المرحلة الأولى: الهوية',
     title: 'إيه هي فكرة مشروعك؟',

@@ -11,7 +11,7 @@ const services = [
   },
   {
     title: 'بحث سوق محلي',
-    desc: 'بيانات مفهرسة من أسيوط والصعيد مع استشهاد بالمصادر.',
+    desc: 'بيانات مفهرسة من مصر مع استشهاد بالمصادر.',
     icon: (
       <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor">
         <circle cx="11" cy="11" r="7" strokeWidth="1.5" />

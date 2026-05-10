@@ -38,7 +38,7 @@ export default function HeroSection() {
           className="mb-5 inline-flex items-center gap-2 rounded-full border border-gold/35 bg-gold/10 px-4 py-1.5 text-xs font-semibold text-gold/95 opacity-0 animate-fade-in-up"
           style={{ animationDelay: "0s", animationFillMode: "forwards" }}
         >
-          ✦ معاك نظام إنذار ذكي بيحميك من الخسارة.
+          ✦  نظام إنذار ذكي يساعدك تتجنب الخسارة.
         </span>
 
         <h1
@@ -56,9 +56,7 @@ export default function HeroSection() {
           className="mx-auto mb-8 max-w-2xl animate-fade-in-up text-base leading-relaxed text-white/85 opacity-0 md:text-lg"
           style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
         >
-          منصة بتستخدم ذكاء اصطناعي مربوط بمعلومات حقيقية عن السوق عشان تحول
-          حلمك لواقع. إحنا مش بس بنعملك دراسة جدوى، إحنا بنرسم لك "خريطة طريق"
-          وبنراقب معاك مشروعك لحظة بلحظة عشان نضمن إنك ماشي صح.
+          مرحباً بك في خطوتك الأولى نحو الريادة. هنا، نحن لا نقدم لك مجرد أداة تخطيط، بل شريكاً تقنياً ذكياً. نحن نسخر قوة الذكاء الاصطناعي والبيانات الحقيقية للسوق المصري لرسم خريطة طريق واضحة لمشروعك، بدءاً من دراسة الجدوى الدقيقة وحتى متابعة الأداء اليومي وصولا بك الي ارض الواقع
         </p>
 
         <div

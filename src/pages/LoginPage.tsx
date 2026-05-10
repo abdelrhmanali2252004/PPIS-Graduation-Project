@@ -44,8 +44,7 @@ export default function LoginPage() {
               </span>
               <h1 className="mb-3 text-3xl font-extrabold">مرحباً بعودتك</h1>
               <p className="max-w-sm text-sm leading-7 text-white/80">
-                سجّل الدخول لمتابعة مشروعك وخطتك الذكية، وتتبع التقدم خطوة
-                بخطوة.
+              سجّل الدخول لمتابعة مشروعك، وتحليل الأداء، واستقبال التنبيهات المهمة لحظة بلحظة
               </p>
             </div>
           </section>

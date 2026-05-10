@@ -27,6 +27,7 @@ export default function ProjectWizard() {
 
   const step = idx + 1
   const [answers, setAnswers] = useState<ProjectAnswers>({
+    idea_name: '',
     idea: '',
     sector: '',
     legalStatus: '',

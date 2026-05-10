@@ -1,4 +1,5 @@
 export type ProjectAnswerKey =
+  | 'idea_name'
   | 'idea'
   | 'sector'
   | 'legalStatus'

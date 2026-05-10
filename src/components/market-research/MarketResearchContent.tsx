@@ -40,7 +40,7 @@ export default function MarketResearchContent() {
       <p className="mb-8 max-w-3xl text-sm leading-7 text-body/80">
         ابدأ من وقائع موثقة: إما رفع مستنداتك الحالية ليقرأها الذكاء الاصطناعي
         ويستشهد بها، أو اطلب دراسة سوق يعدّها فريقنا مدعوماً بالذكاء الاصطناعي
-        وبيانات محلية من أسيوط.
+        وبيانات محلية من مصر.
       </p>
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch">
