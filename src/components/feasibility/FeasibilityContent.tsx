@@ -1,6 +1,10 @@
 import { type ReactNode, useMemo } from "react";
-import { Download, Share2, RefreshCw } from "lucide-react";
-import type { FeasibilityStep3Response } from "../../store/slices/feasibilitySlice";
+import { Download, RefreshCw, Share2 } from "lucide-react";
+import type {
+  FeasibilityRiskLevel,
+  FeasibilityStep3Response,
+  MarketReadinessLabel,
+} from "../../store/slices/feasibilitySlice";
 import FeasibilityLoading from "./FeasibilityLoading";
 
 const TABS = [
@@ -32,6 +36,64 @@ function toDisplayString(value: unknown): string {
   return String(value);
 }
 
+function formatNumber(value: number, maximumFractionDigits = 0): string {
+  return new Intl.NumberFormat("ar-EG", {
+    maximumFractionDigits,
+  }).format(value);
+}
+
+function clampPercent(value: number): number {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+  return Math.min(100, Math.max(0, value));
+}
+
+function getRiskStyles(level: FeasibilityRiskLevel) {
+  switch (level) {
+    case "منخفض":
+      return {
+        badge: "bg-success/15 text-success",
+        bar: "bg-success",
+      };
+    case "مرتفع":
+      return {
+        badge: "bg-red-100 text-red-700",
+        bar: "bg-red-500",
+      };
+    default:
+      return {
+        badge: "bg-warning/20 text-warning",
+        bar: "bg-warning",
+      };
+  }
+}
+
+function getMarketStyles(label: MarketReadinessLabel) {
+  switch (label) {
+    case "ممتاز":
+      return {
+        badge: "bg-success/15 text-success",
+        bar: "bg-success",
+      };
+    case "جيد":
+      return {
+        badge: "bg-nile/10 text-nile",
+        bar: "bg-nile",
+      };
+    case "مقبول":
+      return {
+        badge: "bg-gold/15 text-nile-dark",
+        bar: "bg-gold",
+      };
+    default:
+      return {
+        badge: "bg-red-100 text-red-700",
+        bar: "bg-red-500",
+      };
+  }
+}
+
 function Prose({ text }: { text?: unknown }) {
   const s = toDisplayString(text);
   if (!s.trim()) {
@@ -41,6 +103,121 @@ function Prose({ text }: { text?: unknown }) {
   }
   return (
     <p className="whitespace-pre-wrap text-sm leading-7 text-body/90">{s}</p>
+  );
+}
+
+function ProgressMetric({
+  title,
+  value,
+  subtitle,
+  badge,
+  barClassName,
+}: {
+  title: string;
+  value: number;
+  subtitle: string;
+  badge?: string;
+  barClassName: string;
+}) {
+  const normalized = clampPercent(value);
+  return (
+    <div className="rounded-2xl border border-divider bg-white p-4 shadow-sm">
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div>
+          <div className="text-xs text-slateMuted">{title}</div>
+          <div className="mt-1 text-2xl font-black text-body">
+            {formatNumber(normalized)}%
+          </div>
+        </div>
+        {badge ? (
+          <span className={`rounded-full px-3 py-1 text-xs font-bold ${badge}`}>
+            {subtitle}
+          </span>
+        ) : null}
+      </div>
+      <div className="h-2 w-full overflow-hidden rounded-full bg-divider">
+        <div
+          className={`h-full rounded-full transition-[width] ${barClassName}`}
+          style={{ width: `${normalized}%` }}
+        />
+      </div>
+      {!badge ? (
+        <p className="mt-2 text-xs font-semibold text-slateMuted">{subtitle}</p>
+      ) : null}
+    </div>
+  );
+}
+
+function RoiTrendChart({ values }: { values: number[] }) {
+  if (!values.length) {
+    return (
+      <div className="rounded-2xl border border-divider bg-white p-4 shadow-sm">
+        <div className="text-xs text-slateMuted">اتجاه العائد</div>
+        <p className="mt-3 text-sm text-slateMuted">لا توجد بيانات اتجاه متاحة.</p>
+      </div>
+    );
+  }
+
+  const width = 260;
+  const height = 88;
+  const padding = 8;
+  const max = Math.max(...values);
+  const min = Math.min(...values);
+  const range = max - min || 1;
+  const points = values
+    .map((value, index) => {
+      const x =
+        padding +
+        (index * (width - padding * 2)) / Math.max(1, values.length - 1);
+      const y =
+        height - padding - ((value - min) / range) * (height - padding * 2);
+      return `${x},${y}`;
+    })
+    .join(" ");
+
+  return (
+    <div className="rounded-2xl border border-divider bg-white p-4 shadow-sm">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div>
+          <div className="text-xs text-slateMuted">اتجاه العائد المتوقع</div>
+          <div className="mt-1 text-sm font-semibold text-body">
+            {values.length} نقاط قياس
+          </div>
+        </div>
+        <div className="text-left text-xs text-slateMuted">
+          <div>أدنى: {formatNumber(min, 1)}</div>
+          <div>أعلى: {formatNumber(max, 1)}</div>
+        </div>
+      </div>
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="h-24 w-full overflow-visible"
+        aria-label="ROI trend chart"
+      >
+        <path
+          d={`M ${padding} ${height - padding} H ${width - padding}`}
+          stroke="#E5E7EB"
+          strokeWidth="1"
+          fill="none"
+        />
+        <polyline
+          points={points}
+          fill="none"
+          stroke="#C9A05D"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        {values.map((value, index) => {
+          const x =
+            padding +
+            (index * (width - padding * 2)) / Math.max(1, values.length - 1);
+          const y =
+            height - padding - ((value - min) / range) * (height - padding * 2);
+          return <circle key={`${value}-${index}`} cx={x} cy={y} r="3.5" fill="#1B4C8C" />;
+        })}
+      </svg>
+    </div>
   );
 }
 
@@ -70,8 +247,8 @@ type FeasibilityContentProps = {
 };
 
 function studyTitle(study: FeasibilityStep3Response | null): string {
-  if (study && study?.project) {
-    return study?.project?.name
+  if (study?.project?.name) {
+    return study.project.name;
   }
 
   const t = toDisplayString(study?.res?.executiveSummary).trim();
@@ -92,8 +269,8 @@ export default function FeasibilityContent({
   onRetry,
 }: FeasibilityContentProps) {
   const headerSubtitle = useMemo(() => studyTitle(study), [study]);
-  console.log("data", study);
-
+  const riskStyles = study ? getRiskStyles(study.res.riskLevel) : null;
+  const marketStyles = study ? getMarketStyles(study.res.marketReadinessLabel) : null;
 
   if (projectMissing) {
     return (
@@ -173,6 +350,59 @@ export default function FeasibilityContent({
         </div>
       </header>
 
+      <div className="mb-8 grid grid-cols-1 gap-4 xl:grid-cols-3">
+        <ProgressMetric
+          title="جاهزية السوق"
+          value={res.marketReadinessScore}
+          subtitle={res.marketReadinessLabel}
+          badge={marketStyles?.badge}
+          barClassName={marketStyles?.bar ?? "bg-nile"}
+        />
+        <ProgressMetric
+          title="مستوى المخاطرة"
+          value={res.riskScore}
+          subtitle={res.riskLevel}
+          badge={riskStyles?.badge}
+          barClassName={riskStyles?.bar ?? "bg-warning"}
+        />
+        <div className="rounded-2xl border border-divider bg-white p-4 shadow-sm">
+          <div className="text-xs text-slateMuted">العائد على الاستثمار</div>
+          <div className="mt-1 text-2xl font-black text-gold">
+            {formatNumber(res.roiPercent, 1)}%
+          </div>
+          <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-divider">
+            <div
+              className="h-full rounded-full bg-gold transition-[width]"
+              style={{ width: `${clampPercent(res.roiPercent / 2)}%` }}
+            />
+          </div>
+          <p className="mt-2 text-xs text-slateMuted">
+            شريط نسبي حتى ٢٠٠٪ مع مخطط الاتجاه في البطاقة المجاورة.
+          </p>
+        </div>
+      </div>
+
+      <div className="mb-8 grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+        <RoiTrendChart values={res.roiTrend} />
+        <div className="rounded-2xl border border-divider bg-white p-4 shadow-sm">
+          <div className="mb-3 text-xs text-slateMuted">وسوم تنفيذية</div>
+          <div className="flex flex-wrap gap-2">
+            {res.executiveTags?.length ? (
+              res.executiveTags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full bg-nile/10 px-3 py-1 text-xs font-semibold text-nile"
+                >
+                  {tag}
+                </span>
+              ))
+            ) : (
+              <span className="text-sm text-slateMuted">لا توجد وسوم حالياً.</span>
+            )}
+          </div>
+        </div>
+      </div>
+
       {loading ? (
         <p className="mb-4 text-center text-xs text-slateMuted">جاري التحديث…</p>
       ) : null}
@@ -232,6 +462,9 @@ export default function FeasibilityContent({
             </Section>
             <Section title="خطة التسويق والمبيعات">
               <Prose text={res.marketingAndSalesPlan} />
+            </Section>
+            <Section title="المتطلبات التقنية">
+              <Prose text={res.technicalRequirements} />
             </Section>
           </div>
         )}
