@@ -6,8 +6,8 @@ export const QUESTION_ITEMS: QuestionItem[] = [
     stage: 'المرحلة الأولى: الهوية',
     title: 'ما هو اسم مشروعك ؟',
     helpText: 'اكتب اسم مشروعك بطريقة واضحة ومباشرة.',
-    inputType: 'textarea',
-    placeholder: 'اكتب اسم مشروعك بطريقة واضحة ومباشرة...',
+    inputType: 'text',
+    placeholder: 'مثال: قهوة أسيوط المختصة',
     maxLength: 100,
   },
   {
@@ -192,7 +192,7 @@ export const QUESTION_ITEMS: QuestionItem[] = [
   },
 ]
 
-/** Ordered strings for `POST /project/step2` (one entry per `QUESTION_ITEMS` row). */
+/** Ordered strings for `POST /project/step2`, with project name as the first answer. */
 export function projectAnswersToStep2List(answers: ProjectAnswers): string[] {
   return QUESTION_ITEMS.map((item) => (answers[item.key] ?? '').trim())
 }

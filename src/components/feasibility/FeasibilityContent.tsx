@@ -70,6 +70,10 @@ type FeasibilityContentProps = {
 };
 
 function studyTitle(study: FeasibilityStep3Response | null): string {
+  if (study && study?.project) {
+    return study?.project?.name
+  }
+
   const t = toDisplayString(study?.res?.executiveSummary).trim();
   if (!t) {
     return "مشروعك";
@@ -88,6 +92,8 @@ export default function FeasibilityContent({
   onRetry,
 }: FeasibilityContentProps) {
   const headerSubtitle = useMemo(() => studyTitle(study), [study]);
+  console.log("data", study);
+
 
   if (projectMissing) {
     return (
@@ -139,6 +145,7 @@ export default function FeasibilityContent({
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <span className="rounded-full bg-nile/10 px-3 py-1 text-xs font-semibold text-nile">
               {headerSubtitle}
+
             </span>
             {study.marketResearchUsed ? (
               <span className="rounded-full border border-gold/50 bg-gold/10 px-2 py-0.5 text-xs font-bold text-nile-dark">
@@ -176,11 +183,10 @@ export default function FeasibilityContent({
             key={t.id}
             type="button"
             onClick={() => onTabChange(t.id)}
-            className={`rounded-t-lg px-4 py-2 text-sm font-semibold transition-colors ${
-              tab === t.id
-                ? "bg-nile text-white"
-                : "text-slateMuted hover:bg-offwhite"
-            }`}
+            className={`rounded-t-lg px-4 py-2 text-sm font-semibold transition-colors ${tab === t.id
+              ? "bg-nile text-white"
+              : "text-slateMuted hover:bg-offwhite"
+              }`}
           >
             {t.label}
           </button>

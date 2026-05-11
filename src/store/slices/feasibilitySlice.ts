@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios'
 import { apiClient } from '../../api/client'
+import type { UserProjectApiItem } from './userProjectsSlice'
 
 /** Matches backend `feasibilityJsonOutputContract()` — Arabic copy in string fields. */
 export interface FeasibilityStudyCosts {
@@ -25,7 +26,8 @@ export type FeasibilityStep3Response = {
   message: string
   prompt: string
   res: FeasibilityStudyResponse
-  marketResearchUsed: boolean
+  marketResearchUsed: boolean,
+  project: UserProjectApiItem
 }
 
 type FeasibilityState = {
@@ -55,7 +57,7 @@ export const fetchFeasibilityStep3 = createAsyncThunk<
     const axiosError = error as AxiosError<{ message?: string }>
     return rejectWithValue(
       axiosError.response?.data?.message ??
-        'تعذر تحميل دراسة الجدوى. حاول مرة أخرى.',
+      'تعذر تحميل دراسة الجدوى. حاول مرة أخرى.',
     )
   }
 })

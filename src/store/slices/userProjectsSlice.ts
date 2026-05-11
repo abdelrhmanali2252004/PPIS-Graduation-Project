@@ -11,7 +11,7 @@ export type ProjectCard = {
   step: number
 }
 
-type UserProjectApiItem = {
+export type UserProjectApiItem = {
   _id: string
   name: string
   status: number
