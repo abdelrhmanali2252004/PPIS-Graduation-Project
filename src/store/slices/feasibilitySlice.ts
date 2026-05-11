@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios'
 import { apiClient } from '../../api/client'
-import type { UserProjectApiItem } from './userProjectsSlice'
 
 /** Matches backend `feasibilityJsonOutputContract()` — Arabic copy in string fields. */
 export interface FeasibilityStudyCosts {
@@ -9,26 +8,14 @@ export interface FeasibilityStudyCosts {
   operating: string
 }
 
-export type FeasibilityRiskLevel = 'منخفض' | 'متوسط' | 'مرتفع'
-
-export type MarketReadinessLabel = 'ضعيف' | 'مقبول' | 'جيد' | 'ممتاز'
-
 export interface FeasibilityStudyResponse {
   executiveSummary: string
-  executiveTags: string[]
-  riskLevel: FeasibilityRiskLevel
-  riskScore: number
-  roiPercent: number
-  roiTrend: number[]
-  marketReadinessScore: number
-  marketReadinessLabel: MarketReadinessLabel
   marketAndCustomersAnalysis: string
   competitorsAnalysis: string
   operationsModel: string
   marketingAndSalesPlan: string
   costs: FeasibilityStudyCosts
   revenueAndProfitOutlook: string
-  technicalRequirements: string
   risksAndMitigation: string
   recommendations: string
   ninetyDayActionPlan: string
@@ -38,8 +25,7 @@ export type FeasibilityStep3Response = {
   message: string
   prompt: string
   res: FeasibilityStudyResponse
-  marketResearchUsed: boolean,
-  project: UserProjectApiItem
+  marketResearchUsed: boolean
 }
 
 type FeasibilityState = {
@@ -69,7 +55,7 @@ export const fetchFeasibilityStep3 = createAsyncThunk<
     const axiosError = error as AxiosError<{ message?: string }>
     return rejectWithValue(
       axiosError.response?.data?.message ??
-      'تعذر تحميل دراسة الجدوى. حاول مرة أخرى.',
+        'تعذر تحميل دراسة الجدوى. حاول مرة أخرى.',
     )
   }
 })
