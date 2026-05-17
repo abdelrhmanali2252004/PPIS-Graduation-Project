@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { User } from "lucide-react";
 import { AIFloatingBubble } from "./AIFloatingBubble";
 //import { BottomStatusBar } from './BottomStatusBar'
 

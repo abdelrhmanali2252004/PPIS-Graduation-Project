@@ -6,6 +6,7 @@ import serviceRequestReducer from './slices/serviceRequestSlice'
 import userProjectsReducer from './slices/userProjectsSlice'
 import feasibilityReducer from './slices/feasibilitySlice'
 import brandingReducer from './slices/brandingSlice'
+import projectDetailsReducer from './slices/projectDetailsSlice'
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     userProjects: userProjectsReducer,
     feasibility: feasibilityReducer,
     branding: brandingReducer,
+    projectDetails: projectDetailsReducer,
   },
 })
 

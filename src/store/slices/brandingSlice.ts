@@ -1,5 +1,13 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios'
+import {
+  audienceIdToApiValue,
+  type BrandPalette,
+  type BrandVibe,
+  type LogoStyle,
+  type Step4LogoRequest,
+  type Step4LogoResponse,
+} from '../../api/branding'
 import { apiClient } from '../../api/client'
 
 export const BRANDING_STORAGE_KEY = 'ideaTechBrandingData'
@@ -12,12 +20,12 @@ export type SavedBranding = {
 }
 
 type BrandingState = {
+  generating: boolean
   saving: boolean
   error: string | null
   saved: SavedBranding | null
 }
 
-// Persist branding locally so the user sees it on return even before API responds
 function loadFromStorage(): SavedBranding | null {
   try {
     const raw = localStorage.getItem(BRANDING_STORAGE_KEY)
@@ -27,11 +35,74 @@ function loadFromStorage(): SavedBranding | null {
   }
 }
 
+function persistBranding(saved: SavedBranding) {
+  localStorage.setItem(BRANDING_STORAGE_KEY, JSON.stringify(saved))
+}
+
 const initialState: BrandingState = {
+  generating: false,
   saving: false,
   error: null,
   saved: loadFromStorage(),
 }
+
+export type GenerateLogoPayload = Omit<
+  Step4LogoRequest,
+  'audience' | 'vibe' | 'logoStyle' | 'palette'
+> & {
+  audience: string
+  vibe: string
+  logoStyle: string
+  palette: string
+}
+
+export const generateLogo = createAsyncThunk<
+  SavedBranding,
+  GenerateLogoPayload,
+  { rejectValue: string }
+>('branding/generateLogo', async (payload, { rejectWithValue }) => {
+  try {
+    const audienceLabel = audienceIdToApiValue(payload.audience)
+
+    const body: Step4LogoRequest = {
+      projectId: payload.projectId,
+      brandName: payload.brandName,
+      tagline: payload.tagline,
+      businessType: payload.businessType,
+      audience: audienceLabel,
+      vibe: payload.vibe as BrandVibe,
+      logoStyle: payload.logoStyle as LogoStyle,
+      palette: payload.palette as BrandPalette,
+    }
+
+    const response = await apiClient.post<Step4LogoResponse>(
+      'project/step4',
+      body,
+      { timeout: 300_000 },
+    )
+
+    const logoUrl = response.data.logoUrl ?? response.data.relativeUrl ?? ''
+    const logoPrompt = response.data.logoPrompt ?? response.data.data?.logoPrompt ?? ''
+
+    if (!logoUrl) {
+      return rejectWithValue('لم يُرجع الخادم رابط اللوجو.')
+    }
+
+    const saved: SavedBranding = {
+      logoUrl,
+      logoPrompt,
+      brandName: payload.brandName,
+      tagline: payload.tagline,
+    }
+    persistBranding(saved)
+    return saved
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>
+    return rejectWithValue(
+      axiosError.response?.data?.message ?? 'فشل توليد اللوجو. حاول مرة أخرى.',
+    )
+  }
+})
 
 type SaveLogoPayload = {
   projectId: string
@@ -41,6 +112,7 @@ type SaveLogoPayload = {
   tagline: string
 }
 
+/** @deprecated Prefer generateLogo (step4 persists on the server). Kept for legacy blob URLs. */
 export const saveLogo = createAsyncThunk<
   SavedBranding,
   SaveLogoPayload,
@@ -58,7 +130,7 @@ export const saveLogo = createAsyncThunk<
       brandName: payload.brandName,
       tagline: payload.tagline,
     }
-    localStorage.setItem(BRANDING_STORAGE_KEY, JSON.stringify(saved))
+    persistBranding(saved)
     return saved
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>
@@ -77,9 +149,24 @@ const brandingSlice = createSlice({
       state.error = null
       localStorage.removeItem(BRANDING_STORAGE_KEY)
     },
+    setBrandingError: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(generateLogo.pending, (state) => {
+        state.generating = true
+        state.error = null
+      })
+      .addCase(generateLogo.fulfilled, (state, action) => {
+        state.generating = false
+        state.saved = action.payload
+      })
+      .addCase(generateLogo.rejected, (state, action) => {
+        state.generating = false
+        state.error = action.payload ?? 'فشل توليد اللوجو.'
+      })
       .addCase(saveLogo.pending, (state) => {
         state.saving = true
         state.error = null
@@ -95,5 +182,5 @@ const brandingSlice = createSlice({
   },
 })
 
-export const { clearSavedBranding } = brandingSlice.actions
+export const { clearSavedBranding, setBrandingError } = brandingSlice.actions
 export default brandingSlice.reducer

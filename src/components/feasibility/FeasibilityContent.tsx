@@ -67,6 +67,9 @@ type FeasibilityContentProps = {
   error: string | null;
   study: FeasibilityStep3Response | null;
   onRetry: () => void;
+  /** Hide page title row when embedded in dashboard */
+  showHeader?: boolean;
+  loadingTitle?: string;
 };
 
 function studyTitle(study: FeasibilityStep3Response | null): string {
@@ -86,6 +89,8 @@ export default function FeasibilityContent({
   error,
   study,
   onRetry,
+  showHeader = true,
+  loadingTitle = "جاري توليد مخرجات دراسة الجدوى",
 }: FeasibilityContentProps) {
   const headerSubtitle = useMemo(() => studyTitle(study), [study]);
 
@@ -102,7 +107,7 @@ export default function FeasibilityContent({
   }
 
   if (loading && !study) {
-    return <FeasibilityLoading />;
+    return <FeasibilityLoading title={loadingTitle} />;
   }
 
   if (error && !study) {
@@ -131,6 +136,7 @@ export default function FeasibilityContent({
 
   return (
     <div className="px-8 py-8 pb-16 font-cairo md:px-10" dir="rtl">
+      {showHeader ? (
       <header className="mb-6 flex flex-col gap-4 border-b border-divider pb-6 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-xl font-bold text-body md:text-2xl">
@@ -165,6 +171,7 @@ export default function FeasibilityContent({
           </button>
         </div>
       </header>
+      ) : null}
 
       {loading ? (
         <p className="mb-4 text-center text-xs text-slateMuted">جاري التحديث…</p>

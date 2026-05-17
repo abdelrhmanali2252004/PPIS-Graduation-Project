@@ -1,10 +1,16 @@
 import { useEffect, useMemo } from 'react'
-import { FolderKanban,  Plus, Settings, User } from 'lucide-react'
+import { FolderKanban, Plus, Settings, User } from 'lucide-react'
 import { NavLink, Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom'
 import ExecutiveDashboardContent, { AlertsPanel } from '../components/dashboard/ExecutiveDashboardContent'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { fetchUserProjects, type ProjectCard } from '../store/slices/userProjectsSlice'
 import { PROJECT_ID_STORAGE_KEY } from '../store/slices/projectStepsSlice'
+import {
+  clearProjectDetails,
+  fetchProjectDetails,
+  projectDetailsToFeasibilityStudy,
+} from '../store/slices/projectDetailsSlice'
+
 const USER_PAGES = [
   { id: 'profile', label: 'اعداداتي', Icon: Settings, to: '/dashboard/user/profile' },
   { id: 'projects', label: 'مشروعاتي', Icon: FolderKanban, to: '/dashboard/user/projects' },
@@ -48,17 +54,19 @@ export default function ExecutiveDashboard() {
   }
 
   function handleOpenProject(project: ProjectCard) {
+    localStorage.setItem(PROJECT_ID_STORAGE_KEY, project.id)
+
+    if (project.step === 5) {
+      navigate(`/dashboard/user/content/${project.id}`)
+      return
+    }
+
     const normalizedStep = Number.isFinite(project.step)
-      ? Math.min(5, Math.max(1, Math.trunc(project.step)))
+      ? Math.min(4, Math.max(1, Math.trunc(project.step)))
       : 1
 
-    localStorage.setItem(PROJECT_ID_STORAGE_KEY, project.id)
     navigate(`/app/step${normalizedStep}`)
   }
-
-
-
-  
 
   return (
     <div dir="rtl" className="flex h-screen overflow-hidden bg-offwhite font-cairo">
@@ -231,23 +239,41 @@ function ContentEmptyPage() {
 
 function ProjectContentPage({ projects }: { projects: ProjectCard[] }) {
   const { projectId } = useParams<{ projectId: string }>()
+  const dispatch = useAppDispatch()
+  const { data, loading, error } = useAppSelector((s) => s.projectDetails)
 
-  const selectedProject = useMemo(
+  const listProject = useMemo(
     () => projects.find((project) => project.id === projectId) ?? null,
     [projects, projectId],
   )
 
-  if (!selectedProject) {
+  useEffect(() => {
+    if (!projectId) return
+    localStorage.setItem(PROJECT_ID_STORAGE_KEY, projectId)
+    void dispatch(fetchProjectDetails(projectId))
+    return () => {
+      dispatch(clearProjectDetails())
+    }
+  }, [dispatch, projectId])
+
+  if (!projectId) {
     return <ContentEmptyPage />
   }
 
+  const projectName = data?.name ?? listProject?.name ?? 'مشروع'
+  const study = projectDetailsToFeasibilityStudy(data)
+
   return (
-    <div>
-      <div className="border-b border-divider bg-white px-6 py-4 lg:px-10">
-        <div className="text-xs text-slateMuted">المشروع الحالي</div>
-        <h2 className="text-lg font-bold text-body">{selectedProject.name}</h2>
-      </div>
-      <ExecutiveDashboardContent />
-    </div>
+    <ExecutiveDashboardContent
+      projectId={projectId}
+      projectName={projectName}
+      loading={loading}
+      error={error}
+      study={study}
+      logoUrl={data?.logoUrl}
+      logoPrompt={data?.logoPrompt}
+      onRetry={() => void dispatch(fetchProjectDetails(projectId))}
+    />
   )
 }
+

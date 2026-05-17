@@ -51,11 +51,8 @@ type BrandingWizardContentProps = {
   onFinish?: () => void;
 
   // step 3 logo
-  savedLogoUrl?: string;
-  savedLogoPrompt?: string;
-  onLogoDone?: (logoUrl: string, logoPrompt: string) => void;
-  onStartOver?: () => void;
-  savingLogo?: boolean;
+  projectId?: string | null;
+  generatingLogo?: boolean;
 
   // navigation
   onSubChange: (sub: number) => void;
@@ -72,8 +69,8 @@ export default function BrandingWizardContent({
   onVibeChange, onPaletteChange, onLogoStyleChange,
   accordionOpen, sent, onAccordionToggle, onSent,
   submitting = false, submitError = null, submitSuccess = false,
-  savingLogo = false,
-  savedLogoUrl, savedLogoPrompt, onLogoDone, onStartOver,
+  generatingLogo = false,
+  projectId,
   onFinish,
   onSubChange, onPrev, onNext,
 }: BrandingWizardContentProps) {
@@ -362,6 +359,7 @@ export default function BrandingWizardContent({
         {/* ── Step 3: AI Logo Generator ── */}
         {sub === 2 && (
           <LogoGeneratorStep
+            projectId={projectId ?? null}
             brandName={brandName}
             tagline={tagline}
             businessType={businessType}
@@ -370,10 +368,6 @@ export default function BrandingWizardContent({
             vibe={vibe}
             palette={palette}
             logoStyle={logoStyle}
-            savedLogoUrl={savedLogoUrl}
-            savedLogoPrompt={savedLogoPrompt}
-            onLogoDone={onLogoDone}
-            onStartOver={onStartOver}
           />
         )}
       </div>
@@ -407,14 +401,14 @@ export default function BrandingWizardContent({
             )}
             <button
               type="button"
-              disabled={submitting || savingLogo}
+              disabled={submitting || generatingLogo}
               onClick={onFinish}
               className="flex items-center gap-2 rounded-xl bg-gold px-6 py-2.5 text-sm font-bold text-nile-dark shadow-md disabled:opacity-60"
             >
-              {submitting || savingLogo ? (
+              {submitting || generatingLogo ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  {savingLogo ? "جاري حفظ اللوجو..." : "جاري الإرسال..."}
+                  {generatingLogo ? "جاري توليد اللوجو..." : "جاري الإرسال..."}
                 </>
               ) : (
                 "إنهاء وانتقل للوحة التحكم ✓"

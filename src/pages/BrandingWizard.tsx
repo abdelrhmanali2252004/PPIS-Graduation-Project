@@ -1,27 +1,30 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BrandingWizardContent from '../components/branding/BrandingWizardContent'
 import { AppShell } from '../layouts/AppShell'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { createServiceRequest } from '../store/slices/serviceRequestSlice'
 import { PROJECT_ID_STORAGE_KEY } from '../store/slices/projectStepsSlice'
-import { saveLogo, clearSavedBranding } from '../store/slices/brandingSlice'
+import { clearSavedBranding } from '../store/slices/brandingSlice'
 
 export default function BrandingWizard() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const { creating, error: requestError, lastRequestId } = useAppSelector((s) => s.serviceRequest)
-  const { saved: savedBranding, saving: savingLogo } = useAppSelector((s) => s.branding)
+  const { saved: savedBranding, generating: generatingLogo } = useAppSelector((s) => s.branding)
+  const projectId =
+    useAppSelector((s) => s.projectSteps.projectId) ??
+    localStorage.getItem(PROJECT_ID_STORAGE_KEY)
 
   // If user has a saved logo, jump straight to step 3
   const [sub, setSub] = useState(() => (savedBranding?.logoUrl ? 2 : 0))
 
   // Step 1 — brand data
-  const [brandName, setBrandName]       = useState(savedBranding?.brandName ?? '')
-  const [tagline, setTagline]           = useState(savedBranding?.tagline ?? '')
-  const [businessType, setBusinessType] = useState('')
-  const [audience, setAudience]         = useState('')
+  const [brandName, setBrandName]       = useState(savedBranding?.brandName ?? 'tech light')
+  const [tagline, setTagline]           = useState(savedBranding?.tagline ?? 'quality and more')
+  const [businessType, setBusinessType] = useState('technology')
+  const [audience, setAudience]         = useState('youth')
   const [symbolHint, setSymbolHint]     = useState('')
 
   // Step 2 — personality & colors
@@ -31,32 +34,8 @@ export default function BrandingWizard() {
   const [accordionOpen, setAccordionOpen] = useState(false)
   const [sent, setSent]           = useState(false)
 
-  // Keep sub in sync if savedBranding loads after mount
-  useEffect(() => {
-    if (savedBranding?.logoUrl && sub < 2) {
-      setSub(2)
-    }
-  }, [savedBranding?.logoUrl]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Called by LogoGeneratorStep when a new logo is generated
-  const handleLogoDone = (logoUrl: string, logoPrompt: string) => {
-    const projectId = localStorage.getItem(PROJECT_ID_STORAGE_KEY)
-    if (!projectId) return
-    void dispatch(saveLogo({ projectId, logoUrl, logoPrompt, brandName, tagline }))
-  }
-
-  // Called when user clicks "البدء من جديد" on the saved logo screen
-  const handleStartOver = () => {
-    dispatch(clearSavedBranding())
-    setBrandName('')
-    setTagline('')
-    setBusinessType('')
-    setAudience('')
-    setSymbolHint('')
-    setVibe('pro')
-    setPalette('as')
-    setLogoStyle('mix')
-    setSub(0)
+  const leaveLogoStep = () => {
+    if (sub === 2) dispatch(clearSavedBranding())
   }
 
   const handleFinish = async () => {
@@ -113,11 +92,8 @@ export default function BrandingWizard() {
         onAccordionToggle={() => setAccordionOpen((o) => !o)}
         onSent={() => setSent(true)}
         // step 3 logo
-        savedLogoUrl={savedBranding?.logoUrl}
-        savedLogoPrompt={savedBranding?.logoPrompt}
-        onLogoDone={handleLogoDone}
-        onStartOver={handleStartOver}
-        savingLogo={savingLogo}
+        projectId={projectId}
+        generatingLogo={generatingLogo}
         // finish
         submitting={creating}
         submitError={requestError}
@@ -126,9 +102,13 @@ export default function BrandingWizard() {
         // navigation — steps 2 & 3 locked until step 1 has a brand name
         onSubChange={(i) => {
           if (i > 0 && !brandName.trim()) return  // lock: must fill step 1 first
+          if (sub === 2 && i !== 2) dispatch(clearSavedBranding())
           setSub(i)
         }}
-        onPrev={() => setSub((s) => Math.max(0, s - 1))}
+        onPrev={() => {
+          leaveLogoStep()
+          setSub((s) => Math.max(0, s - 1))
+        }}
         onNext={() => {
           if (sub === 0 && !brandName.trim()) return  // lock: must fill brand name
           setSub((s) => s + 1)
