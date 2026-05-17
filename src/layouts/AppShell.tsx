@@ -57,18 +57,23 @@ export function AppShell({
             const allDone = activeStep === 5 && progressPercent >= 100;
             const active = s.n === activeStep && !allDone;
             const done = s.n < activeStep || allDone;
-            return active ? (
+            const canNavigate = active || done;
+            return canNavigate ? (
               <Link
                 key={s.n}
                 to={s.path}
-                className="block rounded-lg px-3 py-2.5 text-sm transition-colors border-r-4 border-gold bg-white/10 font-semibold text-white"
+                className={`block rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                  active
+                    ? "border-r-4 border-gold bg-white/10 font-semibold text-white"
+                    : "text-gold hover:bg-white/10"
+                }`}
               >
                 <span className="text-xs text-white/50">{s.n}.</span> {s.label}
               </Link>
             ) : (
               <div
                 key={s.n}
-                className={`block rounded-lg px-3 py-2.5 text-sm ${done ? "text-gold" : "text-slateMuted/50"} cursor-not-allowed ${done ? "" : ""}`}
+                className="block cursor-not-allowed rounded-lg px-3 py-2.5 text-sm text-slateMuted/50"
               >
                 <span className="text-xs text-white/50">{s.n}.</span> {s.label}
               </div>

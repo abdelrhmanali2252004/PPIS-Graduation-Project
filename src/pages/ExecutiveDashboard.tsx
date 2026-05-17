@@ -1,7 +1,14 @@
 import { useEffect, useMemo } from 'react'
 import { FolderKanban, Plus, Settings, User } from 'lucide-react'
-import { NavLink, Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom'
-import ExecutiveDashboardContent, { AlertsPanel } from '../components/dashboard/ExecutiveDashboardContent'
+import {
+  NavLink,
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+  useParams,
+} from 'react-router-dom'
+import ExecutiveDashboardContent from '../components/dashboard/ExecutiveDashboardContent'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { fetchUserProjects, type ProjectCard } from '../store/slices/userProjectsSlice'
 import { PROJECT_ID_STORAGE_KEY } from '../store/slices/projectStepsSlice'
@@ -125,8 +132,6 @@ export default function ExecutiveDashboard() {
             <Route path="*" element={<Navigate to="projects" replace />} />
           </Routes>
         </main>
-
-        <AlertsPanel />
       </div>
     </div>
   )

@@ -1,112 +1,185 @@
 # Codebase Index
 
-Last indexed: 2026-04-19
+Last indexed: 2026-05-17
+
+**Naveta Company** (`naveta-company`) — Arabic RTL startup feasibility platform. Users walk through market research → project wizard → feasibility output → branding → executive dashboard.
 
 ## Project Stack
 
-- React + TypeScript + Vite
-- Routing with `react-router-dom`
-- Styling with Tailwind CSS and custom CSS
+| Layer | Tech |
+|-------|------|
+| UI | React 19, TypeScript |
+| Build | Vite 8 |
+| Routing | `react-router-dom` v7 |
+| State | Redux Toolkit + `react-redux` |
+| HTTP | Axios (`src/api/client.ts`) |
+| Styling | Tailwind CSS 3, `src/index.css`, Cairo font, RTL (`dir="rtl"`) |
+| Icons | `lucide-react` |
+
+**Scripts:** `npm run dev` · `npm run build` · `npm run lint` · `npm run preview`
+
+**API base:** `VITE_API_BASE_URL` env var, default `http://localhost:8090/api`
 
 ## Entry Points
 
-- `src/main.tsx`: React app bootstrap, wraps app with `BrowserRouter`.
-- `src/App.tsx`: Central route table.
+- `index.html` → `src/main.tsx`
+- `src/main.tsx` — `Provider` (Redux) + `BrowserRouter` + `App`
+- `src/App.tsx` — top-level route table
 
-## Route Index (`src/App.tsx`)
+## User Flow (5 steps)
 
-- `/` -> `src/pages/LandingPage.tsx`
-- `/login` -> `src/pages/LoginPage.tsx`
-- `/register` -> `src/pages/RegisterPage.tsx`
-- `/app/step1` -> `src/pages/MarketResearchHub.tsx`
-- `/app/step2` -> `src/pages/ProjectWizard.tsx`
-- `/app/step3` -> `src/pages/FeasibilityOutput.tsx`
-- `/app/step4` -> `src/pages/BrandingWizard.tsx`
-- `/app/step5` -> `src/pages/ExecutiveDashboard.tsx`
-- `/dashboard/user` -> `src/pages/ExecutiveDashboard.tsx`
-- `/dashboard/admin` -> `src/pages/AdminDashboard.tsx`
+```
+Landing → Login/Register → Step1 Market Research → Step2 Project Wizard
+  → Step3 Feasibility → Step4 Branding → Step5 Executive Dashboard
+```
 
-## Source Modules
+`AppShell` (`src/layouts/AppShell.tsx`) wraps steps 1–4 with shared step nav, progress bar, and AI tip bubble.
+
+## Route Index
+
+### Public (`src/App.tsx`)
+
+| Path | Page |
+|------|------|
+| `/` | `LandingPage` |
+| `/login` | `LoginPage` |
+| `/register` | `RegisterPage` |
+
+### App wizard (authenticated flow)
+
+| Path | Page | Purpose |
+|------|------|---------|
+| `/app/step1` | `MarketResearchHub` | Upload PDF or request market research |
+| `/app/step2` | `ProjectWizard` | 12-question project intake |
+| `/app/step3` | `FeasibilityOutput` | AI feasibility study display |
+| `/app/step4` | `BrandingWizard` | Logo / brand identity |
+| `/app/step5` | `Navigate` → `/dashboard/user/projects` | Step 5 alias |
+
+### User dashboard (`ExecutiveDashboard` nested routes)
+
+| Path | View |
+|------|------|
+| `/dashboard/user` | redirect → `projects` |
+| `/dashboard/user/projects` | Project list |
+| `/dashboard/user/profile` | Profile settings |
+| `/dashboard/user/content` | Empty content hub |
+| `/dashboard/user/content/:projectId` | Single-project content |
+
+### Admin
+
+| Path | Page |
+|------|------|
+| `/dashboard/admin` | `AdminDashboard` (tabs: users, requests, analyses — UI only, no API in components) |
+
+## Redux Store (`src/store`)
+
+| Slice | File | Role |
+|-------|------|------|
+| `auth` | `authSlice.ts` | Login, register, token/user in localStorage |
+| `projectSteps` | `projectStepsSlice.ts` | Create step-1 project, upload market-research PDF, step status |
+| `projectWizard` | `projectWizardSlice.ts` | Submit step-2 answers |
+| `feasibility` | `feasibilitySlice.ts` | POST step-3, load feasibility study |
+| `branding` | `brandingSlice.ts` | Generate logo (step 4), save logo, persist draft |
+| `userProjects` | `userProjectsSlice.ts` | List user's projects |
+| `projectDetails` | `projectDetailsSlice.ts` | Fetch single project for dashboard content |
+| `serviceRequest` | `serviceRequestSlice.ts` | Create service requests (market research, logo, consultation) |
+
+Typed hooks: `useAppDispatch`, `useAppSelector` in `src/store/hooks.ts`.
+
+## API Endpoints (via `apiClient`)
+
+| Method | Path | Used by |
+|--------|------|---------|
+| POST | `/user/login` | `authSlice` |
+| POST | `/user/register` | `authSlice` |
+| GET | `project/step1` | `projectStepsSlice` — create/get project ID |
+| POST | `project/market-research` | `projectStepsSlice` — multipart PDF upload |
+| POST | `/project/step2` | `projectWizardSlice` |
+| POST | `/project/step3` | `feasibilitySlice` |
+| POST | `project/step4` | `brandingSlice` — generate logo |
+| POST | `project/save-logo` | `brandingSlice` |
+| GET | `project/get-my-projects` | `userProjectsSlice` |
+| GET | `project/get-project/:id` | `projectDetailsSlice` |
+| POST | `request/create-request` | `serviceRequestSlice` |
+
+Auth: Bearer token from `ideaTechAccessToken` on every request; 401 clears token + user.
+
+## Local Storage Keys
+
+| Key | Constant / source |
+|-----|-------------------|
+| `ideaTechAccessToken` | `TOKEN_STORAGE_KEY` (`api/client.ts`) |
+| `ideaTechUserData` | `USER_STORAGE_KEY` |
+| `ideaTechProjectId` | `PROJECT_ID_STORAGE_KEY` (`projectStepsSlice`) |
+| `ideaTechBrandingData` | `BRANDING_STORAGE_KEY` (`brandingSlice`) |
+| `nextventure.aiBubbleDismissed` | `AIFloatingBubble` |
+| `ideaTechSession` | `HeroSection` (legacy check) |
+
+## Source Tree
 
 ### Pages (`src/pages`)
 
+- `LandingPage.tsx` — marketing sections
+- `LoginPage.tsx` / `RegisterPage.tsx`
+- `MarketResearchHub.tsx` — step 1 shell
+- `ProjectWizard.tsx` — step 2 shell
+- `FeasibilityOutput.tsx` — step 3 shell
+- `BrandingWizard.tsx` — step 4 shell
+- `ExecutiveDashboard.tsx` — step 5 / user dashboard + nested routes
 - `AdminDashboard.tsx`
-- `BrandingWizard.tsx`
-- `ExecutiveDashboard.tsx`
-- `FeasibilityOutput.tsx`
-- `LandingPage.tsx`
-- `LoginPage.tsx`
-- `MarketResearchHub.tsx`
-- `ProjectWizard.tsx`
-- `RegisterPage.tsx`
 
 ### Layouts (`src/layouts`)
 
+- `AppShell.tsx` — wizard chrome (steps 1–4)
 - `AIFloatingBubble.tsx`
-- `AppShell.tsx`
-- `BottomStatusBar.tsx`
+- `BottomStatusBar.tsx` (commented out in AppShell)
 
 ### Components (`src/components`)
 
-- `admin/`
-  - `AdminAnalysesSection.tsx`
-  - `AdminHeader.tsx`
-  - `AdminRequestsSection.tsx`
-  - `AdminSidebar.tsx`
-  - `AdminTopBar.tsx`
-  - `AdminUsersSection.tsx`
-- `branding/`
-  - `BrandingWizardContent.tsx`
-- `dashboard/`
-  - `ExecutiveDashboardContent.tsx`
-- `feasibility/`
-  - `FeasibilityContent.tsx`
-  - `FeasibilityLoading.tsx`
-- `landing/`
-  - `AboutSection.tsx`
-  - `ContactFooter.tsx`
-  - `HeroSection.tsx`
-  - `LandingHeader.tsx`
-  - `ReadyToStartSection.tsx`
-  - `ServicesSection.tsx`
-- `market-research/`
-  - `MarketResearchContent.tsx`
-- `project-wizard/`
-  - `ProjectWizardContent.tsx`
-  - `questions/`
-    - `index.ts`
-    - `types.ts`
-    - `Question01Idea.tsx`
-    - `Question02Sector.tsx`
-    - `Question03Audience.tsx`
-    - `Question04Location.tsx`
-    - `Question05Budget.tsx`
-    - `Question06Timeline.tsx`
-    - `Question07Experience.tsx`
-    - `Question08TeamSize.tsx`
-    - `Question09Differentiation.tsx`
-    - `Question10PricingModel.tsx`
-    - `Question11SalesTarget.tsx`
-    - `Question12Risks.tsx`
+**landing/** — `HeroSection`, `AboutSection`, `ServicesSection`, `ReadyToStartSection`, `LandingHeader`, `ContactFooter`
 
-## Styling
+**market-research/** — `MarketResearchContent`, `UploadFileComponent`, `RequestMarketComponent`
 
-- `src/index.css`: global styles and utilities.
-- `src/App.css`: app-level styles.
-- `tailwind.config.js`: Tailwind theme and content config.
-- `postcss.config.js`: PostCSS pipeline config.
+**project-wizard/** — `ProjectWizardContent`; **questions/** — `index.ts` (question config), `types.ts`, `Question01Idea` … `Question12Risks`
 
-## Config + Tooling
+**feasibility/** — `FeasibilityContent`, `FeasibilityLoading`
 
-- `package.json`: scripts and dependencies.
-- `tsconfig.json`, `tsconfig.app.json`, `tsconfig.node.json`: TypeScript settings.
-- `vite.config.ts`: Vite config.
-- `eslint.config.js`: lint rules.
+**branding/** — `BrandingWizardContent`, `LogoGeneratorStep`
+
+**dashboard/** — `ExecutiveDashboardContent` (+ `AlertsPanel`)
+
+**admin/** — `AdminSidebar`, `AdminTopBar`, `AdminHeader`, `AdminUsersSection`, `AdminRequestsSection`, `AdminAnalysesSection`
+
+### API & types
+
+- `src/api/client.ts` — Axios instance + interceptors
+- `src/api/branding.ts` — logo URL helpers, audience mapping, download helper (re-exports `brandingStep4` types)
+- `src/types/brandingStep4.ts` — logo style, palette, audience enums
+
+### Utils
+
+- `src/utils/readStoredProjectId.ts`
+
+### Assets
+
+- `src/assets/logo.png`
+- `public/icons.svg`, `public/about-mission.svg`
+
+## Project Wizard Questions
+
+Configured in `src/components/project-wizard/questions/index.ts` as `QUESTION_ITEMS` (Arabic labels). Keys include: `idea_name`, `idea`, `sector`, `legalStatus`, `audience`, `geoScope`, budget, timeline, experience, team size, differentiation, pricing, sales target, risks. See also `PROJECT_WIZARD_QUESTIONS.txt`.
+
+## Config & Tooling
+
+- `package.json`, `package-lock.json`
+- `vite.config.ts`, `tsconfig.json`, `tsconfig.app.json`, `tsconfig.node.json`
+- `tailwind.config.js`, `postcss.config.js`, `eslint.config.js`
+- `postman/` — API workspace globals
+- `LOGO_GENERATION.md` — branding/logo notes
 
 ## How To Refresh This Index
 
-When new files/routes are added:
-
-1. Update the route mapping from `src/App.tsx`.
-2. Add or remove files in the module lists above.
-3. Update the `Last indexed` date.
+1. Update routes from `src/App.tsx` and nested routes in `ExecutiveDashboard.tsx`.
+2. Grep `apiClient.` in `src/store` for API changes.
+3. Sync file lists under `src/pages`, `src/components`, `src/store/slices`.
+4. Bump **Last indexed** date.

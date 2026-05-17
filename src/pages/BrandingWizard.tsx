@@ -41,14 +41,14 @@ export default function BrandingWizard() {
   const handleFinish = async () => {
     const projectId = localStorage.getItem(PROJECT_ID_STORAGE_KEY)
     if (!projectId) {
-      navigate('/dashboard/user/projects')
+      navigate('/app/step5')
       return
     }
     const result = await dispatch(
       createServiceRequest({ projectId, type: 'MANUAL_LOGO' }),
     )
     if (createServiceRequest.fulfilled.match(result)) {
-      navigate('/dashboard/user/projects')
+      navigate('/app/step5')
     }
   }
 

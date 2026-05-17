@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { SmartNotificationsBell } from '../components/dashboard/SmartNotificationsBell'
+import { parseFeasibilityMetrics } from '../utils/parseFeasibilityMetrics'
 import FeasibilityContent, { type TabId } from '../components/feasibility/FeasibilityContent'
 import { AppShell } from '../layouts/AppShell'
 import {
@@ -12,6 +14,10 @@ export default function FeasibilityOutput() {
   const dispatch = useAppDispatch()
   const { loading, error, data } = useAppSelector((s) => s.feasibility)
   const projectId = readStoredProjectId()
+  const metrics = useMemo(
+    () => (data?.res ? parseFeasibilityMetrics(data.res) : null),
+    [data],
+  )
 
   useEffect(() => {
     if (!projectId) {
@@ -28,6 +34,14 @@ export default function FeasibilityOutput() {
       mainScrollable
       aiTip="أكثر من ٢٠٠ مشروعاً في صعيد مصر تم تحليلها في قاعدة المعرفة — هامش الربح لكافيهات أسيوط أعلى من المتوسط عند التركيز على التجزئة."
     >
+      {metrics ? (
+        <div
+          className="sticky top-0 z-30 flex justify-end border-b border-divider bg-white/95 px-6 py-3 backdrop-blur-sm lg:px-10"
+          dir="rtl"
+        >
+          <SmartNotificationsBell metrics={metrics} />
+        </div>
+      ) : null}
       <FeasibilityContent
         tab={tab}
         onTabChange={setTab}

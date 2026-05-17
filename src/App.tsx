@@ -7,6 +7,7 @@ import ProjectWizard from './pages/ProjectWizard'
 import FeasibilityOutput from './pages/FeasibilityOutput'
 import BrandingWizard from './pages/BrandingWizard'
 import ExecutiveDashboard from './pages/ExecutiveDashboard'
+import StrategicDashboardPage from './pages/StrategicDashboardPage'
 import AdminDashboard from './pages/AdminDashboard'
 
 export default function App() {
@@ -19,7 +20,7 @@ export default function App() {
       <Route path="/app/step2" element={<ProjectWizard />} />
       <Route path="/app/step3" element={<FeasibilityOutput />} />
       <Route path="/app/step4" element={<BrandingWizard />} />
-      <Route path="/app/step5" element={<Navigate to="/dashboard/user/projects" replace />} />
+      <Route path="/app/step5" element={<StrategicDashboardPage />} />
       <Route path="/dashboard/user" element={<Navigate to="/dashboard/user/projects" replace />} />
       <Route path="/dashboard/user/*" element={<ExecutiveDashboard />} />
       <Route path="/dashboard/admin" element={<AdminDashboard />} />
