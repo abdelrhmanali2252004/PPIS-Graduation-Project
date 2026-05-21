@@ -1,25 +1,27 @@
-import { useState } from 'react'
-import AdminAnalysesSection from '../components/admin/AdminAnalysesSection'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import AdminHeader from '../components/admin/AdminHeader'
+import AdminProjectsSection from '../components/admin/AdminProjectsSection'
 import AdminRequestsSection from '../components/admin/AdminRequestsSection'
-import AdminSidebar, { type AdminTab } from '../components/admin/AdminSidebar'
+import AdminSidebar from '../components/admin/AdminSidebar'
 import AdminTopBar from '../components/admin/AdminTopBar'
 import AdminUsersSection from '../components/admin/AdminUsersSection'
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<AdminTab>('users')
-
   return (
     <div dir="rtl" className="flex min-h-screen bg-offwhite font-cairo text-body">
-      <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
+      <AdminSidebar />
 
       <main className="min-w-0 flex-1 p-6 md:p-8">
         <AdminTopBar />
-        <AdminHeader activeTab={activeTab} />
+        <AdminHeader />
 
-        {activeTab === 'users' && <AdminUsersSection />}
-        {activeTab === 'requests' && <AdminRequestsSection />}
-        {activeTab === 'analyses' && <AdminAnalysesSection />}
+        <Routes>
+          <Route path="/" element={<Navigate to="users" replace />} />
+          <Route path="users" element={<AdminUsersSection />} />
+          <Route path="projects" element={<AdminProjectsSection />} />
+          <Route path="requests" element={<AdminRequestsSection />} />
+          <Route path="*" element={<Navigate to="users" replace />} />
+        </Routes>
       </main>
     </div>
   )

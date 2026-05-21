@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { User, Mail, Phone, Lock } from "lucide-react";
 import { registerUser, clearAuthError } from "../store/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { getDashboardHomePath, getUserRole } from "../types/auth";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -39,7 +40,8 @@ export default function RegisterPage() {
 
     if (registerUser.fulfilled.match(action)) {
       if (action.payload.mode === "authenticated") {
-        navigate("/dashboard/user", { replace: true });
+        const role = getUserRole(action.payload.data.user);
+        navigate(getDashboardHomePath(role), { replace: true });
       } else {
         navigate("/login", { replace: true });
       }

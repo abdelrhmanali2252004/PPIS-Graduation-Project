@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios'
-import { apiClient, TOKEN_STORAGE_KEY ,USER_STORAGE_KEY } from '../../api/client'
+import { apiClient, TOKEN_STORAGE_KEY, USER_STORAGE_KEY } from '../../api/client'
+import type { AuthUser } from '../../types/auth'
 
 type LoginPayload = {
   email: string
@@ -17,12 +18,6 @@ type RegisterPayload = {
 type RegisterResult =
   | { mode: 'authenticated'; data: LoginResponse }
   | { mode: 'pending_login' }
-
-type AuthUser = {
-  id: string
-  email: string
-  name?: string
-}
 
 type LoginResponse = {
   token: string

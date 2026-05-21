@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock } from "lucide-react";
 import { loginUser } from "../store/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { getDashboardHomePath, getUserRole } from "../types/auth";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -21,7 +22,8 @@ export default function LoginPage() {
     );
 
     if (loginUser.fulfilled.match(action)) {
-      navigate("/dashboard/user", { replace: true });
+      const role = getUserRole(action.payload.user);
+      navigate(getDashboardHomePath(role), { replace: true });
     }
   };
 

@@ -1,7 +1,12 @@
-import axios from 'axios'
+import axios, { type AxiosError } from 'axios'
+import {
+  handleSessionExpired,
+  isSessionExpiredPayload,
+  SESSION_EXPIRED_MESSAGE,
+} from './session'
+import { TOKEN_STORAGE_KEY } from './storageKeys'
 
-export const TOKEN_STORAGE_KEY = 'ideaTechAccessToken'
-export const USER_STORAGE_KEY = 'ideaTechUserData'
+export { TOKEN_STORAGE_KEY, USER_STORAGE_KEY } from './storageKeys'
 
 const fallbackBaseUrl = 'http://localhost:8090/api'
 
@@ -28,11 +33,24 @@ apiClient.interceptors.request.use((config) => {
 })
 
 apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error?.response?.status === 401) {
-      localStorage.removeItem(TOKEN_STORAGE_KEY)
-      localStorage.removeItem(USER_STORAGE_KEY)
+  (response) => {
+    if (isSessionExpiredPayload(response.data)) {
+      handleSessionExpired()
+      return Promise.reject(
+        new axios.AxiosError(
+          SESSION_EXPIRED_MESSAGE,
+          'ERR_SESSION_EXPIRED',
+          response.config,
+          response,
+        ),
+      )
+    }
+
+    return response
+  },
+  (error: AxiosError) => {
+    if (isSessionExpiredPayload(error.response?.data)) {
+      handleSessionExpired()
     }
 
     return Promise.reject(error)
