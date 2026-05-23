@@ -175,6 +175,30 @@ export default function StrategicDashboard({
               </ChartCard>
 
               <ChartCard
+                title={`تفصيل التكاليف التشغيلية الشهرية — ${formatEgp(metrics.monthlyOperatingCosts)}`}
+                footerAction={
+                  <Link
+                    to="/app/step3"
+                    className="mt-4 inline-block text-xs font-bold text-nile hover:underline"
+                  >
+                    ← العودة لدراسة الجدوى
+                  </Link>
+                }
+              >
+                <div className="space-y-3">
+                  {metrics.operatingBreakdown.map((row) => (
+                    <MetricBar
+                      key={row.label}
+                      label={row.label}
+                      percent={row.percent}
+                      amountLabel={formatEgp(row.amount)}
+                      color={row.color}
+                    />
+                  ))}
+                </div>
+              </ChartCard>
+
+              <ChartCard
                 title={`مصادر الإيرادات — ${formatEgp(metrics.monthlyRevenue)}/شهر`}
               >
                 <div className="flex flex-col items-center gap-6 md:flex-row">
@@ -198,30 +222,6 @@ export default function StrategicDashboard({
                     centerLabel={formatEgp(metrics.monthlyRevenue, true)}
                     centerSub="شهرياً"
                   />
-                </div>
-              </ChartCard>
-
-              <ChartCard
-                title={`تفصيل التكاليف التشغيلية الشهرية — ${formatEgp(metrics.monthlyOperatingCosts)}`}
-                footerAction={
-                  <Link
-                    to="/app/step3"
-                    className="mt-4 inline-block text-xs font-bold text-nile hover:underline"
-                  >
-                    ← العودة لدراسة الجدوى
-                  </Link>
-                }
-              >
-                <div className="space-y-3">
-                  {metrics.operatingBreakdown.map((row) => (
-                    <MetricBar
-                      key={row.label}
-                      label={row.label}
-                      percent={row.percent}
-                      amountLabel={formatEgp(row.amount)}
-                      color={row.color}
-                    />
-                  ))}
                 </div>
               </ChartCard>
             </div>
