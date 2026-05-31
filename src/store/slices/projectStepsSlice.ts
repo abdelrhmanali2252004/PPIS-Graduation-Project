@@ -8,6 +8,8 @@ type StepStatus = 'idle' | 'loading' | 'success' | 'error'
 
 type ProjectStepsState = {
   projectId: string | null
+  /** Bumped when starting a new project so wizard UIs reset local form state. */
+  sessionVersion: number
   creatingStep1: boolean
   uploadingMarketResearch: boolean
   error: string | null
@@ -17,6 +19,7 @@ type ProjectStepsState = {
 
 const initialState: ProjectStepsState = {
   projectId: localStorage.getItem(PROJECT_ID_STORAGE_KEY),
+  sessionVersion: 0,
   creatingStep1: false,
   uploadingMarketResearch: false,
   error: null,
@@ -117,6 +120,7 @@ const projectStepsSlice = createSlice({
     },
     resetProjectSteps: (state) => {
       state.projectId = null
+      state.sessionVersion += 1
       state.creatingStep1 = false
       state.uploadingMarketResearch = false
       state.error = null

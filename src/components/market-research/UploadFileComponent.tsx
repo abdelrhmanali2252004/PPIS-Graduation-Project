@@ -1,5 +1,6 @@
 import { CloudUpload } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useAppSelector } from "../../store/hooks";
 
 type UploadFileComponentProps = {
   selectedOption: "upload" | "request" | null;
@@ -12,8 +13,17 @@ export default function UploadFileComponent({
   setSelectedOption,
   onFileSelected,
 }: UploadFileComponentProps) {
+    const sessionVersion = useAppSelector((s) => s.projectSteps.sessionVersion);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+      setSelectedFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      onFileSelected(null);
+    }, [sessionVersion, onFileSelected]);
 
     const handleFileUpload = () => {
         fileInputRef.current?.click();

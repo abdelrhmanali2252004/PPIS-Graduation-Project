@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ProjectWizardContent from '../components/project-wizard/ProjectWizardContent'
-import { QUESTION_ITEMS, type ProjectAnswers } from '../components/project-wizard/questions'
+import { QUESTION_ITEMS } from '../components/project-wizard/questions'
+import { createEmptyProjectAnswers } from '../utils/wizardDefaults'
 import { AppShell } from '../layouts/AppShell'
 import {
   resetProjectWizardState,
@@ -18,42 +19,22 @@ export default function ProjectWizard() {
   const { loading: submitting, error: wizardError } = useAppSelector(
     (s) => s.projectWizard,
   )
+  const sessionVersion = useAppSelector((s) => s.projectSteps.sessionVersion)
   const [idx, setIdx] = useState(0)
   const [blockedMessage, setBlockedMessage] = useState<string | null>(null)
+  const [answers, setAnswers] = useState(createEmptyProjectAnswers)
 
   useEffect(() => {
     dispatch(resetProjectWizardState())
   }, [dispatch])
 
+  useEffect(() => {
+    setIdx(0)
+    setBlockedMessage(null)
+    setAnswers(createEmptyProjectAnswers())
+  }, [sessionVersion])
+
   const step = idx + 1
-  const [answers, setAnswers] = useState<ProjectAnswers>({
-    idea_name: '',
-    idea: '',
-    sector: '',
-    legalStatus: '',
-    audience: '',
-    geoScope: '',
-    customerReason: '',
-    marketState: '',
-    competitors: '',
-    deliveryChannel: '',
-    revenueModel: '',
-    acquisitionChannel: '',
-    techNeed: '',
-    location: '',
-    budget: '',
-    fundingSource: '',
-    topExpense: '',
-    experience: '',
-    teamSize: '',
-    differentiation: '',
-    pricingModel: '',
-    monthlySalesTarget: '',
-    demandOutlook: '',
-    seasonality: '',
-    risks: '',
-    twoYearGoal: '',
-  })  
 
   const aiTip = `${QUESTION_ITEMS[idx]?.stage ?? 'المرحلة الأولى'} — ${QUESTION_ITEMS[idx]?.title ?? ''}`
   const handleNext = async () => {

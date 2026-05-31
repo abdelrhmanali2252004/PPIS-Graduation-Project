@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BrandingWizardContent from '../components/branding/BrandingWizardContent'
 import { AppShell } from '../layouts/AppShell'
@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { createServiceRequest } from '../store/slices/serviceRequestSlice'
 import { PROJECT_ID_STORAGE_KEY } from '../store/slices/projectStepsSlice'
 import { clearSavedBranding } from '../store/slices/brandingSlice'
+import { DEFAULT_BRANDING_FORM } from '../utils/wizardDefaults'
 
 export default function BrandingWizard() {
   const dispatch = useAppDispatch()
@@ -13,26 +14,41 @@ export default function BrandingWizard() {
 
   const { creating, error: requestError, lastRequestId } = useAppSelector((s) => s.serviceRequest)
   const { saved: savedBranding, generating: generatingLogo } = useAppSelector((s) => s.branding)
+  const { projectId: stepsProjectId, sessionVersion } = useAppSelector((s) => s.projectSteps)
   const projectId =
-    useAppSelector((s) => s.projectSteps.projectId) ??
-    localStorage.getItem(PROJECT_ID_STORAGE_KEY)
+    stepsProjectId ?? localStorage.getItem(PROJECT_ID_STORAGE_KEY)
 
-  // If user has a saved logo, jump straight to step 3
-  const [sub, setSub] = useState(() => (savedBranding?.logoUrl ? 2 : 0))
+  const [sub, setSub] = useState(() =>
+    savedBranding?.logoUrl ? 2 : DEFAULT_BRANDING_FORM.sub,
+  )
+  const [brandName, setBrandName] = useState(
+    savedBranding?.brandName ?? DEFAULT_BRANDING_FORM.brandName,
+  )
+  const [tagline, setTagline] = useState(
+    savedBranding?.tagline ?? DEFAULT_BRANDING_FORM.tagline,
+  )
+  const [businessType, setBusinessType] = useState(DEFAULT_BRANDING_FORM.businessType)
+  const [audience, setAudience] = useState(DEFAULT_BRANDING_FORM.audience)
+  const [symbolHint, setSymbolHint] = useState(DEFAULT_BRANDING_FORM.symbolHint)
+  const [vibe, setVibe] = useState(DEFAULT_BRANDING_FORM.vibe)
+  const [palette, setPalette] = useState(DEFAULT_BRANDING_FORM.palette)
+  const [logoStyle, setLogoStyle] = useState(DEFAULT_BRANDING_FORM.logoStyle)
+  const [accordionOpen, setAccordionOpen] = useState(DEFAULT_BRANDING_FORM.accordionOpen)
+  const [sent, setSent] = useState(DEFAULT_BRANDING_FORM.sent)
 
-  // Step 1 — brand data
-  const [brandName, setBrandName]       = useState(savedBranding?.brandName ?? 'tech light')
-  const [tagline, setTagline]           = useState(savedBranding?.tagline ?? 'quality and more')
-  const [businessType, setBusinessType] = useState('technology')
-  const [audience, setAudience]         = useState('youth')
-  const [symbolHint, setSymbolHint]     = useState('')
-
-  // Step 2 — personality & colors
-  const [vibe, setVibe]           = useState('pro')
-  const [palette, setPalette]     = useState('as')
-  const [logoStyle, setLogoStyle] = useState('mix')
-  const [accordionOpen, setAccordionOpen] = useState(false)
-  const [sent, setSent]           = useState(false)
+  useEffect(() => {
+    setSub(DEFAULT_BRANDING_FORM.sub)
+    setBrandName(DEFAULT_BRANDING_FORM.brandName)
+    setTagline(DEFAULT_BRANDING_FORM.tagline)
+    setBusinessType(DEFAULT_BRANDING_FORM.businessType)
+    setAudience(DEFAULT_BRANDING_FORM.audience)
+    setSymbolHint(DEFAULT_BRANDING_FORM.symbolHint)
+    setVibe(DEFAULT_BRANDING_FORM.vibe)
+    setPalette(DEFAULT_BRANDING_FORM.palette)
+    setLogoStyle(DEFAULT_BRANDING_FORM.logoStyle)
+    setAccordionOpen(DEFAULT_BRANDING_FORM.accordionOpen)
+    setSent(DEFAULT_BRANDING_FORM.sent)
+  }, [sessionVersion])
 
   const leaveLogoStep = () => {
     if (sub === 2) dispatch(clearSavedBranding())

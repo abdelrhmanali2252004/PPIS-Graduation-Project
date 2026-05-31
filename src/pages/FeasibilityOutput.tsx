@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { SmartNotificationsBell } from '../components/dashboard/SmartNotificationsBell'
 import { parseFeasibilityMetrics } from '../utils/parseFeasibilityMetrics'
 import FeasibilityContent, { type TabId } from '../components/feasibility/FeasibilityContent'
@@ -10,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { readStoredProjectId } from '../utils/readStoredProjectId'
 
 export default function FeasibilityOutput() {
+  const navigate = useNavigate()
   const [tab, setTab] = useState<TabId>('summary')
   const dispatch = useAppDispatch()
   const { loading, error, data } = useAppSelector((s) => s.feasibility)
@@ -54,6 +56,7 @@ export default function FeasibilityOutput() {
             void dispatch(fetchFeasibilityStep3(projectId))
           }
         }}
+        onNext={() => navigate('/app/step4')}
       />
     </AppShell>
   )

@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from 'react'
-import { FolderKanban, Plus, Settings, User } from 'lucide-react'
+import { useEffect } from 'react'
+import { Plus } from 'lucide-react'
 import {
   NavLink,
   Navigate,
@@ -8,20 +8,12 @@ import {
   useNavigate,
   useParams,
 } from 'react-router-dom'
-import ExecutiveDashboardContent from '../components/dashboard/ExecutiveDashboardContent'
+import ProjectDashboardView from '../components/dashboard/ProjectDashboardView'
+import UserDashboardLayout from '../layouts/UserDashboardLayout'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { fetchUserProjects, type ProjectCard } from '../store/slices/userProjectsSlice'
 import { PROJECT_ID_STORAGE_KEY } from '../store/slices/projectStepsSlice'
-import {
-  clearProjectDetails,
-  fetchProjectDetails,
-  projectDetailsToFeasibilityStudy,
-} from '../store/slices/projectDetailsSlice'
-
-const USER_PAGES = [
-  { id: 'profile', label: 'اعداداتي', Icon: Settings, to: '/dashboard/user/profile' },
-  { id: 'projects', label: 'مشروعاتي', Icon: FolderKanban, to: '/dashboard/user/projects' },
-] as const
+import { startNewProject } from '../utils/startNewProject'
 
 export default function ExecutiveDashboard() {
   const navigate = useNavigate()
@@ -29,34 +21,12 @@ export default function ExecutiveDashboard() {
   const { projects, loading: projectsLoading, error: projectsError } = useAppSelector(
     (state) => state.userProjects,
   )
-  const sidebarUser = useMemo(() => {
-    const fallback = {
-      name: 'رائد أعمال',
-      email: 'No email',
-    }
-
-    const rawUser = localStorage.getItem('ideaTechUserData')
-    if (!rawUser) {
-      return fallback
-    }
-
-    try {
-      const parsedUser = JSON.parse(rawUser) as { name?: string; email?: string }
-
-      return {
-        name: parsedUser.name?.trim() || fallback.name,
-        email: parsedUser.email?.trim() || fallback.email,
-      }
-    } catch {
-      return fallback
-    }
-  }, [])
-
   useEffect(() => {
     void dispatch(fetchUserProjects())
   }, [dispatch])
 
   function handleAddProject() {
+    startNewProject(dispatch)
     navigate('/app/step1')
   }
 
@@ -76,42 +46,7 @@ export default function ExecutiveDashboard() {
   }
 
   return (
-    <div dir="rtl" className="flex h-screen overflow-hidden bg-offwhite font-cairo">
-      <aside className="flex w-[260px] shrink-0 flex-col border-l border-divider bg-nile text-white">
-        <div className="border-b border-white/15 px-5 py-5">
-          <h2 className="text-sm font-bold">User Dashboard</h2>
-          <p className="mt-1 text-xs text-white/70">فكرة TECH</p>
-        </div>
-
-        <nav className="space-y-2 p-3">
-          {USER_PAGES.map(({ id, label, Icon, to }) => (
-            <NavLink
-              key={id}
-              to={to}
-              className={({ isActive }) =>
-                `flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
-                  isActive ? 'bg-white/15 font-semibold text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'
-                }`
-              }
-            >
-              <Icon className="h-4 w-4 text-gold" />
-              {label}
-            </NavLink>
-          ))}
-        </nav>
-        <div className="mt-auto flex items-center gap-2 border-t border-white/15 px-4 py-4">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
-            <User className="h-5 w-5 text-gold" />
-          </div>
-          <div className="min-w-0 text-sm">
-            <div className="truncate font-medium">{sidebarUser.name}</div>
-            <div className="truncate text-xs text-white/60">{sidebarUser.email}</div>
-          </div>
-        </div>
-      </aside>
-
-      <div className="relative flex min-w-0 flex-1">
-        <main className="min-w-0 flex-1 overflow-y-auto">
+    <UserDashboardLayout>
           <Routes>
             <Route path="/" element={<Navigate to="projects" replace />} />
             <Route
@@ -128,12 +63,10 @@ export default function ExecutiveDashboard() {
             />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="content" element={<ContentEmptyPage />} />
-            <Route path="content/:projectId" element={<ProjectContentPage projects={projects} />} />
+            <Route path="content/:projectId" element={<ProjectContentPage />} />
             <Route path="*" element={<Navigate to="projects" replace />} />
           </Routes>
-        </main>
-      </div>
-    </div>
+    </UserDashboardLayout>
   )
 }
 
@@ -242,43 +175,13 @@ function ContentEmptyPage() {
   )
 }
 
-function ProjectContentPage({ projects }: { projects: ProjectCard[] }) {
+function ProjectContentPage() {
   const { projectId } = useParams<{ projectId: string }>()
-  const dispatch = useAppDispatch()
-  const { data, loading, error } = useAppSelector((s) => s.projectDetails)
-
-  const listProject = useMemo(
-    () => projects.find((project) => project.id === projectId) ?? null,
-    [projects, projectId],
-  )
-
-  useEffect(() => {
-    if (!projectId) return
-    localStorage.setItem(PROJECT_ID_STORAGE_KEY, projectId)
-    void dispatch(fetchProjectDetails(projectId))
-    return () => {
-      dispatch(clearProjectDetails())
-    }
-  }, [dispatch, projectId])
 
   if (!projectId) {
     return <ContentEmptyPage />
   }
 
-  const projectName = data?.name ?? listProject?.name ?? 'مشروع'
-  const study = projectDetailsToFeasibilityStudy(data)
-
-  return (
-    <ExecutiveDashboardContent
-      projectId={projectId}
-      projectName={projectName}
-      loading={loading}
-      error={error}
-      study={study}
-      logoUrl={data?.logoUrl}
-      logoPrompt={data?.logoPrompt}
-      onRetry={() => void dispatch(fetchProjectDetails(projectId))}
-    />
-  )
+  return <ProjectDashboardView projectId={projectId} />
 }
 

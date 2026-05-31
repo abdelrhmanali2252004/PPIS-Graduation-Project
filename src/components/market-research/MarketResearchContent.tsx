@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { uploadMarketResearchPdf } from "../../store/slices/projectStepsSlice";
@@ -7,14 +7,18 @@ import RequestMarketComponent from "./RequestMarketComponent";
 
 export default function MarketResearchContent() {
   const dispatch = useAppDispatch();
-  const { uploadingMarketResearch, marketResearchError } = useAppSelector(
-    (state) => state.projectSteps,
-  );
+  const { uploadingMarketResearch, marketResearchError, sessionVersion } =
+    useAppSelector((state) => state.projectSteps);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedOption, setSelectedOption] = useState<
     "upload" | "request" | null
   >(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setSelectedFile(null);
+    setSelectedOption(null);
+  }, [sessionVersion]);
 
   const handleNext = async () => {
     if (!selectedFile) {
