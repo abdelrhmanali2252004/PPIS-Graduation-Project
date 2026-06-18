@@ -3,6 +3,7 @@ import { ShieldCheck, User } from 'lucide-react'
 import { ADMIN_PAGES } from '../../config/adminNav'
 import { USER_STORAGE_KEY } from '../../api/client'
 import FikraTechLogo from '../branding/FikraTechLogo'
+import { useTranslation } from '../../i18n/LanguageContext'
 
 function readSidebarUser() {
   const fallback = {
@@ -28,21 +29,22 @@ function readSidebarUser() {
 
 export default function AdminSidebar() {
   const sidebarUser = readSidebarUser()
+  const { t } = useTranslation()
 
   return (
-    <aside className="flex w-[260px] shrink-0 flex-col border-l border-divider bg-nile text-white">
+    <aside className="flex w-[260px] shrink-0 flex-col border-s border-divider bg-nile text-white">
       <div className="border-b border-white/15 px-5 py-5">
         <div className="mb-1 flex items-center gap-2">
           <ShieldCheck className="h-5 w-5 text-gold" />
-          <span className="text-sm font-bold">لوحة الإدارة</span>
+          <span className="text-sm font-bold">{t('admin.panel')}</span>
         </div>
-        <Link to="/" className="mt-3 inline-flex" aria-label="فكرة TECH — الرئيسية">
+        <Link to="/" className="mt-3 inline-flex" aria-label={`${t('logo.name')} ${t('logo.tag')}`}>
           <FikraTechLogo variant="compact" />
         </Link>
       </div>
 
       <nav className="space-y-2 p-3">
-        {ADMIN_PAGES.map(({ id, label, Icon, to }) => (
+        {ADMIN_PAGES.map(({ id, labelKey, Icon, to }) => (
           <NavLink
             key={id}
             to={to}
@@ -55,7 +57,7 @@ export default function AdminSidebar() {
             }
           >
             <Icon className="h-4 w-4 text-gold" />
-            {label}
+            {t(labelKey)}
           </NavLink>
         ))}
       </nav>

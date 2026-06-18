@@ -13,7 +13,9 @@ import UserDashboardLayout from '../layouts/UserDashboardLayout'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { fetchUserProjects, type ProjectCard } from '../store/slices/userProjectsSlice'
 import { PROJECT_ID_STORAGE_KEY } from '../store/slices/projectStepsSlice'
+import ProfileSettingsPage from './ProfileSettingsPage'
 import { startNewProject } from '../utils/startNewProject'
+import { useLanguage } from '../i18n/LanguageContext'
 
 export default function ExecutiveDashboard() {
   const navigate = useNavigate()
@@ -61,7 +63,7 @@ export default function ExecutiveDashboard() {
                 />
               }
             />
-            <Route path="profile" element={<ProfilePage />} />
+            <Route path="profile" element={<ProfileSettingsPage />} />
             <Route path="content" element={<ContentEmptyPage />} />
             <Route path="content/:projectId" element={<ProjectContentPage />} />
             <Route path="*" element={<Navigate to="projects" replace />} />
@@ -83,17 +85,19 @@ function ProjectsPage({
   onOpenProject: (project: ProjectCard) => void
   onAddProject: () => void
 }) {
+  const { t, dir } = useLanguage()
+
   return (
     <section className="p-6 lg:p-10">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold text-body">My Projects</h1>
+        <h1 className="text-2xl font-bold text-body">{t('dashboard.myProjects')}</h1>
         <button
           type="button"
           onClick={onAddProject}
           className="inline-flex items-center gap-2 rounded-lg bg-nile px-4 py-2 text-sm font-bold text-white"
         >
           <Plus className="h-4 w-4" />
-          Add New Project
+          {t('dashboard.addProject')}
         </button>
       </div>
 
@@ -116,10 +120,8 @@ function ProjectsPage({
 
         {!loading && !error && projects.length === 0 ? (
           <div className="rounded-2xl border border-divider bg-white p-6 text-center shadow-sm md:col-span-2 xl:col-span-3">
-            <h3 className="text-base font-bold text-body">لا توجد مشروعات حالياً</h3>
-            <p className="mt-2 text-sm text-slateMuted">
-              لم يتم العثور على بيانات مشروعات لهذا المستخدم.
-            </p>
+            <h3 className="text-base font-bold text-body">{t('dashboard.noProjects')}</h3>
+            <p className="mt-2 text-sm text-slateMuted">{t('dashboard.noProjectsDesc')}</p>
           </div>
         ) : null}
 
@@ -134,7 +136,9 @@ function ProjectsPage({
             key={project.id}
             type="button"
             onClick={() => onOpenProject(project)}
-            className="rounded-2xl border border-divider bg-white p-5 text-right shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            className={`rounded-2xl border border-divider bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${
+              dir === 'rtl' ? 'text-right' : 'text-left'
+            }`}
           >
             <div className="mb-3 flex items-center justify-between">
               <span className="rounded-full bg-nile/10 px-2.5 py-1 text-[11px] font-semibold text-nile">
@@ -143,7 +147,9 @@ function ProjectsPage({
               <span className="text-xs text-slateMuted">{project.updatedAt}</span>
             </div>
             <h3 className="mb-2 text-base font-bold text-body">{project.name}</h3>
-            <p className="text-sm text-slateMuted">الموقع: {project.location}</p>
+            <p className="text-sm text-slateMuted">
+              {t('dashboard.location')}: {project.location}
+            </p>
           </button>
         ))}
       </div>
@@ -151,24 +157,15 @@ function ProjectsPage({
   )
 }
 
-function ProfilePage() {
-  return (
-    <section className="p-6 lg:p-10">
-      <h1 className="mb-4 text-2xl font-bold text-body">Profile Settings</h1>
-      <div className="max-w-2xl rounded-2xl border border-divider bg-white p-6 shadow-sm">
-        <p className="text-sm text-slateMuted">يمكن تعديل إعدادات الحساب والملف الشخصي هنا.</p>
-      </div>
-    </section>
-  )
-}
-
 function ContentEmptyPage() {
+  const { t } = useLanguage()
+
   return (
     <section className="p-6 lg:p-10">
       <div className="rounded-2xl border border-divider bg-white p-6 shadow-sm">
-        <h2 className="mb-2 text-lg font-bold text-body">اختر مشروعا لعرض المحتوى</h2>
+        <h2 className="mb-2 text-lg font-bold text-body">{t('dashboard.contentEmpty')}</h2>
         <NavLink to="/dashboard/user/projects" className="text-sm font-semibold text-nile">
-          الانتقال إلى My Projects
+          {t('dashboard.goToProjects')}
         </NavLink>
       </div>
     </section>

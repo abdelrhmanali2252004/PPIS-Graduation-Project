@@ -1,25 +1,28 @@
 import { Brain, MapPin, Users } from 'lucide-react'
-
-
-
-const highlights = [
-  {
-    icon: Brain,
-    title: 'نموذج ذكاء اصطناعي  ',
-    desc: 'مربوط ببيانات من السوق المحلي ووثائق رسميه من الحهات المعتمده في مصر ',
-  },
-  {
-    icon: Users,
-    title: 'جسر للخبراء المحليين',
-    desc: 'نوفر لك مراجعة بشرية متخصصة، لا نتركك وحدك أمام الأرقام.',
-  },
-  {
-    icon: MapPin,
-    title: 'فهم عميق للسوق المحلي',
-    desc: 'حلولنا مبنية على واقع السوق في مصر    — ليست قوالب عامة أو نماذج مستوردة.',  },
-]
+import { useTranslation } from '../../i18n/LanguageContext'
+import aboutCover from '../../assets/about-cover.png'
 
 export default function AboutSection() {
+  const { t } = useTranslation()
+
+  const highlights = [
+    {
+      icon: Brain,
+      title: t('landing.about.h1Title'),
+      desc: t('landing.about.h1Desc'),
+    },
+    {
+      icon: Users,
+      title: t('landing.about.h2Title'),
+      desc: t('landing.about.h2Desc'),
+    },
+    {
+      icon: MapPin,
+      title: t('landing.about.h3Title'),
+      desc: t('landing.about.h3Desc'),
+    },
+  ]
+
   return (
     <section
       id="about"
@@ -30,30 +33,28 @@ export default function AboutSection() {
         aria-hidden
       />
       <div className="relative mx-auto max-w-6xl">
-        <div className="mb-10 text-center md:mb-14">
-          <h2 className="text-2xl font-bold text-nile md:text-3xl">رؤيتنا</h2>
+        <div className="mb-10 text-center md:mb-12">
+          <h2 className="text-2xl font-bold text-nile md:text-3xl">{t('landing.about.title')}</h2>
           <p className="mt-2 text-base font-medium text-gold md:text-lg">
-            شريكك في رحلة ريادة الأعمال
+            {t('landing.about.subtitle')}
           </p>
         </div>
 
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <div className="space-y-6">
+        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
+          <div className="order-2 space-y-5 lg:order-1">
             <p className="text-lg font-semibold leading-relaxed text-nile md:text-xl">
-            نؤمن بأن النجاح يبدأ ببيانات دقيقة، لذا نقدم لك تخطيطاً مبنياً على الحقائق عبر دراسات جدوى وأبحاث سوق تعتمد على الذكاء الاصطناعي المرتبط بمصادر رسمية لتعكس نبض السوق الفعلي، مع بناء هوية بصرية متكاملة تليق بطموحك وتصميم شعار يعبر عن روح مشروعك ويترك بصمة قوية، ليكتمل هذا الأمان بنظام الرادار الذكي الذي يتتبع حركة استثمارك المالي لحظة بلحظة وينبهك فوراً لأي مخاطر محتملة، مما يمنحك القدرة على حماية أرباحك وضمان استدامة نجاحك في منظومة تقنية واحدة.
+              {t('landing.about.p1')}
             </p>
-            <p className="text-base leading-8 text-body/85">
-            مصممة خصيصاً لتناسب طبيعة السوق في مصر واهم المشروعات، علشان تكون قراراتك مبنية على معلومات حقيقية تقدر تعتمد عليها و تاخد قراراتك بناء علي بيانات من ارض الواقع 
-            </p>
+            <p className="text-base leading-8 text-body/85">{t('landing.about.p2')}</p>
 
-            <ul className="space-y-4 pt-2">
+            <ul className="space-y-3 pt-1">
               {highlights.map(({ icon: Icon, title, desc }) => (
                 <li
                   key={title}
                   className="flex gap-4 rounded-2xl border border-divider bg-white/90 p-4 shadow-sm transition-shadow hover:shadow-md"
                 >
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-nile/8 text-nile">
-                    <Icon className="h-6 w-6" strokeWidth={1.75} aria-hidden />
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-nile/8 text-nile">
+                    <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden />
                   </span>
                   <div>
                     <h3 className="font-bold text-nile">{title}</h3>
@@ -64,39 +65,22 @@ export default function AboutSection() {
             </ul>
           </div>
 
-          <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
+          <div className="relative order-1 w-full lg:order-2 lg:-translate-x-3 lg:pe-0 xl:-translate-x-5">
             <div
-              className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-gold/25 via-nile/15 to-nile-dark/25 blur-2xl"
+              className="pointer-events-none absolute -inset-3 rounded-2xl bg-gradient-to-br from-gold/20 via-nile/10 to-nile-dark/20 blur-xl"
               aria-hidden
             />
-            <div className="relative overflow-hidden rounded-[1.75rem] border border-gold/25 bg-nile-dark shadow-2xl ring-1 ring-white/10">
+            <div className="relative overflow-hidden rounded-2xl border border-gold/25 bg-nile-dark shadow-[0_18px_36px_-10px_rgba(27,76,140,0.38)] ring-1 ring-white/10">
               <img
-                src="https://cdn.completeaitraining.com/news_images/rga-forecasts-agi-will-replace-fragmented-insurance-ai-systems-by-2033_2026-04-08.jpg"
-                alt="لوحة بصرية تمثل النمو والتخطيط وذكاء المنصة"
-                className="h-auto w-full object-cover"
-                width={800}
-                height={560}
+                src={aboutCover}
+                alt={t('landing.about.imageAlt')}
+                className="block h-auto w-full"
+                width={1024}
+                height={576}
                 loading="lazy"
                 decoding="async"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-nile-dark/80 via-transparent to-transparent" />
-              <div className="absolute bottom-0 right-0 left-0 p-5 text-right">
-                <p className="text-sm font-bold text-white drop-shadow md:text-base">
-                  من الفكرة إلى خطة قابلة للتنفيذ
-                </p>
-                <p className="mt-1 text-xs text-white/85 md:text-sm">
-                  بيانات موثقة • متابعة ذكية • خبراء بجانبك
-                </p>
-              </div>
             </div>
-            <div
-              className="absolute -left-2 top-8 hidden h-14 w-14 rotate-12 rounded-xl border border-gold/40 bg-gold/15 md:block"
-              aria-hidden
-            />
-            <div
-              className="absolute -right-1 bottom-24 hidden h-10 w-10 rounded-full border border-white/25 bg-white/10 md:block"
-              aria-hidden
-            />
           </div>
         </div>
       </div>

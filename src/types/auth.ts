@@ -4,7 +4,20 @@ export type AuthUser = {
   id: string
   email: string
   name?: string
+  phoneNumber?: string
+  secondaryPhoneNumber?: string | null
   role?: string
+}
+
+export function getRoleLabel(role?: string | null): string {
+  switch (role?.trim().toLowerCase()) {
+    case 'admin':
+      return 'مدير'
+    case 'specialist':
+      return 'متخصص'
+    default:
+      return 'مستخدم'
+  }
 }
 
 export function normalizeUserRole(role?: string | null): UserRole {

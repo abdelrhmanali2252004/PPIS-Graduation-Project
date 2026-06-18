@@ -1,5 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios'
+import {
+  changePassword,
+  getProfile,
+  updateProfile,
+  type ChangePasswordPayload,
+  type UpdateProfilePayload,
+  type UserProfile,
+} from '../../api/profile'
 import { apiClient, TOKEN_STORAGE_KEY, USER_STORAGE_KEY } from '../../api/client'
 import type { AuthUser } from '../../types/auth'
 
@@ -30,6 +38,24 @@ type AuthState = {
   token: string | null
   user: AuthUser | null
   error: string | null
+  profileLoading: boolean
+  profileSaving: boolean
+  passwordSaving: boolean
+}
+
+function profileToAuthUser(profile: UserProfile): AuthUser {
+  return {
+    id: profile.id,
+    email: profile.email,
+    name: profile.name,
+    phoneNumber: profile.phoneNumber,
+    secondaryPhoneNumber: profile.secondaryPhoneNumber ?? null,
+    role: profile.role,
+  }
+}
+
+function persistUser(user: AuthUser) {
+  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user))
 }
 
 function readStoredUser(): AuthUser | null {
@@ -51,6 +77,9 @@ const initialState: AuthState = {
   token: localStorage.getItem(TOKEN_STORAGE_KEY),
   user: readStoredUser(),
   error: null,
+  profileLoading: false,
+  profileSaving: false,
+  passwordSaving: false,
 }
 
 export const loginUser = createAsyncThunk<
@@ -105,6 +134,51 @@ export const logoutUser = createAsyncThunk('auth/logoutUser', async () => {
   localStorage.removeItem(USER_STORAGE_KEY)
 })
 
+export const fetchUserProfile = createAsyncThunk<
+  UserProfile,
+  void,
+  { rejectValue: string }
+>('auth/fetchUserProfile', async (_, { rejectWithValue }) => {
+  try {
+    return await getProfile()
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>
+    return rejectWithValue(
+      axiosError.response?.data?.message ?? 'تعذر تحميل بيانات الحساب.',
+    )
+  }
+})
+
+export const updateUserProfile = createAsyncThunk<
+  UserProfile,
+  UpdateProfilePayload,
+  { rejectValue: string }
+>('auth/updateUserProfile', async (payload, { rejectWithValue }) => {
+  try {
+    return await updateProfile(payload)
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>
+    return rejectWithValue(
+      axiosError.response?.data?.message ?? 'تعذر حفظ التغييرات.',
+    )
+  }
+})
+
+export const changeUserPassword = createAsyncThunk<
+  string,
+  ChangePasswordPayload,
+  { rejectValue: string }
+>('auth/changeUserPassword', async (payload, { rejectWithValue }) => {
+  try {
+    return await changePassword(payload)
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>
+    return rejectWithValue(
+      axiosError.response?.data?.message ?? 'تعذر تغيير كلمة المرور.',
+    )
+  }
+})
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -156,6 +230,39 @@ const authSlice = createSlice({
         state.user = null
         state.isAuthenticated = false
         state.error = null
+      })
+      .addCase(fetchUserProfile.pending, (state) => {
+        state.profileLoading = true
+      })
+      .addCase(fetchUserProfile.fulfilled, (state, action) => {
+        state.profileLoading = false
+        const user = profileToAuthUser(action.payload)
+        state.user = user
+        persistUser(user)
+      })
+      .addCase(fetchUserProfile.rejected, (state) => {
+        state.profileLoading = false
+      })
+      .addCase(updateUserProfile.pending, (state) => {
+        state.profileSaving = true
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.profileSaving = false
+        const user = profileToAuthUser(action.payload)
+        state.user = user
+        persistUser(user)
+      })
+      .addCase(updateUserProfile.rejected, (state) => {
+        state.profileSaving = false
+      })
+      .addCase(changeUserPassword.pending, (state) => {
+        state.passwordSaving = true
+      })
+      .addCase(changeUserPassword.fulfilled, (state) => {
+        state.passwordSaving = false
+      })
+      .addCase(changeUserPassword.rejected, (state) => {
+        state.passwordSaving = false
       })
   },
 })

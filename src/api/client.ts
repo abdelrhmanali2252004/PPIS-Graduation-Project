@@ -5,11 +5,16 @@ import {
   SESSION_EXPIRED_MESSAGE,
 } from './session'
 import { TOKEN_STORAGE_KEY } from './storageKeys'
+import { LOCALE_STORAGE_KEY } from '../i18n/types'
 
 export { TOKEN_STORAGE_KEY, USER_STORAGE_KEY } from './storageKeys'
 
 const fallbackBaseUrl = 'http://localhost:8090/api'
 
+function readLocaleHeader(): string {
+  const locale = localStorage.getItem(LOCALE_STORAGE_KEY)
+  return locale === 'en' ? 'en' : 'ar'
+}
 
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ?? fallbackBaseUrl,
@@ -22,6 +27,8 @@ apiClient.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
+
+  config.headers['Accept-Language'] = readLocaleHeader()
 
   if (isFormData) {
     delete config.headers['Content-Type']

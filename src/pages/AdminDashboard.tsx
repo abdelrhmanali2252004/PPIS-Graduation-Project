@@ -1,10 +1,12 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import AdminHeader from '../components/admin/AdminHeader'
 import AdminProjectsSection from '../components/admin/AdminProjectsSection'
+import AdminProjectDashboardPage from './AdminProjectDashboardPage'
 import AdminRequestsSection from '../components/admin/AdminRequestsSection'
 import AdminSidebar from '../components/admin/AdminSidebar'
 import AdminTopBar from '../components/admin/AdminTopBar'
 import AdminUsersSection from '../components/admin/AdminUsersSection'
+import ProfileSettingsPage from './ProfileSettingsPage'
 
 export default function AdminDashboard() {
   return (
@@ -19,7 +21,9 @@ export default function AdminDashboard() {
           <Route path="/" element={<Navigate to="users" replace />} />
           <Route path="users" element={<AdminUsersSection />} />
           <Route path="projects" element={<AdminProjectsSection />} />
+          <Route path="projects/:projectId/dashboard" element={<AdminProjectDashboardPage />} />
           <Route path="requests" element={<AdminRequestsSection />} />
+          <Route path="profile" element={<ProfileSettingsPage />} />
           <Route path="*" element={<Navigate to="users" replace />} />
         </Routes>
       </main>

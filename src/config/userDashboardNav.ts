@@ -3,19 +3,19 @@ import { FolderKanban, LayoutDashboard, Settings } from 'lucide-react'
 export const USER_DASHBOARD_PAGES = [
   {
     id: 'projects',
-    label: 'مشروعاتي',
+    labelKey: 'dashboard.myProjects',
     Icon: FolderKanban,
     to: '/dashboard/user/projects',
   },
   {
     id: 'dashboard',
-    label: 'لوحة التحكم',
+    labelKey: 'app.step5',
     Icon: LayoutDashboard,
     to: '/app/step5',
   },
   {
     id: 'profile',
-    label: 'اعداداتي',
+    labelKey: 'dashboard.settings',
     Icon: Settings,
     to: '/dashboard/user/profile',
   },

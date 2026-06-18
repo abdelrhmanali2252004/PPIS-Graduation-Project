@@ -1,4 +1,5 @@
 import logoWeb from '../../assets/logo web.png'
+import { useTranslation } from '../../i18n/LanguageContext'
 
 type FikraTechLogoProps = {
   className?: string
@@ -35,6 +36,7 @@ export default function FikraTechLogo({
   iconClassName,
   variant = 'default',
 }: FikraTechLogoProps) {
+  const { t } = useTranslation()
   const styles = variantStyles[variant]
 
   return (
@@ -49,8 +51,8 @@ export default function FikraTechLogo({
       />
       {showText ? (
         <span className="flex min-w-0 flex-col justify-center leading-none">
-          <span className={styles.title}>فكرة</span>
-          <span className={styles.sub}>Tech</span>
+          <span className={styles.title}>{t('logo.name')}</span>
+          <span className={styles.sub}>{t('logo.tag')}</span>
         </span>
       ) : null}
     </span>

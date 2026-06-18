@@ -1,6 +1,6 @@
-import { useMemo, useState, type ReactNode } from 'react'
+import { useMemo, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, Download, TrendingUp } from 'lucide-react'
+import { Calendar, Download, Loader2, TrendingUp } from 'lucide-react'
 import type { FeasibilityStep3Response } from '../../store/slices/feasibilitySlice'
 import type { ProjectDetails } from '../../store/slices/projectDetailsSlice'
 import { formatEgp, parseFeasibilityMetrics } from '../../utils/parseFeasibilityMetrics'
@@ -15,6 +15,7 @@ import { GroupedBarChart } from './charts/GroupedBarChart'
 import { MetricBar } from './charts/MetricBar'
 import FeasibilityLoading from '../feasibility/FeasibilityLoading'
 import DashboardTabBar from './DashboardTabBar'
+import ProjectReportPdfDocument from './ProjectReportPdfDocument'
 
 type DashboardTabId = 'dashboard' | 'project' | FeasibilityStudyTabId
 
@@ -40,6 +41,8 @@ export default function StrategicDashboard({
   onRetry,
 }: StrategicDashboardProps) {
   const [activeTab, setActiveTab] = useState<DashboardTabId>('dashboard')
+  const [pdfGenerating, setPdfGenerating] = useState(false)
+  const reportRef = useRef<HTMLDivElement>(null)
 
   const projectName = project?.name ?? 'مشروع'
   const projectStep = project?.step
@@ -82,8 +85,42 @@ export default function StrategicDashboard({
   const isStudyTab = (id: DashboardTabId): id is FeasibilityStudyTabId =>
     id !== 'dashboard' && id !== 'project'
 
+  const handleDownloadPdf = async () => {
+    if (!studyRes || !reportRef.current) {
+      return
+    }
+
+    setPdfGenerating(true)
+    try {
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+      const { downloadProjectReportPdf } = await import('../../utils/generateProjectReportPdf')
+      const safeName =
+        projectName.replace(/[<>:"/\\|?*]/g, '').trim() || 'project'
+      await downloadProjectReportPdf(
+        reportRef.current,
+        `${safeName}-feasibility-dashboard.pdf`,
+      )
+    } catch {
+      window.alert('تعذر إنشاء ملف PDF. حاول مرة أخرى.')
+    } finally {
+      setPdfGenerating(false)
+    }
+  }
+
   return (
     <div className="min-h-full" dir="rtl">
+      {studyRes ? (
+        <div className="pointer-events-none fixed -left-[10000px] top-0 z-[-1]" aria-hidden>
+          <ProjectReportPdfDocument
+            ref={reportRef}
+            projectName={projectName}
+            project={project}
+            study={studyRes}
+            metrics={metrics}
+            marketResearchUsed={Boolean(study?.marketResearchUsed || project.marketResearchUsed)}
+          />
+        </div>
+      ) : null}
       <header className="border-b border-divider bg-white px-6 py-5 lg:px-8">
         <div className="mb-3 flex items-start justify-between gap-4">
           <p className="text-xs text-slateMuted">لوحة التحكم الاستراتيجية</p>
@@ -130,10 +167,16 @@ export default function StrategicDashboard({
         <div className="mt-4 flex flex-wrap gap-2">
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-lg border border-divider bg-white px-4 py-2 text-xs font-semibold text-body hover:bg-offwhite"
+            onClick={() => void handleDownloadPdf()}
+            disabled={!studyRes || pdfGenerating}
+            className="inline-flex items-center gap-2 rounded-lg border border-divider bg-white px-4 py-2 text-xs font-semibold text-body hover:bg-offwhite disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <Download className="h-4 w-4" />
-            تحميل PDF
+            {pdfGenerating ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4" />
+            )}
+            {pdfGenerating ? 'جاري التحميل...' : 'تحميل PDF'}
           </button>
           <button
             type="button"
