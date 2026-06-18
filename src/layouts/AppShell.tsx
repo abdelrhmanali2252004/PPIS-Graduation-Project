@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import FikraTechLogo from "../components/branding/FikraTechLogo";
 import { AIFloatingBubble } from "./AIFloatingBubble";
 //import { BottomStatusBar } from './BottomStatusBar'
 
@@ -44,12 +45,8 @@ export function AppShell({
     >
       <aside className="flex w-[240px] shrink-0 flex-col bg-nile text-white">
         <div className="border-b border-white/15 px-4 py-5">
-          <Link to="/" className="flex items-center gap-2">
-            <span
-              className="inline-block h-9 w-9 rotate-45 border-2 border-gold bg-gold/20"
-              aria-hidden
-            />
-            <span className="text-lg font-bold text-white">فكرة TECH</span>
+          <Link to="/" className="inline-flex">
+            <FikraTechLogo variant="compact" />
           </Link>
         </div>
         <nav className="flex-1 space-y-1 overflow-y-auto px-2 py-4">

@@ -4,6 +4,7 @@ import { User, Mail, Phone, Lock } from "lucide-react";
 import { registerUser, clearAuthError } from "../store/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getDashboardHomePath, getUserRole } from "../types/auth";
+import FikraTechLogo from "../components/branding/FikraTechLogo";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -160,9 +161,9 @@ export default function RegisterPage() {
               aria-hidden
             />
             <div className="relative">
-              <span className="mb-4 inline-block text-lg font-bold text-white">
-                فكرة TECH
-              </span>
+              <div className="mb-4">
+                <FikraTechLogo />
+              </div>
               <h1 className="mb-3 text-3xl font-extrabold">ابنِ مشروعك بثقة</h1>
               <p className="max-w-sm text-sm leading-7 text-white/80">
                 بعد إنشاء الحساب، ستبدأ مباشرة في مركز أبحاث السوق وتبني خطة

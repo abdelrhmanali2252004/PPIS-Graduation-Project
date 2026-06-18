@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
 import { TOKEN_STORAGE_KEY } from "../../api/client";
+import FikraTechLogo from "../branding/FikraTechLogo";
 
 const nav = [
   { href: "#hero", label: "الرئيسية" },
@@ -84,14 +85,14 @@ export default function LandingHeader() {
   };
   return (
     <header className="sticky top-0 z-30 border-b border-white/10 bg-nile shadow-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-        <div className="flex items-center gap-2">
-          <span
-            className="inline-block h-10 w-10 rotate-45 border-2 border-gold bg-gold/20 mx-3"
-            aria-hidden
-          />
-          <span className="text-lg font-bold text-white">فكرة TECH</span>
-        </div>
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6 sm:py-3">
+        <Link
+          to="/"
+          className="inline-flex rounded-xl px-1 py-1"
+          aria-label="فكرة TECH — الرئيسية"
+        >
+          <FikraTechLogo />
+        </Link>
         <nav className="hidden items-center gap-6 md:flex">
           {nav.map((item) => (
             <a

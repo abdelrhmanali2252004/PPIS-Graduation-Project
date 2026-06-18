@@ -4,6 +4,7 @@ import { Mail, Lock } from "lucide-react";
 import { loginUser } from "../store/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getDashboardHomePath, getUserRole } from "../types/auth";
+import FikraTechLogo from "../components/branding/FikraTechLogo";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -41,9 +42,9 @@ export default function LoginPage() {
               aria-hidden
             />
             <div className="relative">
-              <span className="mb-4 inline-block text-lg font-bold text-white">
-                فكرة TECH
-              </span>
+              <div className="mb-4">
+                <FikraTechLogo />
+              </div>
               <h1 className="mb-3 text-3xl font-extrabold">مرحباً بعودتك</h1>
               <p className="max-w-sm text-sm leading-7 text-white/80">
               سجّل الدخول لمتابعة مشروعك، وتحليل الأداء، واستقبال التنبيهات المهمة لحظة بلحظة

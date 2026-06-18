@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { User } from 'lucide-react'
 import { USER_DASHBOARD_PAGES } from '../config/userDashboardNav'
+import FikraTechLogo from '../components/branding/FikraTechLogo'
 
 export function readSidebarUser() {
   const fallback = {
@@ -32,7 +33,9 @@ export default function UserDashboardSidebar() {
     <aside className="flex w-[260px] shrink-0 flex-col border-l border-divider bg-nile text-white">
       <div className="border-b border-white/15 px-5 py-5">
         <h2 className="text-sm font-bold">User Dashboard</h2>
-        <p className="mt-1 text-xs text-white/70">فكرة TECH</p>
+        <Link to="/" className="mt-3 inline-flex" aria-label="فكرة TECH — الرئيسية">
+          <FikraTechLogo variant="compact" />
+        </Link>
       </div>
 
       <nav className="space-y-2 p-3">

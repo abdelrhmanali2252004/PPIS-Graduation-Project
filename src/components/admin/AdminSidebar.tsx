@@ -1,7 +1,8 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 import { ShieldCheck, User } from 'lucide-react'
 import { ADMIN_PAGES } from '../../config/adminNav'
 import { USER_STORAGE_KEY } from '../../api/client'
+import FikraTechLogo from '../branding/FikraTechLogo'
 
 function readSidebarUser() {
   const fallback = {
@@ -35,7 +36,9 @@ export default function AdminSidebar() {
           <ShieldCheck className="h-5 w-5 text-gold" />
           <span className="text-sm font-bold">لوحة الإدارة</span>
         </div>
-        <p className="text-xs text-white/70">فكرة TECH</p>
+        <Link to="/" className="mt-3 inline-flex" aria-label="فكرة TECH — الرئيسية">
+          <FikraTechLogo variant="compact" />
+        </Link>
       </div>
 
       <nav className="space-y-2 p-3">
