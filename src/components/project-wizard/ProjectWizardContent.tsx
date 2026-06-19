@@ -45,7 +45,7 @@ export default function ProjectWizardContent({
         </header>
 
         <div className="mb-6">
-          <div className="rounded-2xl border border-divider bg-white px-3 py-3 sm:px-4">
+          <div className="rounded-2xl border border-divider bg-surface px-3 py-3 sm:px-4">
             <div className="grid grid-cols-6 justify-items-center gap-2 sm:grid-cols-8 md:grid-cols-12">
             {Array.from({ length: QUESTION_ITEMS.length }, (_, i) => {
               const n = i + 1;
@@ -59,7 +59,7 @@ export default function ProjectWizardContent({
                       ? "bg-nile text-white shadow-[0_0_0_4px_rgba(27,76,140,0.25)] animate-pulse-glow"
                       : done
                         ? "bg-gold text-nile-dark"
-                        : "border border-divider bg-white text-slateMuted"
+                        : "border border-divider bg-surface text-slateMuted"
                   }`}
                 >
                   {n}
@@ -73,11 +73,11 @@ export default function ProjectWizardContent({
           </p>
         </div>
 
-        <div className="rounded-2xl border border-divider bg-white p-4 shadow-sm sm:p-6">
-          <p className="mb-2 inline-flex rounded-full bg-nile/10 px-3 py-1 text-xs font-bold text-nile">
+        <div className="rounded-2xl border border-divider bg-surface p-4 shadow-sm sm:p-6">
+          <p className="mb-2 inline-flex rounded-full bg-nile/10 px-3 py-1 text-xs font-bold text-heading">
             {currentQuestion.stage}
           </p>
-          <h2 className="mb-2 text-lg font-bold text-nile">{currentQuestion.title}</h2>
+          <h2 className="mb-2 text-lg font-bold text-heading">{currentQuestion.title}</h2>
           {currentQuestion.helpText && (
             <p className="mb-4 text-sm text-slateMuted">{currentQuestion.helpText}</p>
           )}

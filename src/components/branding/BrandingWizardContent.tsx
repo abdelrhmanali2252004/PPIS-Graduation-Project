@@ -9,9 +9,9 @@ const VIBES = [
 ] as const;
 
 const PALETTES = [
-  { id: "as",   name: "تراث أسيوط", colors: ["#1B4C8C","#C9A05D","#F9FAFB","#111827","#059669"] },
-  { id: "nile", name: "نيل هادئ",   colors: ["#0D2F5E","#38BDF8","#E5E7EB","#1E293B","#22C55E"] },
-  { id: "sun",  name: "شمس الصعيد", colors: ["#B45309","#FDE68A","#FFFBEB","#422006","#15803D"] },
+  { id: "as",   name: "color set 1", colors: ["#1B4C8C","#C9A05D","#F9FAFB","#111827","#059669"] },
+  { id: "nile", name: "color set 2",   colors: ["#0D2F5E","#38BDF8","#E5E7EB","#1E293B","#22C55E"] },
+  { id: "sun",  name: "color set 3", colors: ["#B45309","#FDE68A","#FFFBEB","#422006","#15803D"] },
 ] as const;
 
 type BrandingWizardContentProps = {
@@ -102,8 +102,8 @@ export default function BrandingWizardContent({
                     : i < sub
                     ? "bg-gold text-nile-dark"
                     : locked
-                    ? "border border-divider bg-white text-divider cursor-not-allowed"
-                    : "border border-divider bg-white text-slateMuted hover:border-nile"
+                    ? "border border-divider bg-surface text-divider cursor-not-allowed"
+                    : "border border-divider bg-surface text-slateMuted hover:border-nile"
                 }`}
               >
                 {i + 1}
@@ -135,14 +135,14 @@ export default function BrandingWizardContent({
                   value={brandName}
                   onChange={(e) => onBrandNameChange(e.target.value)}
                   placeholder="مثال: بصمة ستور"
-                  className="w-full rounded-xl border border-divider bg-white px-3 py-2 text-sm"
+                  className="w-full rounded-xl border border-divider bg-surface px-3 py-2 text-sm"
                 />
                 <input
                   type="text"
                   value={tagline}
                   onChange={(e) => onTaglineChange(e.target.value)}
                   placeholder="شعار اختياري: جودة في كل تفصيلة"
-                  className="w-full rounded-xl border border-divider bg-white px-3 py-2 text-sm"
+                  className="w-full rounded-xl border border-divider bg-surface px-3 py-2 text-sm"
                 />
               </div>
             </div>
@@ -157,7 +157,7 @@ export default function BrandingWizardContent({
                 value={businessType}
                 onChange={(e) => onBusinessTypeChange(e.target.value)}
                 placeholder="اكتب نوع النشاط"
-                className="w-full rounded-xl border border-divider bg-white px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-divider bg-surface px-3 py-2 text-sm"
               />
             </div>
 
@@ -178,7 +178,7 @@ export default function BrandingWizardContent({
                     className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all ${
                       audience === a.id
                         ? "border-nile bg-nile text-white"
-                        : "border-divider bg-white text-body"
+                        : "border-divider bg-surface text-body"
                     }`}
                   >
                     {a.label}
@@ -197,7 +197,7 @@ export default function BrandingWizardContent({
                 value={symbolHint}
                 onChange={(e) => onSymbolHintChange(e.target.value)}
                 placeholder="اكتب الرمز المقترح (اختياري)"
-                className="w-full rounded-xl border border-divider bg-white px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-divider bg-surface px-3 py-2 text-sm"
               />
             </div>
           </div>
@@ -207,7 +207,7 @@ export default function BrandingWizardContent({
         {sub === 1 && (
           <div className="space-y-4">
             {/* Vibe */}
-            <div className="space-y-3 rounded-2xl border border-divider bg-white p-4">
+            <div className="space-y-3 rounded-2xl border border-divider bg-surface p-4">
               <label className="block text-sm font-bold text-body">روح البراند</label>
               <p className="text-xs text-slateMuted">عايز اللوجو يحسس الناس بإيه؟</p>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -219,7 +219,7 @@ export default function BrandingWizardContent({
                       type="button"
                       onClick={() => onVibeChange(v.id)}
                       className={`relative rounded-2xl border-2 p-4 text-right transition-all ${
-                        sel ? "border-nile bg-nile/5 shadow-md" : "border-divider bg-white hover:border-nile/30"
+                        sel ? "border-nile bg-nile/5 shadow-md" : "border-divider bg-surface hover:border-nile/30"
                       }`}
                     >
                       {sel && (
@@ -228,7 +228,7 @@ export default function BrandingWizardContent({
                         </span>
                       )}
                       <v.Icon className="mb-2 h-7 w-7 text-gold" />
-                      <div className="font-bold text-nile">{v.title}</div>
+                      <div className="font-bold text-heading">{v.title}</div>
                       <div className="text-xs text-slateMuted">{v.desc}</div>
                     </button>
                   );
@@ -237,7 +237,7 @@ export default function BrandingWizardContent({
             </div>
 
             {/* Logo style */}
-            <div className="space-y-2 rounded-2xl border border-divider bg-white p-4">
+            <div className="space-y-2 rounded-2xl border border-divider bg-surface p-4">
               <label className="block text-sm font-bold text-body">ستايل اللوجو</label>
               <p className="text-xs text-slateMuted">اختار الشكل الأقرب لك.</p>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
@@ -253,7 +253,7 @@ export default function BrandingWizardContent({
                     className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all ${
                       logoStyle === style.id
                         ? "border-gold bg-gold/15 text-nile-dark"
-                        : "border-divider bg-white text-body"
+                        : "border-divider bg-surface text-body"
                     }`}
                   >
                     {style.label}
@@ -263,7 +263,7 @@ export default function BrandingWizardContent({
             </div>
 
             {/* Palette */}
-            <div className="space-y-2 rounded-2xl border border-divider bg-white p-4">
+            <div className="space-y-2 rounded-2xl border border-divider bg-surface p-4">
               <label className="block text-sm font-bold text-body">اختيار الألوان</label>
               <p className="text-xs text-slateMuted">
                 اختر لونك المفضل أو دع الذكاء الاصطناعي يختار الأنسب.
@@ -275,13 +275,13 @@ export default function BrandingWizardContent({
                 type="button"
                 onClick={() => onPaletteChange(p.id)}
                 className={`flex w-full flex-col gap-3 rounded-2xl border-2 p-4 text-right transition-all ${
-                  palette === p.id ? "border-gold bg-gold/5 shadow-md" : "border-divider bg-white"
+                  palette === p.id ? "border-gold bg-gold/5 shadow-md" : "border-divider bg-surface"
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-body">{p.name}</span>
                   {p.id === "as" && (
-                    <span className="rounded-full bg-nile/10 px-2 py-0.5 text-[10px] font-bold text-nile">
+                    <span className="rounded-full bg-nile/10 px-2 py-0.5 text-[10px] font-bold text-heading">
                       مُوصى به بواسطة AI ✦
                     </span>
                   )}
@@ -301,7 +301,7 @@ export default function BrandingWizardContent({
               type="button"
               onClick={() => onPaletteChange("ai")}
               className={`w-full rounded-2xl border-2 px-4 py-3 text-right text-sm font-semibold transition-all ${
-                palette === "ai" ? "border-gold bg-gold/10 text-nile-dark" : "border-divider bg-white text-body"
+                palette === "ai" ? "border-gold bg-gold/10 text-nile-dark" : "border-divider bg-surface text-body"
               }`}
             >
               خلّي الذكاء الاصطناعي يختار أفضل ألوان حسب نشاطك
@@ -322,7 +322,7 @@ export default function BrandingWizardContent({
               </button>
               {accordionOpen && (
                 <div className="space-y-3 border-t border-divider bg-offwhite/50 px-4 py-4">
-                  <div className="rounded-lg bg-nile/10 p-3 text-xs text-nile">
+                  <div className="rounded-lg bg-nile/10 p-3 text-xs text-heading">
                     صفِّ ما تريد بالعربية — سنعيد التوليد أو نربطك بمصمم بشري.
                   </div>
                   <textarea

@@ -1,15 +1,20 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
+        page: 'rgb(var(--color-page) / <alpha-value>)',
+        offwhite: 'rgb(var(--color-page) / <alpha-value>)',
+        surface: 'rgb(var(--color-surface) / <alpha-value>)',
+        body: 'rgb(var(--color-foreground) / <alpha-value>)',
+        divider: 'rgb(var(--color-divider) / <alpha-value>)',
+        slateMuted: 'rgb(var(--color-muted) / <alpha-value>)',
+        footer: 'rgb(var(--color-footer) / <alpha-value>)',
+        heading: 'rgb(var(--color-heading) / <alpha-value>)',
         nile: { DEFAULT: '#1B4C8C', dark: '#0D2F5E' },
         gold: '#C9A05D',
-        offwhite: '#F9FAFB',
-        divider: '#E5E7EB',
-        body: '#111827',
-        slateMuted: '#94A3B8',
         success: '#059669',
         warning: '#D97706',
         danger: '#DC2626',

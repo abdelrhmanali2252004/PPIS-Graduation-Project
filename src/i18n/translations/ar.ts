@@ -25,6 +25,15 @@ const ar: TranslationDictionary = {
     switchToArabic: 'العربية',
     aria: 'تغيير اللغة',
   },
+  theme: {
+    light: 'فاتح',
+    dark: 'داكن',
+    aria: 'تغيير المظهر',
+    switchToLight: 'التبديل إلى الوضع الفاتح',
+    switchToDark: 'التبديل إلى الوضع الداكن',
+    sectionTitle: 'المظهر',
+    sectionDesc: 'اختر الوضع الفاتح أو الداكن لواجهة التطبيق',
+  },
   nav: {
     home: 'الرئيسية',
     about: 'رؤيتنا',

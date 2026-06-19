@@ -60,7 +60,7 @@ export default function RequestMarketComponent({
     return (
       <>
       <div
-        className="flex-1 rounded-2xl border border-divider bg-white p-6 shadow-sm"
+        className="flex-1 rounded-2xl border border-divider bg-surface p-6 shadow-sm"
         style={{ borderTop: "4px solid #C9A05D" }}
       >
         <span className="mb-3 inline-block rounded-full bg-gold/15 px-2 py-0.5 text-xs font-bold text-nile-dark">
@@ -91,7 +91,7 @@ export default function RequestMarketComponent({
         <div className="flex flex-wrap items-center gap-2 text-xs text-slateMuted">
           <Building2 className="h-4 w-4" />
           <span>تقدير التسليم: ٣–٥ أيام عمل</span>
-          <span className="rounded-md bg-nile/10 px-2 py-0.5 font-medium text-nile">
+          <span className="rounded-md bg-nile/10 px-2 py-0.5 font-medium text-heading">
             أسيوط
           </span>
         </div>
@@ -99,7 +99,7 @@ export default function RequestMarketComponent({
 
       {showConfirmModal ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 text-right shadow-xl">
+          <div className="w-full max-w-md rounded-2xl bg-surface p-6 text-right shadow-xl">
             <h3 className="text-lg font-bold text-body">تأكيد إرسال الطلب</h3>
             <p className="mt-2 text-sm text-slateMuted">
               هل تريد إرسال طلب دراسة السوق الآن؟

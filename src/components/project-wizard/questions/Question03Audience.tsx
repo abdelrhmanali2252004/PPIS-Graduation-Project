@@ -3,7 +3,7 @@ import type { QuestionComponentProps } from './types'
 export default function Question03Audience({ value, onChange }: QuestionComponentProps) {
   return (
     <>
-      <h2 className="mb-4 text-lg font-bold text-nile">3) من هو العميل المستهدف؟</h2>
+      <h2 className="mb-4 text-lg font-bold text-heading">3) من هو العميل المستهدف؟</h2>
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value.slice(0, 220))}

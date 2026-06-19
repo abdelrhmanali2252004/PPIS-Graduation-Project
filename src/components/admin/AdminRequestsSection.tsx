@@ -41,11 +41,11 @@ export default function AdminRequestsSection() {
 
   return (
     <>
-      <section className="rounded-2xl border border-divider bg-white p-5 shadow-sm">
+      <section className="rounded-2xl border border-divider bg-surface p-5 shadow-sm">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-sm font-bold text-nile">طلبات المستخدمين للتواصل مع المختص</h2>
+          <h2 className="text-sm font-bold text-heading">طلبات المستخدمين للتواصل مع المختص</h2>
           {!loading && !error ? (
-            <span className="rounded-full bg-nile/10 px-2.5 py-1 text-xs font-semibold text-nile">
+            <span className="rounded-full bg-nile/10 px-2.5 py-1 text-xs font-semibold text-heading">
               {count} طلب
             </span>
           ) : null}
@@ -58,7 +58,7 @@ export default function AdminRequestsSection() {
                 key={`request-skeleton-${index}`}
                 className="animate-pulse rounded-xl border border-divider bg-offwhite/70 p-4"
               >
-                <div className="mb-3 h-4 w-1/3 rounded bg-slate-200" />
+                <div className="mb-3 h-4 w-1/3 rounded bg-divider" />
                 <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
                   <div className="h-3 rounded bg-slate-100" />
                   <div className="h-3 rounded bg-slate-100" />
@@ -112,34 +112,34 @@ export default function AdminRequestsSection() {
                   }}
                   className={`rounded-xl border border-divider bg-offwhite/70 p-4 transition ${
                     isContactable
-                      ? 'cursor-pointer hover:border-nile/40 hover:bg-white hover:shadow-sm'
+                      ? 'cursor-pointer hover:border-nile/40 hover:bg-surface hover:shadow-sm'
                       : ''
                   }`}
                 >
                   <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                     <h3 className="text-sm font-bold text-body">{projectName}</h3>
-                    <span className="rounded-md bg-white px-2 py-1 text-xs text-slateMuted">
+                    <span className="rounded-md bg-surface px-2 py-1 text-xs text-slateMuted">
                       {createdAt}
                     </span>
                   </div>
                   <div className="grid grid-cols-1 gap-2 text-sm text-body/90 md:grid-cols-3">
                     <p>
-                      <span className="font-semibold text-nile">المستخدم:</span> {userName}
+                      <span className="font-semibold text-heading">المستخدم:</span> {userName}
                       {userEmail ? (
                         <span className="mt-0.5 block text-xs text-slateMuted">{userEmail}</span>
                       ) : null}
                     </p>
                     <p>
-                      <span className="font-semibold text-nile">نوع الطلب:</span>{' '}
+                      <span className="font-semibold text-heading">نوع الطلب:</span>{' '}
                       {getRequestTypeLabel(request.type)}
                     </p>
                     <p>
-                      <span className="font-semibold text-nile">الحالة:</span>{' '}
+                      <span className="font-semibold text-heading">الحالة:</span>{' '}
                       {getRequestStatusLabel(request.status)}
                     </p>
                   </div>
                   {isContactable ? (
-                    <p className="mt-2 text-xs font-semibold text-nile">اضغط لعرض بيانات التواصل</p>
+                    <p className="mt-2 text-xs font-semibold text-heading">اضغط لعرض بيانات التواصل</p>
                   ) : null}
                 </article>
               )

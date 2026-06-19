@@ -39,26 +39,26 @@ export default function UploadFileComponent({
       };
     return (
         <div
-        className="flex-1 rounded-2xl border border-divider bg-white p-6 shadow-sm"
+        className="flex-1 rounded-2xl border border-divider bg-surface p-6 shadow-sm"
         style={{ borderTop: "4px solid #1B4C8C" }}
       >
-        <span className="mb-3 inline-block rounded-full bg-nile/10 px-2 py-0.5 text-xs font-bold text-nile">
+        <span className="mb-3 inline-block rounded-full bg-nile/10 px-2 py-0.5 text-xs font-bold text-heading">
           RAG Technology
         </span>
-        <h2 className="mb-4 text-lg font-bold text-nile">
+        <h2 className="mb-4 text-lg font-bold text-heading">
           لديك ملفات بالفعل؟
         </h2>
         <div
           className={`flex min-h-[200px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-4 py-8 transition-colors ${selectedOption === "upload" ? "border-nile bg-nile/5" : "border-nile/30 bg-offwhite/50 hover:border-nile/50"}`}
           onClick={handleFileUpload}
         >
-          <CloudUpload className="mb-3 h-10 w-10 text-nile/60" />
+          <CloudUpload className="mb-3 h-10 w-10 text-heading/60" />
           <p className="mb-2 text-center text-sm font-medium text-body">
             {selectedFile
               ? `تم اختيار: ${selectedFile.name}`
               : "اسحب ملفات PDF هنا أو انقر للتحميل"}
           </p>
-          <span className="rounded-md bg-nile/10 px-2 py-1 text-xs text-nile">
+          <span className="rounded-md bg-nile/10 px-2 py-1 text-xs text-heading">
             PDF فقط
           </span>
         </div>

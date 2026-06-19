@@ -61,14 +61,14 @@ export default function ServicesSection() {
   return (
     <section id="services" className="bg-offwhite px-4 py-16 md:py-20">
       <div className="mx-auto max-w-6xl">
-        <h2 className="mb-10 text-center text-2xl font-bold text-nile md:text-3xl">
+        <h2 className="mb-10 text-center text-2xl font-bold text-heading md:text-3xl">
           {t('landing.services.title')}
         </h2>
         <div className="flex flex-wrap justify-center gap-6">
           {services.map((card) => (
             <div
               key={card.title}
-              className="relative w-full max-w-[210px] rounded-xl border border-divider bg-white p-5 shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-md"
+              className="relative w-full max-w-[210px] rounded-xl border border-divider bg-surface p-5 shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-md"
               style={{ borderTopWidth: '3px', borderTopColor: '#C9A05D' }}
             >
               {card.ai ? (
@@ -77,7 +77,7 @@ export default function ServicesSection() {
                 </span>
               ) : null}
               <div className="mb-3 text-gold">{card.icon}</div>
-              <h3 className="mb-2 text-sm font-bold text-nile">{card.title}</h3>
+              <h3 className="mb-2 text-sm font-bold text-heading">{card.title}</h3>
               <p className="text-xs leading-relaxed text-slateMuted">{card.desc}</p>
             </div>
           ))}

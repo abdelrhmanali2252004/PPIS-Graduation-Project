@@ -5,10 +5,10 @@ const ALERT_STYLES: Record<
   DashboardAlert['type'],
   { border: string; title: string; bg: string }
 > = {
-  risk: { border: 'border-danger', title: 'text-danger', bg: 'bg-red-50/50' },
-  opportunity: { border: 'border-gold', title: 'text-warning', bg: 'bg-amber-50/50' },
-  positive: { border: 'border-success', title: 'text-success', bg: 'bg-emerald-50/50' },
-  action: { border: 'border-nile', title: 'text-nile', bg: 'bg-blue-50/50' },
+  risk: { border: 'border-danger', title: 'text-danger', bg: 'bg-red-50/50 dark:bg-red-500/10' },
+  opportunity: { border: 'border-gold', title: 'text-warning', bg: 'bg-amber-50/50 dark:bg-amber-500/10' },
+  positive: { border: 'border-success', title: 'text-success', bg: 'bg-emerald-50/50 dark:bg-emerald-500/10' },
+  action: { border: 'border-nile', title: 'text-heading', bg: 'bg-blue-50/50 dark:bg-nile/20' },
 }
 
 const ALERT_LABELS: Record<DashboardAlert['type'], string> = {
@@ -30,7 +30,7 @@ export function AlertsPanelContent({ metrics, compact }: AlertsPanelContentProps
   return (
     <div className={compact ? 'space-y-3' : 'space-y-4'} dir="rtl">
       <div className={compact ? 'px-4 pt-4' : ''}>
-        <h2 className="text-sm font-bold text-nile">التنبيهات الذكية</h2>
+        <h2 className="text-sm font-bold text-heading">التنبيهات الذكية</h2>
         <div className="mt-2 flex items-center gap-2 text-xs">
           <span className="h-2 w-2 animate-blink rounded-full bg-danger" />
           <span className="font-semibold text-body">{count} تنبيهات</span>
@@ -62,7 +62,7 @@ export function AlertsPanelContent({ metrics, compact }: AlertsPanelContentProps
 
       {metrics ? (
         <div className={compact ? 'border-t border-divider px-4 py-4' : 'border-t border-divider pt-4'}>
-          <h3 className="mb-3 text-xs font-bold text-nile">لقطة مالية</h3>
+          <h3 className="mb-3 text-xs font-bold text-heading">لقطة مالية</h3>
           <ul className="space-y-2 text-xs text-body">
             <SnapshotRow label="رأس المال" value={formatEgp(metrics.totalCapital, true)} />
             <SnapshotRow label="تكاليف التأسيس" value={formatEgp(metrics.startupCosts, true)} />

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>دليل عرض مشروع التخرج — فكرة TECH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --nile: #1b4c8c;
+      --nile-dark: #0d2f5e;
+      --gold: #c9a05d;
+      --text: #111827;
+      --muted: #4b5563;
+      --border: #e5e7eb;
+      --bg: #f9fafb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Cairo, system-ui, sans-serif;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.75;
+      font-size: 14px;
+    }
+    .page {
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 18mm 16mm;
+    }
+    .cover {
+      text-align: center;
+      padding: 24mm 10mm;
+      border: 3px solid var(--nile);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #f0f6ff 0%, #fff 100%);
+      margin-bottom: 20px;
+      page-break-after: always;
+    }
+    .cover h1 {
+      color: var(--nile);
+      font-size: 32px;
+      margin: 0 0 8px;
+    }
+    .cover .subtitle {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+    .cover p { color: var(--muted); margin: 6px 0; }
+    .badge {
+      display: inline-block;
+      background: var(--nile);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+    h2 {
+      color: var(--nile);
+      font-size: 20px;
+      border-right: 5px solid var(--gold);
+      padding-right: 10px;
+      margin: 28px 0 12px;
+      page-break-after: avoid;
+    }
+    h3 {
+      color: var(--nile-dark);
+      font-size: 16px;
+      margin: 18px 0 8px;
+      page-break-after: avoid;
+    }
+    p { margin: 8px 0; text-align: justify; }
+    ul, ol { margin: 8px 0; padding-right: 22px; }
+    li { margin: 4px 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 13px;
+      page-break-inside: avoid;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      text-align: right;
+      vertical-align: top;
+    }
+    th {
+      background: #eef4fb;
+      color: var(--nile);
+      font-weight: 700;
+    }
+    .note {
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 12px 0;
+      page-break-inside: avoid;
+    }
+    .important {
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 12px 0;
+      page-break-inside: avoid;
+    }
+    .box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 10px 0;
+      page-break-inside: avoid;
+    }
+    .flow-step {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      page-break-inside: avoid;
+    }
+    .flow-num {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--nile);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+    }
+    .placeholder {
+      background: #f3f4f6;
+      color: #6b7280;
+      font-style: italic;
+    }
+    .footer {
+      margin-top: 30px;
+      padding-top: 12px;
+      border-top: 2px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    @media print {
+      body { background: #fff; }
+      .page { padding: 12mm 10mm; max-width: none; }
+      .cover { page-break-after: always; }
+      h2 { page-break-before: auto; }
+      section { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="cover">
+      <div class="badge">مشروع تخرج — PPIS</div>
+      <h1>فكرة TECH</h1>
+      <div class="subtitle">Fikra Tech — منصة ذكية لدراسة جدوى المشاريع وريادة الأعمال</div>
+      <p><strong>دليل العرض التقديمي الشامل</strong></p>
+      <p>البروفة الأخيرة Offline — 21 يونيو 2026 | الحضور 9:00 صباحاً</p>
+      <p>مدة العرض: ~30 دقيقة لكل فريق | يشمل Demo + Q&amp;A</p>
+    </div>
+
+    <h2>1. متطلبات الاجتماع (ملخص رسالة الدكاترة)</h2>
+    <div class="important">
+      <ul>
+        <li><strong>الحضور:</strong> جميع أعضاء الفريق في المعهد الساعة 9:00 صباحاً — الالتزام بالموعد إلزامي.</li>
+        <li><strong>العرض:</strong> Presentation واضحة، مرتبة، واحترافية لمدة ~30 دقيقة.</li>
+        <li><strong>المشاركة:</strong> كل عضو له جزء واضح في العرض — ليس شخصاً واحداً فقط.</li>
+        <li><strong>الـ Demo:</strong> مشاركة من كل الأعضاء أثناء العرض الحي — أي شخص قد يُطلب منه يكمل أو يشرح أي جزء.</li>
+        <li><strong>الجاهزية:</strong> الجميع حافظ الـ Flow خطوة بخطوة — Business + Technical.</li>
+      </ul>
+    </div>
+
+    <h3>محتوى العرض المطلوب</h3>
+    <ol>
+      <li>Team Members — أعضاء الفريق</li>
+      <li>نبذة عن المشروع والفكرة الأساسية</li>
+      <li>Technologies المستخدمة</li>
+      <li>شرح الـ Features الموجودة في المشروع</li>
+      <li>Demo جاهز للمشروع</li>
+      <li>Q&amp;A — أسئلة وأجوبة</li>
+    </ol>
+
+    <h2>2. أعضاء الفريق (يُحدَّث قبل العرض)</h2>
+    <div class="note">⚠️ املأوا الأسماء والأدوار الفعلية قبل طباعة/توزيع الملف على الفريق.</div>
+    <table>
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>الدور في المشروع</th>
+          <th>جزء العرض (دقيقة تقريبية)</th>
+          <th>ما يشرحه في الـ Demo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="placeholder">[اسم العضو 1]</td>
+          <td class="placeholder">[مثلاً: Team Lead / Frontend]</td>
+          <td>3–4 دقائق — مقدمة + الفريق</td>
+          <td>فتح الموقع + Landing Page</td>
+        </tr>
+        <tr>
+          <td class="placeholder">[اسم العضو 2]</td>
+          <td class="placeholder">[مثلاً: Backend / API]</td>
+          <td>5–6 دقائق — الفكرة + التقنيات</td>
+          <td>التسجيل / تسجيل الدخول</td>
+        </tr>
+        <tr>
+          <td class="placeholder">[اسم العضو 3]</td>
+          <td class="placeholder">[مثلاً: AI / Database]</td>
+          <td>6–7 دقائق — الـ Features + AI</td>
+          <td>الخطوات 1–2 (سوق + Wizard)</td>
+        </tr>
+        <tr>
+          <td class="placeholder">[اسم العضو 4]</td>
+          <td class="placeholder">[مثلاً: UI/UX / Testing]</td>
+          <td>6–7 دقائق — Dashboard + Admin</td>
+          <td>الخطوات 3–5 + لوحة التحكم</td>
+        </tr>
+        <tr>
+          <td class="placeholder">[عضو إضافي إن وُجد]</td>
+          <td class="placeholder">[الدور]</td>
+          <td>مشاركة في Demo + Q&amp;A</td>
+          <td>البروفايل / الإعدادات / Admin</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>3. نبذة عن المشروع والفكرة الأساسية</h2>
+    <h3>ما هو فكرة TECH؟</h3>
+    <p>
+      <strong>فكرة TECH</strong> منصة ويب عربية (RTL) تساعد رواد الأعمال في مصر — وخاصة في الصعيد —
+      على تحويل فكرة المشروع إلى خطة عمل قابلة للتنفيذ، من خلال مسار رقمي من 5 خطوات يجمع بين
+      <strong>الذكاء الاصطناعي</strong>، <strong>أبحاث السوق</strong>، <strong>دراسة الجدوى</strong>،
+      <strong>الهوية البصرية</strong>، و<strong>لوحة تحكم استراتيجية</strong> لمتابعة الأداء.
+    </p>
+
+    <h3>المشكلة التي نحلها</h3>
+    <ul>
+      <li>كثير من أصحاب المشاريع الصغيرة يبدأون بدون دراسة جدوى منظمة أو بيانات سوق موثقة.</li>
+      <li>تكلفة ووقت إعداد دراسات الجدوى التقليدية مرتفعان وغير متاحين للجميع.</li>
+      <li>غياب أداة عربية متكاملة تجمع: بحث سوق + أسئلة منظمة + تقرير AI + شعار + متابعة مالية.</li>
+    </ul>
+
+    <h3>الحل الذي نقدمه</h3>
+    <ul>
+      <li>منصة واحدة تُرشد المستخدم من أول الفكرة حتى لوحة التحكم التنفيذية.</li>
+      <li>توليد دراسة جدوى بالذكاء الاصطناعي مع إمكانية دمج ملف PDF لأبحاث السوق (RAG).</li>
+      <li>توليد شعار وهوية بصرية بالـ AI حسب بيانات المشروع.</li>
+      <li>لوحة تحكم بمؤشرات مالية، تنبيهات ذكية، ورسوم بيانية مستخرجة من دراسة الجدوى.</li>
+      <li>لوحة إدارة للمشرفين لمتابعة المستخدمين والمشاريع والطلبات.</li>
+    </ul>
+
+    <h3>الجمهور المستهدف</h3>
+    <p>رواد أعمال، طلاب مشاريع تخرج، أصحاب مشاريع صغيرة ومتوسطة في السوق المصري — مع تركيز على واقع السوق المحلي.</p>
+
+    <h2>4. التقنيات المستخدمة (Technologies)</h2>
+
+    <h3>4.1 الواجهة الأمامية (Frontend)</h3>
+    <table>
+      <thead><tr><th>التقنية</th><th>الاستخدام</th></tr></thead>
+      <tbody>
+        <tr><td>React 19 + TypeScript</td><td>بناء واجهة المستخدم التفاعلية</td></tr>
+        <tr><td>Vite 8</td><td>أداة البناء والتطوير السريع</td></tr>
+        <tr><td>React Router v7</td><td>التنقل بين الصفحات والمسارات</td></tr>
+        <tr><td>Redux Toolkit</td><td>إدارة حالة التطبيق (Auth, Projects, Feasibility, Branding...)</td></tr>
+        <tr><td>Axios</td><td>التواصل مع الـ REST API</td></tr>
+        <tr><td>Tailwind CSS 3</td><td>التصميم + دعم Light/Dark Mode</td></tr>
+        <tr><td>Lucide React</td><td>الأيقونات</td></tr>
+        <tr><td>html2canvas + jsPDF</td><td>تصدير تقرير المشروع PDF من لوحة التحكم</td></tr>
+        <tr><td>i18n (عربي / إنجليزي)</td><td>دعم لغتين مع RTL/LTR</td></tr>
+      </tbody>
+    </table>
+
+    <h3>4.2 الخادم الخلفي (Backend)</h3>
+    <table>
+      <thead><tr><th>التقنية</th><th>الاستخدام</th></tr></thead>
+      <tbody>
+        <tr><td>Node.js + Express 5</td><td>خادم REST API على المنفذ 8090</td></tr>
+        <tr><td>MongoDB + Mongoose</td><td>قاعدة البيانات (Users, Projects, Requests, OTP...)</td></tr>
+        <tr><td>JWT + bcryptjs</td><td>المصادقة وتشفير كلمات المرور</td></tr>
+        <tr><td>Multer</td><td>رفع ملفات PDF لأبحاث السوق</td></tr>
+        <tr><td>Nodemailer / Resend</td><td>إرسال OTP عبر البريد</td></tr>
+        <tr><td>Twilio (اختياري)</td><td>إرسال OTP عبر SMS</td></tr>
+        <tr><td>Vercel</td><td>نشر الباك إند (serverless)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>4.3 الذكاء الاصطناعي والخدمات الخارجية</h3>
+    <table>
+      <thead><tr><th>الخدمة</th><th>الاستخدام</th></tr></thead>
+      <tbody>
+        <tr><td>OpenRouter (GPT-4o-mini)</td><td>توليد دراسة الجدوى (JSON منظم بالعربية)</td></tr>
+        <tr><td>Google Gemini 2.0 Flash</td><td>بديل/مسار AI لدراسة الجدوى</td></tr>
+        <tr><td>Groq (Llama 3.3 70B)</td><td>توليد Prompt إنجليزي لتصميم الشعار</td></tr>
+        <tr><td>Pollinations.ai</td><td>توليد صورة الشعار</td></tr>
+        <tr><td>pdf-parse + RAG System</td><td>استخراج نص PDF أبحاث السوق وإثراء الـ Prompt</td></tr>
+      </tbody>
+    </table>
+
+    <h3>4.4 هيكل المشروع (Architecture)</h3>
+    <div class="box">
+      <p><strong>Frontend</strong> (React) ←→ <strong>REST API</strong> (/api) ←→ <strong>Backend</strong> (Express)</p>
+      <p>Backend ←→ <strong>MongoDB</strong> | Backend ←→ <strong>OpenRouter / Gemini</strong> | Backend ←→ <strong>Pollinations Proxy</strong></p>
+      <p>المستخدم يمر بمسار: Landing → Auth → 5 Steps → User Dashboard | Admin Dashboard منفصل للمشرفين</p>
+    </div>
+
+    <h2>5. الـ Features (المميزات) بالتفصيل</h2>
+
+    <h3>5.1 الصفحة الرئيسية (Landing)</h3>
+    <ul>
+      <li>عرض تسويقي للمنصة: Hero، الرؤية، الخدمات، دعوة للبدء، تواصل.</li>
+      <li>تبديل اللغة (عربي/إنجليزي) والثيم (فاتح/داكن).</li>
+      <li>تسجيل دخول / إنشاء حساب من الهيدر.</li>
+    </ul>
+
+    <h3>5.2 المصادقة والحساب</h3>
+    <ul>
+      <li>تسجيل مستخدم جديد (اسم، بريد، هاتف، كلمة مرور).</li>
+      <li>تسجيل دخول بـ JWT — التوكن يُحفظ ويُرسل مع كل طلب API.</li>
+      <li>أدوار: <strong>user</strong> | <strong>admin</strong> | <strong>specialist</strong>.</li>
+      <li>إعدادات البروفايل: تعديل الاسم، OTP لإضافة هاتف ثانوي، تغيير كلمة المرور، استعادة كلمة المرور.</li>
+    </ul>
+
+    <h3>5.3 مسار المشروع — 5 خطوات (App Wizard)</h3>
+
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <div>
+        <strong>مركز أبحاث السوق</strong><br />
+        رفع ملف PDF لدراسة سوق موجودة، أو طلب بحث سوق من المنصة. يُنشأ Project ID ويُربط بالجلسة.
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <div>
+        <strong>تفاصيل المشروع (Wizard)</strong><br />
+        24 سؤالاً منظماً في 5 مراحل: الهوية، السوق والعملاء، التشغيل، المالية، المخاطر والتوقعات.
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <div>
+        <strong>مخرجات دراسة الجدوى</strong><br />
+        AI يولّد تقريراً عربياً شاملاً: ملخص تنفيذي، سوق، منافسين، تشغيل، تسويق، تكاليف، أرباح، مخاطر، توصيات، خطة 90 يوم.
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">4</div>
+      <div>
+        <strong>الهوية البصرية</strong><br />
+        جمع بيانات البراند → Groq يولّد Prompt → Pollinations يولّد الشعار → حفظ في قاعدة البيانات.
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">5</div>
+      <div>
+        <strong>لوحة التحكم الاستراتيجية</strong><br />
+        KPIs مالية، رسوم بيانية، تنبيهات ذكية، تبويبات للتوقعات والسوق والتشغيل، تصدير PDF للتقرير.
+      </div>
+    </div>
+
+    <h3>5.4 لوحة المستخدم (User Dashboard)</h3>
+    <ul>
+      <li>عرض كل مشاريع المستخدم مع المرحلة الحالية.</li>
+      <li>فتح مشروع والاستكمال من آخر خطوة.</li>
+      <li>لوحة محتوى تفصيلية لكل مشروع مكتمل (Step 5).</li>
+      <li>إعدادات الحساب والمظهر.</li>
+    </ul>
+
+    <h3>5.5 لوحة الإدارة (Admin Dashboard)</h3>
+    <ul>
+      <li>إدارة المستخدمين — عرض كل الحسابات.</li>
+      <li>إدارة المشاريع — عرض المشاريع، المرحلة، المالك، فتح لوحة المشروع.</li>
+      <li>إدارة الطلبات — طلبات التواصل مع المختص (بحث سوق، استشارة...).</li>
+    </ul>
+
+    <h3>5.6 مميزات تقنية إضافية</h3>
+    <ul>
+      <li>RAG: دمج محتوى PDF أبحاث السوق في prompt دراسة الجدوى لزيادة الدقة.</li>
+      <li>تنبيهات ذكية مبنية على مؤشرات مستخرجة من التقرير.</li>
+      <li>جلسة منتهية — معالجة 401 وتسجيل خروج تلقائي.</li>
+      <li>دعم RTL كامل + خط Cairo + تصميم متجاوب.</li>
+    </ul>
+
+    <h2>6. سيناريو الـ Demo (خطوة بخطوة — ~10–12 دقيقة)</h2>
+    <div class="note">
+      <strong>قبل الـ Demo:</strong> شغّلوا Frontend (<code>npm run dev</code>) و Backend (<code>npm run dev</code> على 8090) وتأكدوا من MongoDB و API Keys.
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>#</th><th>الخطوة</th><th>المسار</th><th>من يعرض؟</th><th>ماذا تقول؟</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>الصفحة الرئيسية</td>
+          <td>/</td>
+          <td>العضو 1</td>
+          <td>شرح الفكرة، الخدمات، تبديل اللغة والثيم</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>إنشاء حساب / دخول</td>
+          <td>/register أو /login</td>
+          <td>العضو 2</td>
+          <td>JWT، الأدوار، حماية المسارات</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>أبحاث السوق</td>
+          <td>/app/step1</td>
+          <td>العضو 3</td>
+          <td>رفع PDF أو طلب بحث — إنشاء Project ID</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>أسئلة المشروع</td>
+          <td>/app/step2</td>
+          <td>العضو 3</td>
+          <td>24 سؤال — 5 مراحل — حفظ في DB</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>دراسة الجدوى</td>
+          <td>/app/step3</td>
+          <td>العضو 4</td>
+          <td>انتظار AI — عرض الأقسام — RAG إن وُجد PDF</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>الهوية البصرية</td>
+          <td>/app/step4</td>
+          <td>العضو 4</td>
+          <td>Groq + Pollinations — حفظ الشعار</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>لوحة التحكم</td>
+          <td>/app/step5</td>
+          <td>العضو 1</td>
+          <td>KPIs، Charts، تنبيهات، PDF</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>مشاريعي + البروفايل</td>
+          <td>/dashboard/user</td>
+          <td>العضو 2</td>
+          <td>قائمة المشاريع، OTP، كلمة المرور</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>لوحة الأدمن</td>
+          <td>/dashboard/admin</td>
+          <td>العضو 3 أو 4</td>
+          <td>Users, Projects, Requests</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>7. توزيع وقت العرض (~30 دقيقة)</h2>
+    <table>
+      <thead><tr><th>الجزء</th><th>المدة</th><th>المحتوى</th></tr></thead>
+      <tbody>
+        <tr><td>مقدمة + الفريق</td><td>3 د</td><td>ترحيب، أسماء، أدوار</td></tr>
+        <tr><td>المشكلة والحل</td><td>4 د</td><td>Business case — ليه فكرة TECH؟</td></tr>
+        <tr><td>التقنيات والهيكل</td><td>5 د</td><td>Frontend, Backend, AI, DB — رسم بسيط</td></tr>
+        <tr><td>شرح الـ Features</td><td>6 د</td><td>5 خطوات + Dashboard + Admin</td></tr>
+        <tr><td>Demo حي</td><td>10 د</td><td>كل الأعضاء يشاركوا — تناوب على الخطوات</td></tr>
+        <tr><td>Q&amp;A</td><td>2–5 د</td><td>أي عضو يجيب حسب تخصصه</td></tr>
+      </tbody>
+    </table>
+
+    <h2>8. أسئلة متوقعة في Q&amp;A (وجواب مختصر)</h2>
+
+    <h3>أسئلة Business</h3>
+    <table>
+      <thead><tr><th>السؤال</th><th>إجابة مقترحة</th></tr></thead>
+      <tbody>
+        <tr><td>إيه الفرق بينكم وبين دراسة جدوى تقليدية؟</td><td>منصة رقمية فورية بالـ AI، أرخص وأسرع، مع متابعة مستمرة عبر Dashboard.</td></tr>
+        <tr><td>مين الجمهور المستهدف؟</td><td>رواد أعمال في مصر، مشاريع صغيرة، طلاب — مع بيانات سوق محلية.</td></tr>
+        <tr><td>إزاي بتكسبوا فلوس؟</td><td>[حدّدوا نموذج العمل: اشتراكات / خدمات مدفوعة / عمولة استشارات]</td></tr>
+        <tr><td>إيه الميزة التنافسية؟</td><td>مسار متكامل 5 خطوات + عربي + RAG + شعار + لوحة استراتيجية في مكان واحد.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>أسئلة Technical</h3>
+    <table>
+      <thead><tr><th>السؤال</th><th>إجابة مقترحة</th></tr></thead>
+      <tbody>
+        <tr><td>ليه React و Redux؟</td><td>واجهة تفاعلية معقدة، حالة موزعة (Auth, Projects, Feasibility...) — Redux ينظمها.</td></tr>
+        <tr><td>ليه MongoDB؟</td><td>مرونة في هيكل بيانات المشروع، إجابات Wizard، تقارير JSON من AI.</td></tr>
+        <tr><td>إزاي بتتعاملوا مع الأمان؟</td><td>JWT، bcrypt لكلمات المرور، OTP للعمليات الحساسة، Middleware للتحقق.</td></tr>
+        <tr><td>إيه الـ RAG؟</td><td>نستخرج نص PDF أبحاث السوق، نقسّمه، نبحث فيه، ونضيفه لـ prompt الجدوى.</td></tr>
+        <tr><td>ليه Proxy للشعار؟</td><td>Pollinations ترفض طلبات المتصفح المباشرة — الباك إند يجلب الصورة server-side.</td></tr>
+        <tr><td>إيه الـ API Endpoints الرئيسية؟</td><td>/user/login, /project/step1-4, /project/step3, /project/save-logo, /request/create-request...</td></tr>
+        <tr><td>إزاي بتتعاملوا مع انتهاء الجلسة؟</td><td>Interceptor على Axios — عند 401 أو session expired يُعاد توجيه المستخدم.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>9. قرارات تقنية مهمة (للشرح أمام اللجنة)</h2>
+    <ul>
+      <li>فصل Frontend و Backend — REST API واضح يسهّل الصيانة والتوسع.</li>
+      <li>OpenRouter كطبقة AI موحّدة بدل الاعتماد على مزود واحد.</li>
+      <li>حفظ Project ID في localStorage لاستمرار الجلسة بين الخطوات.</li>
+      <li>Typescript في Frontend لسلامة الأنواع مع عقد API.</li>
+      <li>دعم i18n و Theme من البداية لتجربة مستخدم أوسع.</li>
+      <li>تصدير PDF من Dashboard باستخدام html2canvas لدعم العربية في التقارير.</li>
+    </ul>
+
+    <h2>10. قائمة تحقق قبل يوم 21/6</h2>
+    <div class="box">
+      <ul>
+        <li>☐ كل الأعضاء حاضرين 9:00 ص — لا تأخير</li>
+        <li>☐ اللابتوبات مشحونة + إنترنت احتياطي (Hotspot)</li>
+        <li>☐ MongoDB شغالة + Backend على 8090 + Frontend شغال</li>
+        <li>☐ حساب Demo جاهز (بيانات دخول معروفة للفريق)</li>
+        <li>☐ مشروع Demo مكتمل (وصل Step 5) + مشروع نصف مكتمل للعرض الحي</li>
+        <li>☐ ملف PDF أبحاث سوق جاهز لرفعه في Step 1</li>
+        <li>☐ API Keys (OpenRouter, Groq) شغالة</li>
+        <li>☐ كل عضو يعرف جزءه + يقدر يكمل Demo لو زميله توقف</li>
+        <li>☐ Presentation (PowerPoint) جاهزة — هذا الملف مرجع للفريق</li>
+        <li>☐ تدريب Q&amp;A — كل شخص يجاوب على سؤال Business و Technical</li>
+      </ul>
+    </div>
+
+    <h2>11. أوامر تشغيل المشروع (للمرجع السريع)</h2>
+    <div class="box">
+      <p><strong>Frontend:</strong> مجلد <code>graduation project</code></p>
+      <p><code>npm install</code> → <code>npm run dev</code> (عادة http://localhost:5173)</p>
+      <p><strong>Backend:</strong> مجلد <code>backend</code></p>
+      <p><code>npm install</code> → إعداد <code>.env</code> → <code>npm run dev</code> (http://localhost:8090)</p>
+      <p><strong>متغيرات مهمة:</strong> DB_CONNECTION_2, JWT_SECRET, OPENROUTER_API_KEY, VITE_API_BASE_URL, VITE_GROQ_API_KEY</p>
+    </div>
+
+    <div class="footer">
+      فكرة TECH — دليل العرض التقديمي | مشروع تخرج PPIS | يونيو 2026<br />
+      بالتوفيق للفريق — عروض قوية ومتميزة إن شاء الله ❤️
+    </div>
+  </div>
+</body>
+</html>

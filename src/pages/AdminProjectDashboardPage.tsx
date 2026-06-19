@@ -10,7 +10,7 @@ export default function AdminProjectDashboardPage() {
     <section>
       <Link
         to="/dashboard/admin/projects"
-        className="mb-4 inline-flex text-sm font-semibold text-nile transition-colors hover:text-gold"
+        className="mb-4 inline-flex text-sm font-semibold text-heading transition-colors hover:text-gold"
       >
         ← {t('admin.backToProjects')}
       </Link>

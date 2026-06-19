@@ -35,7 +35,8 @@ export function DonutChart({
         cy={size / 2}
         r={radius}
         fill="none"
-        stroke="#E5E7EB"
+        stroke="currentColor"
+        className="text-divider"
         strokeWidth={stroke}
       />
       {segments.map((seg) => {
@@ -74,7 +75,7 @@ export function DonutChart({
           x="50%"
           y="58%"
           textAnchor="middle"
-          fill="#94A3B8"
+          className="fill-slateMuted"
           fontSize="9"
         >
           {centerSub}

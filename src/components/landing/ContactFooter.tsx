@@ -29,7 +29,7 @@ export default function ContactFooter() {
   const { t } = useTranslation()
 
   return (
-    <footer id="contact" className="bg-body px-4 py-14 text-white">
+    <footer id="contact" className="bg-footer px-4 py-14 text-white">
       <div className="mx-auto max-w-6xl">
         <h2 className="mb-8 text-center text-2xl font-bold text-gold">
           {t('landing.contact.title')}
@@ -39,13 +39,13 @@ export default function ContactFooter() {
             <Phone className="mx-auto mb-2 h-5 w-5 text-gold" />
             <div className="mb-1 text-xs text-white/60">{t('landing.contact.phone')}</div>
             <div className="text-sm font-semibold text-white/90" dir="ltr">
-              +20 88 123 4567
+              +201069291006
             </div>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
             <Mail className="mx-auto mb-2 h-5 w-5 text-gold" />
             <div className="mb-1 text-xs text-white/60">{t('landing.contact.email')}</div>
-            <div className="text-sm font-semibold text-white/90">hello@nextventure.os</div>
+            <div className="text-sm font-semibold text-white/90">fkratech29@gmail.com</div>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center sm:col-span-2 lg:col-span-1">
             <MapPin className="mx-auto mb-2 h-5 w-5 text-gold" />
@@ -62,7 +62,7 @@ export default function ContactFooter() {
           <a href="#" className="text-slateMuted transition-colors hover:text-gold" aria-label="Twitter">
             <IconTwitter className="h-6 w-6" />
           </a>
-          <a href="#" className="text-slateMuted transition-colors hover:text-gold" aria-label="Facebook">
+          <a href="https://www.facebook.com/share/1BWakLxm8H/" className="text-slateMuted transition-colors hover:text-gold" aria-label="Facebook">
             <IconFacebook className="h-6 w-6" />
           </a>
         </div>

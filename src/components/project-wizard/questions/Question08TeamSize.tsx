@@ -5,7 +5,7 @@ const OPTIONS = ['أنا فقط', '2-3 أفراد', '4-6 أفراد', 'أكثر 
 export default function Question08TeamSize({ value, onChange }: QuestionComponentProps) {
   return (
     <>
-      <h2 className="mb-4 text-lg font-bold text-nile">8) كم عدد فريق العمل المتوقع؟</h2>
+      <h2 className="mb-4 text-lg font-bold text-heading">8) كم عدد فريق العمل المتوقع؟</h2>
       <div className="grid grid-cols-2 gap-2">
         {OPTIONS.map((option) => (
           <button

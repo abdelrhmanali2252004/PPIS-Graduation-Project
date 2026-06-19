@@ -5,7 +5,7 @@ import { registerUser, clearAuthError } from '../store/slices/authSlice'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { getDashboardHomePath, getUserRole } from '../types/auth'
 import FikraTechLogo from '../components/branding/FikraTechLogo'
-import LanguageToggle from '../i18n/LanguageToggle'
+import UtilityTogglesBar from '../layouts/UtilityTogglesBar'
 import { useLanguage } from '../i18n/LanguageContext'
 
 export default function RegisterPage() {
@@ -57,13 +57,13 @@ export default function RegisterPage() {
   return (
     <div dir={dir} className="relative min-h-screen bg-offwhite font-cairo text-body">
       <div className="absolute end-4 top-4 z-10 sm:end-6 sm:top-6">
-        <LanguageToggle />
+        <UtilityTogglesBar />
       </div>
       <div className="mx-auto flex min-h-screen max-w-6xl items-center px-4 py-10">
-        <div className="grid w-full grid-cols-1 overflow-hidden rounded-2xl border border-divider bg-white shadow-lg md:grid-cols-2">
+        <div className="grid w-full grid-cols-1 overflow-hidden rounded-2xl border border-divider bg-surface shadow-lg md:grid-cols-2">
           <section className="p-6 sm:p-8 md:p-10">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-nile">{t('auth.registerTitle')}</h2>
+              <h2 className="text-2xl font-bold text-heading">{t('auth.registerTitle')}</h2>
               <p className="mt-1 text-sm text-slateMuted">{t('auth.registerSubtitle')}</p>
             </div>
 
@@ -79,7 +79,7 @@ export default function RegisterPage() {
                     onChange={(e) => setName(e.target.value)}
                     type="text"
                     placeholder={t('auth.namePlaceholder')}
-                    className="w-full rounded-xl border border-divider bg-white py-3 pe-10 ps-4 text-sm outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15"
+                    className="w-full rounded-xl border border-divider bg-surface py-3 pe-10 ps-4 text-sm outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15"
                   />
                 </div>
               </label>
@@ -95,7 +95,7 @@ export default function RegisterPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     placeholder="name@example.com"
-                    className="w-full rounded-xl border border-divider bg-white py-3 pe-10 ps-4 text-sm outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15"
+                    className="w-full rounded-xl border border-divider bg-surface py-3 pe-10 ps-4 text-sm outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15"
                   />
                 </div>
               </label>
@@ -111,7 +111,7 @@ export default function RegisterPage() {
                     onChange={(e) => setPhone(e.target.value)}
                     type="tel"
                     placeholder="+20 10 0000 0000"
-                    className="w-full rounded-xl border border-divider bg-white py-3 pe-10 ps-4 text-sm outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15"
+                    className="w-full rounded-xl border border-divider bg-surface py-3 pe-10 ps-4 text-sm outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15"
                   />
                 </div>
               </label>
@@ -127,7 +127,7 @@ export default function RegisterPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     type="password"
                     placeholder="••••••••"
-                    className="w-full rounded-xl border border-divider bg-white py-3 pe-10 ps-4 text-sm outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15"
+                    className="w-full rounded-xl border border-divider bg-surface py-3 pe-10 ps-4 text-sm outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15"
                   />
                 </div>
               </label>
@@ -149,7 +149,7 @@ export default function RegisterPage() {
 
             <p className="mt-6 text-center text-sm text-slateMuted">
               {t('auth.hasAccount')}{' '}
-              <Link to="/login" className="font-bold text-nile hover:text-gold">
+              <Link to="/login" className="font-bold text-heading hover:text-gold">
                 {t('auth.loginBtn')}
               </Link>
             </p>

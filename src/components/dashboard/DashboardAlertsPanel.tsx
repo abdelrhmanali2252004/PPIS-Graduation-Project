@@ -9,7 +9,7 @@ type DashboardAlertsPanelProps = {
 export function DashboardAlertsPanel({ metrics }: DashboardAlertsPanelProps) {
   return (
     <aside
-      className="hidden w-[260px] shrink-0 overflow-y-auto border-r border-divider bg-white lg:block"
+      className="hidden w-[260px] shrink-0 overflow-y-auto border-r border-divider bg-surface lg:block"
       dir="rtl"
     >
       <AlertsPanelContent metrics={metrics} />

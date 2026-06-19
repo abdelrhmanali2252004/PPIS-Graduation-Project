@@ -5,7 +5,7 @@ import { TOKEN_STORAGE_KEY, USER_STORAGE_KEY } from '../../api/client'
 import FikraTechLogo from '../branding/FikraTechLogo'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { logoutUser } from '../../store/slices/authSlice'
-import LanguageToggle from '../../i18n/LanguageToggle'
+import UtilityTogglesBar from '../../layouts/UtilityTogglesBar'
 import { useTranslation } from '../../i18n/LanguageContext'
 import { ADMIN_PAGES } from '../../config/adminNav'
 import { isAdminUser, type AuthUser } from '../../types/auth'
@@ -173,7 +173,7 @@ export default function LandingHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <LanguageToggle variant="dark" />
+          <UtilityTogglesBar variant="dark" />
           {isLoggedIn ? (
             <div className="relative">
               <button

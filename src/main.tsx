@@ -6,15 +6,18 @@ import './index.css'
 import App from './App.tsx'
 import { store } from './store'
 import { LanguageProvider } from './i18n/LanguageContext'
+import { ThemeProvider } from './theme/ThemeContext'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
-      <LanguageProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </LanguageProvider>
+      <ThemeProvider>
+        <LanguageProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </LanguageProvider>
+      </ThemeProvider>
     </Provider>
   </StrictMode>,
 )

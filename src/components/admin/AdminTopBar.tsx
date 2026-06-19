@@ -9,21 +9,21 @@ export default function AdminTopBar() {
           <input
             type="text"
             placeholder="ابحث عن مستخدم، مشروع، أو طلب..."
-            className="w-full rounded-xl border border-divider bg-offwhite py-2.5 pr-10 pl-4 text-sm outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15"
+            className="w-full rounded-xl border border-divider bg-surface py-2.5 pr-10 pl-4 text-sm text-body outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15"
           />
         </div>
 
         <div className="flex items-center justify-end gap-3">
           <button
             type="button"
-            className="relative rounded-full border border-divider bg-offwhite p-2 text-slateMuted hover:text-nile"
+            className="relative rounded-full border border-divider bg-surface p-2 text-slateMuted hover:text-gold"
             aria-label="الإشعارات"
           >
             <Bell className="h-4 w-4" />
             <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-danger" />
           </button>
-          <div className="flex items-center gap-2 rounded-xl border border-divider bg-offwhite px-3 py-1.5">
-            <UserCircle2 className="h-7 w-7 text-nile" />
+          <div className="flex items-center gap-2 rounded-xl border border-divider bg-surface px-3 py-1.5">
+            <UserCircle2 className="h-7 w-7 text-heading" />
             <div className="text-right">
               <div className="text-sm font-bold text-body">مدير النظام</div>
               <div className="text-xs text-slateMuted">admin@nextventure.os</div>

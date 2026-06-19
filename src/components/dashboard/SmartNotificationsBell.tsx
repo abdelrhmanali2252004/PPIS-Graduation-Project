@@ -44,8 +44,8 @@ export function SmartNotificationsBell({ metrics, className = '' }: SmartNotific
         aria-label={`التنبيهات الذكية${count > 0 ? `، ${count} تنبيهات` : ''}`}
         className={`relative flex h-10 w-10 items-center justify-center rounded-full border transition-colors ${
           open
-            ? 'border-nile bg-nile/10 text-nile'
-            : 'border-divider bg-white text-body hover:border-nile/40 hover:bg-offwhite'
+            ? 'border-nile bg-nile/10 text-heading'
+            : 'border-divider bg-surface text-body hover:border-nile/40 hover:bg-offwhite'
         }`}
       >
         <Bell className="h-5 w-5" />
@@ -66,7 +66,7 @@ export function SmartNotificationsBell({ metrics, className = '' }: SmartNotific
           <div
             role="dialog"
             aria-label="التنبيهات الذكية"
-            className="absolute end-0 top-[calc(100%+8px)] z-50 w-[min(100vw-2rem,320px)] overflow-hidden rounded-2xl border border-divider bg-white shadow-xl"
+            className="absolute end-0 top-[calc(100%+8px)] z-50 w-[min(100vw-2rem,320px)] overflow-hidden rounded-2xl border border-divider bg-surface shadow-xl"
           >
             <AlertsPanelContent metrics={metrics} compact />
           </div>

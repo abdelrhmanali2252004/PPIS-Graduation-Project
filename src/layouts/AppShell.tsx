@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import FikraTechLogo from '../components/branding/FikraTechLogo'
-import LanguageToggle from '../i18n/LanguageToggle'
+import UtilityTogglesBar from './UtilityTogglesBar'
 import { useLanguage } from '../i18n/LanguageContext'
 import { AIFloatingBubble } from './AIFloatingBubble'
 
@@ -45,13 +45,13 @@ export function AppShell({
 
   return (
     <div dir={dir} className="flex h-screen overflow-hidden bg-offwhite font-cairo">
-      <aside className="flex w-[240px] shrink-0 flex-col bg-nile text-white">
+      <aside className="flex w-[260px] shrink-0 flex-col bg-nile text-white">
         <div className="border-b border-white/15 px-4 py-5">
-          <div className="mb-3 flex items-center justify-between gap-2">
-            <Link to="/" className="inline-flex">
+          <div className="mb-3 flex items-start justify-between gap-3">
+            <Link to="/" className="inline-flex min-w-0 shrink">
               <FikraTechLogo variant="compact" />
             </Link>
-            <LanguageToggle variant="dark" />
+            <UtilityTogglesBar variant="dark" />
           </div>
         </div>
         <nav className="flex-1 space-y-1 overflow-y-auto px-2 py-4">

@@ -3,6 +3,7 @@ import { ShieldCheck, User } from 'lucide-react'
 import { ADMIN_PAGES } from '../../config/adminNav'
 import { USER_STORAGE_KEY } from '../../api/client'
 import FikraTechLogo from '../branding/FikraTechLogo'
+import UtilityTogglesBar from '../../layouts/UtilityTogglesBar'
 import { useTranslation } from '../../i18n/LanguageContext'
 
 function readSidebarUser() {
@@ -34,9 +35,12 @@ export default function AdminSidebar() {
   return (
     <aside className="flex w-[260px] shrink-0 flex-col border-s border-divider bg-nile text-white">
       <div className="border-b border-white/15 px-5 py-5">
-        <div className="mb-1 flex items-center gap-2">
-          <ShieldCheck className="h-5 w-5 text-gold" />
-          <span className="text-sm font-bold">{t('admin.panel')}</span>
+        <div className="mb-1 flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2">
+            <ShieldCheck className="h-5 w-5 shrink-0 text-gold" />
+            <span className="truncate text-sm font-bold">{t('admin.panel')}</span>
+          </div>
+          <UtilityTogglesBar variant="dark" />
         </div>
         <Link to="/" className="mt-3 inline-flex" aria-label={`${t('logo.name')} ${t('logo.tag')}`}>
           <FikraTechLogo variant="compact" />

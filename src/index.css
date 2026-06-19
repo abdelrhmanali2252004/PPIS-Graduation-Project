@@ -3,7 +3,31 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --color-page: 249 250 251;
+    --color-surface: 255 255 255;
+    --color-foreground: 17 24 39;
+    --color-divider: 229 231 235;
+    --color-muted: 148 163 184;
+    --color-footer: 17 24 39;
+    --color-heading: 27 76 140;
+  }
+
+  .dark {
+    --color-page: 11 18 32;
+    --color-surface: 20 28 43;
+    --color-foreground: 241 245 249;
+    --color-divider: 42 53 72;
+    --color-muted: 139 156 181;
+    --color-footer: 5 10 18;
+    --color-heading: 255 255 255;
+  }
+
   html {
     font-family: Cairo, system-ui, sans-serif;
+  }
+
+  body {
+    @apply bg-page text-body antialiased;
   }
 }

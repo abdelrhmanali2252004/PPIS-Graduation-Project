@@ -37,7 +37,7 @@ export default function MarketResearchContent() {
         <h1 className="text-xl font-bold text-body md:text-2xl">
           الخطوة الأولى: مركز أبحاث السوق
         </h1>
-        <p className="mt-1 text-sm font-medium text-nile">
+        <p className="mt-1 text-sm font-medium text-heading">
           Step 1: Market Research Hub
         </p>
       </header>
@@ -59,7 +59,7 @@ export default function MarketResearchContent() {
           aria-hidden
         >
           <div className="hidden h-px flex-1 bg-divider lg:block lg:h-auto lg:w-px lg:flex-none" />
-          <span className="rounded-full bg-white px-3 py-1 text-sm font-bold text-gold">
+          <span className="rounded-full bg-surface px-3 py-1 text-sm font-bold text-gold">
             أو
           </span>
           <div className="hidden h-px flex-1 bg-divider lg:block lg:h-auto lg:w-px lg:flex-none" />

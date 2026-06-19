@@ -3,7 +3,7 @@ import { Link, NavLink } from 'react-router-dom'
 import { User } from 'lucide-react'
 import { USER_DASHBOARD_PAGES } from '../config/userDashboardNav'
 import FikraTechLogo from '../components/branding/FikraTechLogo'
-import LanguageToggle from '../i18n/LanguageToggle'
+import UtilityTogglesBar from './UtilityTogglesBar'
 import { useLanguage } from '../i18n/LanguageContext'
 
 export function readSidebarUser() {
@@ -35,9 +35,9 @@ export default function UserDashboardSidebar() {
   return (
     <aside className="flex w-[260px] shrink-0 flex-col border-s border-divider bg-nile text-white">
       <div className="border-b border-white/15 px-5 py-5">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-sm font-bold">{t('dashboard.userDashboard')}</h2>
-          <LanguageToggle variant="dark" />
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="min-w-0 text-sm font-bold">{t('dashboard.userDashboard')}</h2>
+          <UtilityTogglesBar variant="dark" />
         </div>
         <Link to="/" className="mt-3 inline-flex" aria-label={`${t('logo.name')} ${t('logo.tag')}`}>
           <FikraTechLogo variant="compact" />

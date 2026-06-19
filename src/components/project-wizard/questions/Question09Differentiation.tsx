@@ -3,7 +3,7 @@ import type { QuestionComponentProps } from './types'
 export default function Question09Differentiation({ value, onChange }: QuestionComponentProps) {
   return (
     <>
-      <h2 className="mb-4 text-lg font-bold text-nile">9) ما الذي يميز مشروعك عن المنافسين؟</h2>
+      <h2 className="mb-4 text-lg font-bold text-heading">9) ما الذي يميز مشروعك عن المنافسين؟</h2>
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value.slice(0, 220))}

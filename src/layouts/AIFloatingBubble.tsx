@@ -26,7 +26,7 @@ export function AIFloatingBubble({ tip, pulseKey = 0 }: Props) {
     >
       <div
         key={pulseKey}
-        className="animate-pulse-ring rounded-2xl border-2 border-gold bg-white p-1 shadow-lg"
+        className="animate-pulse-ring rounded-2xl border-2 border-gold bg-surface p-1 shadow-lg"
       >
         <div className="relative flex gap-3 rounded-xl bg-nile/95 p-3 text-white shadow-inner">
           <button

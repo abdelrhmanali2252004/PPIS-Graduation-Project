@@ -119,11 +119,11 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
         <p className="mt-1 text-xs text-slateMuted">تم توليد اللوجو بناءً على بيانات مشروعك</p>
       </div>
 
-      <div className="w-full max-w-sm rounded-2xl border border-divider bg-white p-6 shadow-md">
+      <div className="w-full max-w-sm rounded-2xl border border-divider bg-surface p-6 shadow-md">
         {isLoading && (
           <div className="flex flex-col items-center gap-3 py-10">
-            <Loader2 className="h-10 w-10 animate-spin text-nile" />
-            <p className="text-sm font-semibold text-nile">جاري تصميم لوجوك...</p>
+            <Loader2 className="h-10 w-10 animate-spin text-heading" />
+            <p className="text-sm font-semibold text-heading">جاري تصميم لوجوك...</p>
             <div className="h-1.5 w-48 overflow-hidden rounded-full bg-divider">
               <div className="h-full w-3/4 animate-pulse rounded-full bg-gradient-to-l from-gold to-nile" />
             </div>
@@ -148,7 +148,7 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
         )}
 
         {displayName && (
-          <p className="mt-4 text-center text-base font-bold text-nile">{displayName}</p>
+          <p className="mt-4 text-center text-base font-bold text-heading">{displayName}</p>
         )}
         {displayTagline && (
           <p className="mt-1 text-center text-xs text-slateMuted">{displayTagline}</p>
@@ -168,7 +168,7 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
           type="button"
           disabled={isLoading}
           onClick={handleRetry}
-          className="flex items-center gap-2 rounded-xl border border-divider bg-white px-5 py-2.5 text-sm font-semibold text-body shadow-sm transition-all hover:border-nile disabled:opacity-40"
+          className="flex items-center gap-2 rounded-xl border border-divider bg-surface px-5 py-2.5 text-sm font-semibold text-body shadow-sm transition-all hover:border-nile disabled:opacity-40"
         >
           <RefreshCw className="h-4 w-4" />
           إعادة التوليد

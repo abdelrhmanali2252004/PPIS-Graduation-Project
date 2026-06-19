@@ -3,7 +3,7 @@ import type { QuestionComponentProps } from './types'
 export default function Question07Experience({ value, onChange }: QuestionComponentProps) {
   return (
     <>
-      <h2 className="mb-4 text-lg font-bold text-nile">7) ما خبرتك السابقة في هذا المجال؟</h2>
+      <h2 className="mb-4 text-lg font-bold text-heading">7) ما خبرتك السابقة في هذا المجال؟</h2>
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value.slice(0, 220))}

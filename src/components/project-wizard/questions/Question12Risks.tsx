@@ -3,7 +3,7 @@ import type { QuestionComponentProps } from './types'
 export default function Question12Risks({ value, onChange }: QuestionComponentProps) {
   return (
     <>
-      <h2 className="mb-4 text-lg font-bold text-nile">12{")"} ما أكبر المخاطر أو التحديات المتوقعة؟</h2>
+      <h2 className="mb-4 text-lg font-bold text-heading">12{")"} ما أكبر المخاطر أو التحديات المتوقعة؟</h2>
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value.slice(0, 250))}

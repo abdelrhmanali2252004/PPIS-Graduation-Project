@@ -1,16 +1,18 @@
-import { Languages } from 'lucide-react'
-import { useLanguage } from './LanguageContext'
+import { Moon, Sun } from 'lucide-react'
+import { useLanguage } from '../i18n/LanguageContext'
+import { useTheme } from './ThemeContext'
 
-type LanguageToggleProps = {
+type ThemeToggleProps = {
   className?: string
   variant?: 'light' | 'dark' | 'light-grouped' | 'dark-grouped'
 }
 
-export default function LanguageToggle({
+export default function ThemeToggle({
   className = '',
   variant = 'light',
-}: LanguageToggleProps) {
-  const { locale, toggleLocale, t } = useLanguage()
+}: ThemeToggleProps) {
+  const { theme, toggleTheme } = useTheme()
+  const { t } = useLanguage()
 
   const styles =
     variant === 'dark-grouped'
@@ -28,16 +30,23 @@ export default function LanguageToggle({
 
   const bordered = variant === 'light' || variant === 'dark'
 
+  const label =
+    theme === 'dark' ? t('theme.switchToLight') : t('theme.switchToDark')
+
   return (
     <button
       type="button"
-      onClick={toggleLocale}
+      onClick={toggleTheme}
       className={`inline-flex items-center gap-1 rounded-lg text-xs font-bold transition-colors ${padding} ${bordered ? `border ${styles}` : styles} ${className}`}
-      aria-label={t('language.aria')}
-      title={locale === 'ar' ? t('language.switchToEnglish') : t('language.switchToArabic')}
+      aria-label={t('theme.aria')}
+      title={label}
     >
-      <Languages className="h-4 w-4" aria-hidden />
-      <span>{locale === 'ar' ? 'EN' : 'AR'}</span>
+      {theme === 'dark' ? (
+        <Sun className="h-4 w-4" aria-hidden />
+      ) : (
+        <Moon className="h-4 w-4" aria-hidden />
+      )}
+      <span>{theme === 'dark' ? t('theme.light') : t('theme.dark')}</span>
     </button>
   )
 }

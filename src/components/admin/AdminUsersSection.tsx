@@ -12,11 +12,11 @@ export default function AdminUsersSection() {
   }, [dispatch])
 
   return (
-    <section className="rounded-2xl border border-divider bg-white p-5 shadow-sm">
+    <section className="rounded-2xl border border-divider bg-surface p-5 shadow-sm">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-sm font-bold text-nile">كل المستخدمين وتفاصيلهم</h2>
+        <h2 className="text-sm font-bold text-heading">كل المستخدمين وتفاصيلهم</h2>
         {!loading && !error ? (
-          <span className="rounded-full bg-nile/10 px-2.5 py-1 text-xs font-semibold text-nile">
+          <span className="rounded-full bg-nile/10 px-2.5 py-1 text-xs font-semibold text-heading">
             {count} مستخدم
           </span>
         ) : null}
@@ -39,7 +39,7 @@ export default function AdminUsersSection() {
                 <tr key={`user-skeleton-${index}`} className="border-b border-divider/70">
                   {Array.from({ length: 5 }).map((__, cellIndex) => (
                     <td key={`user-skeleton-cell-${index}-${cellIndex}`} className="px-2 py-3">
-                      <div className="h-4 animate-pulse rounded bg-slate-200" />
+                      <div className="h-4 animate-pulse rounded bg-divider" />
                     </td>
                   ))}
                 </tr>
@@ -84,7 +84,7 @@ export default function AdminUsersSection() {
                   <td className="px-2 py-3 font-semibold text-body">{user.name}</td>
                   <td className="px-2 py-3 text-body/80">{user.email}</td>
                   <td className="px-2 py-3">{user.phoneNumber || '—'}</td>
-                  <td className="px-2 py-3 text-nile">{getUserRoleLabel(user.role)}</td>
+                  <td className="px-2 py-3 text-heading">{getUserRoleLabel(user.role)}</td>
                   <td className="px-2 py-3">{user.projectCount}</td>
                 </tr>
               ))}

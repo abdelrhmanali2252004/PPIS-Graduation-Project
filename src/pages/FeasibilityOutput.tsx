@@ -38,7 +38,7 @@ export default function FeasibilityOutput() {
     >
       {metrics ? (
         <div
-          className="sticky top-0 z-30 flex justify-end border-b border-divider bg-white/95 px-6 py-3 backdrop-blur-sm lg:px-10"
+          className="sticky top-0 z-30 flex justify-end border-b border-divider bg-surface/95 px-6 py-3 backdrop-blur-sm lg:px-10"
           dir="rtl"
         >
           <SmartNotificationsBell metrics={metrics} />

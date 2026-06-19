@@ -38,7 +38,7 @@ export function FeasibilityProse({ text }: { text?: unknown }) {
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
-      <h3 className="mb-2 text-sm font-bold text-nile">{title}</h3>
+      <h3 className="mb-2 text-sm font-bold text-heading">{title}</h3>
       {children}
     </div>
   )

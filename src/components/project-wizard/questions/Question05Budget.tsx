@@ -3,7 +3,7 @@ import type { QuestionComponentProps } from './types'
 export default function Question05Budget({ value, onChange }: QuestionComponentProps) {
   return (
     <>
-      <h2 className="mb-4 text-lg font-bold text-nile">5) ما رأس المال المبدئي المتوقع؟</h2>
+      <h2 className="mb-4 text-lg font-bold text-heading">5) ما رأس المال المبدئي المتوقع؟</h2>
       <input
         type="number"
         value={value}
@@ -17,7 +17,7 @@ export default function Question05Budget({ value, onChange }: QuestionComponentP
             key={r}
             type="button"
             onClick={() => onChange(r)}
-            className="rounded-lg border border-divider bg-white px-3 py-1.5 text-xs font-medium text-body hover:border-gold"
+            className="rounded-lg border border-divider bg-surface px-3 py-1.5 text-xs font-medium text-body hover:border-gold"
           >
             {r}
           </button>

@@ -3,7 +3,7 @@ import type { QuestionComponentProps } from './types'
 export default function Question01Idea({ value, onChange }: QuestionComponentProps) {
   return (
     <>
-      <h2 className="mb-4 text-lg font-bold text-nile">1) ما هي فكرة المشروع؟</h2>
+      <h2 className="mb-4 text-lg font-bold text-heading">1) ما هي فكرة المشروع؟</h2>
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value.slice(0, 300))}

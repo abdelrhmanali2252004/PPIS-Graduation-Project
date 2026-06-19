@@ -5,7 +5,7 @@ import { loginUser } from '../store/slices/authSlice'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { getDashboardHomePath, getUserRole } from '../types/auth'
 import FikraTechLogo from '../components/branding/FikraTechLogo'
-import LanguageToggle from '../i18n/LanguageToggle'
+import UtilityTogglesBar from '../layouts/UtilityTogglesBar'
 import { useLanguage } from '../i18n/LanguageContext'
 
 export default function LoginPage() {
@@ -34,10 +34,10 @@ export default function LoginPage() {
   return (
     <div dir={dir} className="relative min-h-screen bg-offwhite font-cairo text-body">
       <div className="absolute end-4 top-4 z-10 sm:end-6 sm:top-6">
-        <LanguageToggle />
+        <UtilityTogglesBar />
       </div>
       <div className="mx-auto flex min-h-screen max-w-6xl items-center px-4 py-10">
-        <div className="grid w-full grid-cols-1 overflow-hidden rounded-2xl border border-divider bg-white shadow-lg md:grid-cols-2">
+        <div className="grid w-full grid-cols-1 overflow-hidden rounded-2xl border border-divider bg-surface shadow-lg md:grid-cols-2">
           <section className="relative hidden overflow-hidden bg-gradient-to-b from-nile to-nile-dark p-8 text-white md:block">
             <div className="relative">
               <div className="mb-4">
@@ -52,7 +52,7 @@ export default function LoginPage() {
 
           <section className="p-6 sm:p-8 md:p-10">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-nile">{t('auth.loginTitle')}</h2>
+              <h2 className="text-2xl font-bold text-heading">{t('auth.loginTitle')}</h2>
               <p className="mt-1 text-sm text-slateMuted">{t('auth.loginSubtitle')}</p>
             </div>
 
@@ -68,7 +68,7 @@ export default function LoginPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     placeholder="name@example.com"
-                    className="w-full rounded-xl border border-divider bg-white py-3 pe-10 ps-4 text-sm outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15"
+                    className="w-full rounded-xl border border-divider bg-surface py-3 pe-10 ps-4 text-sm outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15"
                   />
                 </div>
               </label>
@@ -84,7 +84,7 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     type="password"
                     placeholder="••••••••"
-                    className="w-full rounded-xl border border-divider bg-white py-3 pe-10 ps-4 text-sm outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15"
+                    className="w-full rounded-xl border border-divider bg-surface py-3 pe-10 ps-4 text-sm outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15"
                   />
                 </div>
               </label>
@@ -94,7 +94,7 @@ export default function LoginPage() {
                   <input type="checkbox" className="accent-nile" />
                   {t('auth.rememberMe')}
                 </label>
-                <button type="button" className="font-semibold text-nile hover:text-gold">
+                <button type="button" className="font-semibold text-heading hover:text-gold">
                   {t('auth.forgotPassword')}
                 </button>
               </div>
@@ -114,13 +114,13 @@ export default function LoginPage() {
 
             <p className="mt-6 text-center text-sm text-slateMuted">
               {t('auth.noAccount')}{' '}
-              <Link to="/register" className="font-bold text-gold hover:text-nile">
+              <Link to="/register" className="font-bold text-gold hover:text-gold">
                 {t('auth.createAccount')}
               </Link>
             </p>
 
             <div className="mt-6 text-center">
-              <Link to="/" className="text-xs font-semibold text-nile/80 hover:text-gold">
+              <Link to="/" className="text-xs font-semibold text-heading/80 hover:text-gold">
                 {t('common.backHome')}
               </Link>
             </div>

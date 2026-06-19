@@ -73,7 +73,7 @@ export default function AdminRequestContactModal({
       role="presentation"
     >
       <div
-        className="w-full max-w-md rounded-2xl bg-white p-6 text-right shadow-xl"
+        className="w-full max-w-md rounded-2xl bg-surface p-6 text-right shadow-xl"
         role="dialog"
         aria-modal="true"
         aria-labelledby="request-contact-title"
@@ -81,7 +81,7 @@ export default function AdminRequestContactModal({
       >
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <h3 id="request-contact-title" className="text-lg font-bold text-nile">
+            <h3 id="request-contact-title" className="text-lg font-bold text-heading">
               بيانات التواصل
             </h3>
             <p className="mt-1 text-sm text-slateMuted">
@@ -91,7 +91,7 @@ export default function AdminRequestContactModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-divider p-1.5 text-slateMuted transition hover:text-nile"
+            className="rounded-lg border border-divider p-1.5 text-slateMuted transition hover:text-gold"
             aria-label="إغلاق"
           >
             <X className="h-4 w-4" />
@@ -113,7 +113,7 @@ export default function AdminRequestContactModal({
                 }
               }}
               disabled={isSaving}
-              className="min-w-[180px] flex-1 rounded-xl border border-divider bg-white px-3 py-2.5 text-sm font-semibold text-body outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15 disabled:cursor-not-allowed disabled:opacity-60"
+              className="min-w-[180px] flex-1 rounded-xl border border-divider bg-surface px-3 py-2.5 text-sm font-semibold text-body outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {REQUEST_STATUS_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -149,7 +149,7 @@ export default function AdminRequestContactModal({
             {userEmail ? (
               <a
                 href={toMailtoHref(userEmail)}
-                className="inline-flex items-center gap-2 font-semibold text-nile hover:text-gold"
+                className="inline-flex items-center gap-2 font-semibold text-heading hover:text-gold"
               >
                 <Mail className="h-4 w-4" />
                 {userEmail}
@@ -164,7 +164,7 @@ export default function AdminRequestContactModal({
             {userPhone ? (
               <div className="flex flex-wrap items-center gap-3">
                 <span className="inline-flex items-center gap-2 font-semibold text-body">
-                  <Phone className="h-4 w-4 text-nile" />
+                  <Phone className="h-4 w-4 text-heading" />
                   {userPhone}
                 </span>
                 <a

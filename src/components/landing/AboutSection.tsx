@@ -26,7 +26,7 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="relative overflow-hidden bg-gradient-to-b from-white via-offwhite to-white px-4 py-16 md:py-24"
+      className="relative overflow-hidden bg-gradient-to-b from-page via-offwhite to-page px-4 py-16 md:py-24"
     >
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-gold/40 to-transparent"
@@ -34,7 +34,7 @@ export default function AboutSection() {
       />
       <div className="relative mx-auto max-w-6xl">
         <div className="mb-10 text-center md:mb-12">
-          <h2 className="text-2xl font-bold text-nile md:text-3xl">{t('landing.about.title')}</h2>
+          <h2 className="text-2xl font-bold text-heading md:text-3xl">{t('landing.about.title')}</h2>
           <p className="mt-2 text-base font-medium text-gold md:text-lg">
             {t('landing.about.subtitle')}
           </p>
@@ -42,7 +42,7 @@ export default function AboutSection() {
 
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
           <div className="order-2 space-y-5 lg:order-1">
-            <p className="text-lg font-semibold leading-relaxed text-nile md:text-xl">
+            <p className="text-lg font-semibold leading-relaxed text-heading md:text-xl">
               {t('landing.about.p1')}
             </p>
             <p className="text-base leading-8 text-body/85">{t('landing.about.p2')}</p>
@@ -51,13 +51,13 @@ export default function AboutSection() {
               {highlights.map(({ icon: Icon, title, desc }) => (
                 <li
                   key={title}
-                  className="flex gap-4 rounded-2xl border border-divider bg-white/90 p-4 shadow-sm transition-shadow hover:shadow-md"
+                  className="flex gap-4 rounded-2xl border border-divider bg-surface/90 p-4 shadow-sm transition-shadow hover:shadow-md"
                 >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-nile/8 text-nile">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-nile/8 text-heading dark:bg-white/10">
                     <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden />
                   </span>
                   <div>
-                    <h3 className="font-bold text-nile">{title}</h3>
+                    <h3 className="font-bold text-heading">{title}</h3>
                     <p className="mt-1 text-sm leading-relaxed text-body/80">{desc}</p>
                   </div>
                 </li>

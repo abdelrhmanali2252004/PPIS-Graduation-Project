@@ -3,7 +3,7 @@ import type { QuestionComponentProps } from './types'
 export default function Question11SalesTarget({ value, onChange }: QuestionComponentProps) {
   return (
     <>
-      <h2 className="mb-4 text-lg font-bold text-nile">11) ما هدف المبيعات الشهري في أول سنة؟</h2>
+      <h2 className="mb-4 text-lg font-bold text-heading">11) ما هدف المبيعات الشهري في أول سنة؟</h2>
       <input
         type="number"
         value={value}

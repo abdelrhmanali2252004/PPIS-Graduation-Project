@@ -106,20 +106,20 @@ function ProjectsPage({
           ? Array.from({ length: 3 }).map((_, idx) => (
               <div
                 key={`project-skeleton-${idx}`}
-                className="animate-pulse rounded-2xl border border-divider bg-white p-5 shadow-sm"
+                className="animate-pulse rounded-2xl border border-divider bg-surface p-5 shadow-sm"
               >
                 <div className="mb-3 flex items-center justify-between">
-                  <div className="h-5 w-20 rounded-full bg-slate-200" />
+                  <div className="h-5 w-20 rounded-full bg-divider" />
                   <div className="h-4 w-24 rounded bg-slate-100" />
                 </div>
-                <div className="mb-2 h-5 w-3/4 rounded bg-slate-200" />
+                <div className="mb-2 h-5 w-3/4 rounded bg-divider" />
                 <div className="h-4 w-1/2 rounded bg-slate-100" />
               </div>
             ))
           : null}
 
         {!loading && !error && projects.length === 0 ? (
-          <div className="rounded-2xl border border-divider bg-white p-6 text-center shadow-sm md:col-span-2 xl:col-span-3">
+          <div className="rounded-2xl border border-divider bg-surface p-6 text-center shadow-sm md:col-span-2 xl:col-span-3">
             <h3 className="text-base font-bold text-body">{t('dashboard.noProjects')}</h3>
             <p className="mt-2 text-sm text-slateMuted">{t('dashboard.noProjectsDesc')}</p>
           </div>
@@ -136,12 +136,12 @@ function ProjectsPage({
             key={project.id}
             type="button"
             onClick={() => onOpenProject(project)}
-            className={`rounded-2xl border border-divider bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${
+            className={`rounded-2xl border border-divider bg-surface p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${
               dir === 'rtl' ? 'text-right' : 'text-left'
             }`}
           >
             <div className="mb-3 flex items-center justify-between">
-              <span className="rounded-full bg-nile/10 px-2.5 py-1 text-[11px] font-semibold text-nile">
+              <span className="rounded-full bg-nile/10 px-2.5 py-1 text-[11px] font-semibold text-heading">
                 {project.category}
               </span>
               <span className="text-xs text-slateMuted">{project.updatedAt}</span>
@@ -162,9 +162,9 @@ function ContentEmptyPage() {
 
   return (
     <section className="p-6 lg:p-10">
-      <div className="rounded-2xl border border-divider bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-divider bg-surface p-6 shadow-sm">
         <h2 className="mb-2 text-lg font-bold text-body">{t('dashboard.contentEmpty')}</h2>
-        <NavLink to="/dashboard/user/projects" className="text-sm font-semibold text-nile">
+        <NavLink to="/dashboard/user/projects" className="text-sm font-semibold text-heading">
           {t('dashboard.goToProjects')}
         </NavLink>
       </div>

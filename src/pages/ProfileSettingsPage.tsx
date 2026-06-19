@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { KeyRound, Lock, Mail, Phone, Shield, Smartphone, User } from 'lucide-react'
+import { KeyRound, Lock, Mail, Moon, Phone, Shield, Smartphone, Sun, User } from 'lucide-react'
 import {
   addSecondaryPhone,
   getOtpDeliveryMessage,
@@ -15,12 +15,9 @@ import {
 } from '../store/slices/authSlice'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { useLanguage } from '../i18n/LanguageContext'
-
-const inputClassName =
-  'w-full rounded-xl border border-divider bg-white py-3 pe-10 ps-4 text-sm outline-none transition focus:border-nile focus:ring-2 focus:ring-nile/15'
-
-const readOnlyClassName =
-  'w-full rounded-xl border border-divider bg-offwhite py-3 pe-10 ps-4 text-sm text-slateMuted outline-none'
+import { inputClassName, readOnlyClassName } from '../theme/inputStyles'
+import { useTheme } from '../theme/ThemeContext'
+import type { ThemeMode } from '../theme/types'
 
 function getLocalizedRoleLabel(role: string | null | undefined, t: (key: string) => string) {
   switch (role?.trim().toLowerCase()) {
@@ -36,6 +33,7 @@ function getLocalizedRoleLabel(role: string | null | undefined, t: (key: string)
 export default function ProfileSettingsPage() {
   const dispatch = useAppDispatch()
   const { t } = useLanguage()
+  const { theme, setTheme } = useTheme()
   const { user, profileLoading, profileSaving, passwordSaving } = useAppSelector(
     (state) => state.auth,
   )
@@ -275,9 +273,9 @@ export default function ProfileSettingsPage() {
     return (
       <section className="p-6 lg:p-10">
         <div className="max-w-3xl animate-pulse space-y-4">
-          <div className="h-8 w-48 rounded-lg bg-slate-200" />
-          <div className="h-4 w-72 rounded bg-slate-100" />
-          <div className="h-64 rounded-2xl bg-slate-100" />
+          <div className="h-8 w-48 rounded-lg bg-divider" />
+          <div className="h-4 w-72 rounded bg-divider/60" />
+          <div className="h-64 rounded-2xl bg-divider/60" />
         </div>
       </section>
     )
@@ -303,8 +301,42 @@ export default function ProfileSettingsPage() {
       ) : null}
 
       <div className="max-w-3xl space-y-6">
-        <article className="rounded-2xl border border-divider bg-white p-6 shadow-sm">
-          <h2 className="mb-1 text-lg font-bold text-nile">{t('profile.personal')}</h2>
+        <article className="rounded-2xl border border-divider bg-surface p-6 shadow-sm">
+          <h2 className="mb-1 text-lg font-bold text-heading">{t('theme.sectionTitle')}</h2>
+          <p className="mb-6 text-sm text-slateMuted">{t('theme.sectionDesc')}</p>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {(['light', 'dark'] as ThemeMode[]).map((mode) => {
+              const selected = theme === mode
+              return (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => setTheme(mode)}
+                  className={`rounded-xl border px-4 py-4 text-start transition-colors ${
+                    selected
+                      ? 'border-nile bg-nile/10 text-heading'
+                      : 'border-divider bg-page text-body hover:border-nile/40'
+                  }`}
+                >
+                  <div className="mb-2 flex items-center gap-2 font-bold">
+                    {mode === 'light' ? (
+                      <Sun className="h-4 w-4" aria-hidden />
+                    ) : (
+                      <Moon className="h-4 w-4" aria-hidden />
+                    )}
+                    <span>{mode === 'light' ? t('theme.light') : t('theme.dark')}</span>
+                  </div>
+                  <p className="text-xs text-slateMuted">
+                    {mode === 'light' ? t('theme.switchToLight') : t('theme.switchToDark')}
+                  </p>
+                </button>
+              )
+            })}
+          </div>
+        </article>
+
+        <article className="rounded-2xl border border-divider bg-surface p-6 shadow-sm">
+          <h2 className="mb-1 text-lg font-bold text-heading">{t('profile.personal')}</h2>
           <p className="mb-6 text-sm text-slateMuted">{t('profile.personalDesc')}</p>
 
           {profileSuccess ? (
@@ -391,8 +423,8 @@ export default function ProfileSettingsPage() {
           </form>
         </article>
 
-        <article className="rounded-2xl border border-divider bg-white p-6 shadow-sm">
-          <h2 className="mb-1 text-lg font-bold text-nile">{t('profile.secondarySection')}</h2>
+        <article className="rounded-2xl border border-divider bg-surface p-6 shadow-sm">
+          <h2 className="mb-1 text-lg font-bold text-heading">{t('profile.secondarySection')}</h2>
           <p className="mb-6 text-sm text-slateMuted">{t('profile.secondaryDesc')}</p>
 
           {secondarySuccess ? (
@@ -427,7 +459,7 @@ export default function ProfileSettingsPage() {
             <button
               type="button"
               onClick={() => setShowSecondaryForm(true)}
-              className="rounded-xl border border-nile bg-white px-5 py-2.5 text-sm font-bold text-nile transition-colors hover:bg-nile/5"
+              className="rounded-xl border border-nile bg-surface px-5 py-2.5 text-sm font-bold text-heading transition-colors hover:bg-nile/5"
             >
               {t('profile.addPhone')}
             </button>
@@ -484,7 +516,7 @@ export default function ProfileSettingsPage() {
                     type="button"
                     onClick={() => void handleRequestSecondaryOtp()}
                     disabled={secondaryLoading}
-                    className="rounded-xl border border-nile bg-white px-5 py-2.5 text-sm font-bold text-nile transition-colors hover:bg-nile/5 disabled:opacity-60"
+                    className="rounded-xl border border-nile bg-surface px-5 py-2.5 text-sm font-bold text-heading transition-colors hover:bg-nile/5 disabled:opacity-60"
                   >
                     {secondaryLoading ? t('common.sendingOtp') : t('common.sendOtp')}
                   </button>
@@ -546,8 +578,8 @@ export default function ProfileSettingsPage() {
           )}
         </article>
 
-        <article className="rounded-2xl border border-divider bg-white p-6 shadow-sm">
-          <h2 className="mb-1 text-lg font-bold text-nile">{t('profile.security')}</h2>
+        <article className="rounded-2xl border border-divider bg-surface p-6 shadow-sm">
+          <h2 className="mb-1 text-lg font-bold text-heading">{t('profile.security')}</h2>
           <p className="mb-6 text-sm text-slateMuted">{t('profile.securityDesc')}</p>
 
           {passwordSuccess ? (
@@ -616,7 +648,7 @@ export default function ProfileSettingsPage() {
             <button
               type="submit"
               disabled={passwordSaving}
-              className="rounded-xl border border-nile bg-white px-5 py-2.5 text-sm font-bold text-nile transition-colors hover:bg-nile/5 disabled:opacity-60"
+              className="rounded-xl border border-nile bg-surface px-5 py-2.5 text-sm font-bold text-heading transition-colors hover:bg-nile/5 disabled:opacity-60"
             >
               {passwordSaving ? t('profile.changingPassword') : t('profile.changePasswordBtn')}
             </button>
@@ -626,7 +658,7 @@ export default function ProfileSettingsPage() {
             <button
               type="button"
               onClick={() => setShowForgotPassword((prev) => !prev)}
-              className="text-sm font-bold text-nile hover:text-gold"
+              className="text-sm font-bold text-heading hover:text-gold"
             >
               {showForgotPassword ? t('profile.hideForgot') : t('profile.forgotSection')}
             </button>
@@ -678,7 +710,7 @@ export default function ProfileSettingsPage() {
                     type="button"
                     onClick={() => void handleRequestForgotOtp()}
                     disabled={forgotLoading}
-                    className="rounded-xl border border-nile bg-white px-5 py-2.5 text-sm font-bold text-nile transition-colors hover:bg-nile/5 disabled:opacity-60"
+                    className="rounded-xl border border-nile bg-surface px-5 py-2.5 text-sm font-bold text-heading transition-colors hover:bg-nile/5 disabled:opacity-60"
                   >
                     {forgotLoading ? t('common.sendingOtp') : t('common.sendOtp')}
                   </button>

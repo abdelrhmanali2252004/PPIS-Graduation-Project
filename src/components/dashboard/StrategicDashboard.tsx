@@ -121,7 +121,7 @@ export default function StrategicDashboard({
           />
         </div>
       ) : null}
-      <header className="border-b border-divider bg-white px-6 py-5 lg:px-8">
+      <header className="border-b border-divider bg-surface px-6 py-5 lg:px-8">
         <div className="mb-3 flex items-start justify-between gap-4">
           <p className="text-xs text-slateMuted">لوحة التحكم الاستراتيجية</p>
           {metrics ? <SmartNotificationsBell metrics={metrics} /> : null}
@@ -130,7 +130,7 @@ export default function StrategicDashboard({
         {metrics ? (
           <p className="mt-2 text-sm text-slateMuted">
             مستخرجة من مخرجات دراسة الجدوى — رأس مال مبدئي:{' '}
-            <span className="font-bold text-nile">{formatEgp(metrics.totalCapital)}</span>
+            <span className="font-bold text-heading">{formatEgp(metrics.totalCapital)}</span>
           </p>
         ) : (
           <p className="mt-2 text-sm text-slateMuted">
@@ -144,7 +144,7 @@ export default function StrategicDashboard({
             </span>
           ) : null}
           {logoUrl ? (
-            <span className="rounded-full bg-nile/10 px-3 py-1 text-xs font-semibold text-nile">
+            <span className="rounded-full bg-nile/10 px-3 py-1 text-xs font-semibold text-heading">
               شعار المشروع متوفر
             </span>
           ) : null}
@@ -169,7 +169,7 @@ export default function StrategicDashboard({
             type="button"
             onClick={() => void handleDownloadPdf()}
             disabled={!studyRes || pdfGenerating}
-            className="inline-flex items-center gap-2 rounded-lg border border-divider bg-white px-4 py-2 text-xs font-semibold text-body hover:bg-offwhite disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-lg border border-divider bg-surface px-4 py-2 text-xs font-semibold text-body hover:bg-offwhite disabled:cursor-not-allowed disabled:opacity-50"
           >
             {pdfGenerating ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -214,7 +214,7 @@ export default function StrategicDashboard({
 
           {isStudyTab(activeTab) ? (
             studyRes ? (
-              <article className="rounded-2xl border border-divider bg-white p-6 shadow-sm">
+              <article className="rounded-2xl border border-divider bg-surface p-6 shadow-sm">
                 <FeasibilityStudyTabPanel tab={activeTab} res={studyRes} />
               </article>
             ) : (
@@ -229,11 +229,11 @@ export default function StrategicDashboard({
 
 function TabEmptyState({ message }: { message: string }) {
   return (
-    <div className="rounded-2xl border border-divider bg-white p-8 text-center shadow-sm">
+    <div className="rounded-2xl border border-divider bg-surface p-8 text-center shadow-sm">
       <p className="text-sm text-slateMuted">{message}</p>
       <Link
         to="/app/step3"
-        className="mt-4 inline-block text-xs font-bold text-nile hover:underline"
+        className="mt-4 inline-block text-xs font-bold text-heading hover:underline"
       >
         الانتقال إلى دراسة الجدوى
       </Link>
@@ -251,7 +251,7 @@ function ProjectInfoPanel({
   logoPrompt: string | null
 }) {
   return (
-    <article className="rounded-2xl border border-divider bg-white p-6 shadow-sm">
+    <article className="rounded-2xl border border-divider bg-surface p-6 shadow-sm">
       <dl className="grid gap-4 sm:grid-cols-2">
         <InfoRow label="اسم المشروع" value={project.name} />
         <InfoRow label="الخطوة الحالية" value={`${project.step} من ٥`} />
@@ -267,7 +267,7 @@ function ProjectInfoPanel({
 
       {logoUrl ? (
         <div className="mt-6 border-t border-divider pt-6">
-          <h3 className="mb-3 text-sm font-bold text-nile">شعار المشروع</h3>
+          <h3 className="mb-3 text-sm font-bold text-heading">شعار المشروع</h3>
           <img
             src={logoUrl}
             alt={`شعار ${project.name}`}
@@ -282,7 +282,7 @@ function ProjectInfoPanel({
 
       {logoPrompt?.trim() ? (
         <div className="mt-6 border-t border-divider pt-6">
-          <h3 className="mb-2 text-sm font-bold text-nile">وصف الشعار (Prompt)</h3>
+          <h3 className="mb-2 text-sm font-bold text-heading">وصف الشعار (Prompt)</h3>
           <p className="whitespace-pre-wrap text-sm leading-7 text-body/90">{logoPrompt}</p>
         </div>
       ) : null}
@@ -310,7 +310,7 @@ function FinancialDashboardPanel({ metrics }: { metrics: FeasibilityMetrics }) {
           value={formatEgp(metrics.monthlyRevenue)}
           badge="هدف المشروع"
           badgeIcon={<TrendingUp className="h-3.5 w-3.5 text-success" />}
-          accent="text-nile"
+          accent="text-heading"
         />
         <KpiCard
           title="صافي الربح الشهري"
@@ -334,7 +334,7 @@ function FinancialDashboardPanel({ metrics }: { metrics: FeasibilityMetrics }) {
         />
       </div>
 
-      <h2 className="mb-4 text-sm font-bold text-nile">التوقعات المالية</h2>
+      <h2 className="mb-4 text-sm font-bold text-heading">التوقعات المالية</h2>
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <ChartCard
           title={`توزيع رأس المال — ${formatEgp(metrics.totalCapital)}`}
@@ -380,7 +380,7 @@ function FinancialDashboardPanel({ metrics }: { metrics: FeasibilityMetrics }) {
           footerAction={
             <Link
               to="/app/step3"
-              className="mt-4 inline-block text-xs font-bold text-nile hover:underline"
+              className="mt-4 inline-block text-xs font-bold text-heading hover:underline"
             >
               ← العودة لدراسة الجدوى
             </Link>
@@ -446,9 +446,9 @@ function KpiCard({
   accent?: string
 }) {
   return (
-    <div className="rounded-2xl border border-divider bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-divider bg-surface p-5 shadow-sm">
       <p className="text-xs font-semibold text-slateMuted">{title}</p>
-      <p className={`mt-2 text-2xl font-bold ${accent ?? 'text-nile'}`}>{value}</p>
+      <p className={`mt-2 text-2xl font-bold ${accent ?? 'text-heading'}`}>{value}</p>
       <div className="mt-3 flex items-center gap-1.5 text-[10px] font-semibold text-slateMuted">
         {badgeIcon}
         {badge}
@@ -477,8 +477,8 @@ function ChartCard({
   footerAction?: ReactNode
 }) {
   return (
-    <article className="rounded-2xl border border-divider bg-white p-5 shadow-sm">
-      <h3 className="mb-4 text-sm font-bold text-nile">{title}</h3>
+    <article className="rounded-2xl border border-divider bg-surface p-5 shadow-sm">
+      <h3 className="mb-4 text-sm font-bold text-heading">{title}</h3>
       {children}
       {footer ? (
         <p className="mt-4 rounded-lg bg-offwhite px-3 py-2 text-[10px] leading-relaxed text-slateMuted">

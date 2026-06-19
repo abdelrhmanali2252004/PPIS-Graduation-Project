@@ -5,6 +5,14 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>فكرة TECH</title>
+    <script>
+      ;(function () {
+        var theme = localStorage.getItem('ideaTechTheme')
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark')
+        }
+      })()
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -20,7 +28,7 @@
       />
     </noscript>
   </head>
-  <body class="bg-offwhite text-body antialiased">
+  <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

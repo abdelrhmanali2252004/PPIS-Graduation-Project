@@ -97,7 +97,7 @@ export default function FeasibilityContent({
           <div>
             <h1 className="text-xl font-bold text-body md:text-2xl">مخرجات دراسة الجدوى</h1>
             <div className="mt-2 flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-nile/10 px-3 py-1 text-xs font-semibold text-nile">
+              <span className="rounded-full bg-nile/10 px-3 py-1 text-xs font-semibold text-heading">
                 {headerSubtitle}
               </span>
               {study.marketResearchUsed ? (
@@ -113,13 +113,13 @@ export default function FeasibilityContent({
           <div className="flex gap-2">
             <button
               type="button"
-              className="flex items-center gap-2 rounded-lg border border-divider bg-white px-3 py-2 text-xs font-semibold text-body hover:bg-offwhite"
+              className="flex items-center gap-2 rounded-lg border border-divider bg-surface px-3 py-2 text-xs font-semibold text-body hover:bg-offwhite"
             >
               <Download className="h-4 w-4" /> تنزيل
             </button>
             <button
               type="button"
-              className="flex items-center gap-2 rounded-lg border border-divider bg-white px-3 py-2 text-xs font-semibold text-body hover:bg-offwhite"
+              className="flex items-center gap-2 rounded-lg border border-divider bg-surface px-3 py-2 text-xs font-semibold text-body hover:bg-offwhite"
             >
               <Share2 className="h-4 w-4" /> مشاركة
             </button>
@@ -148,7 +148,7 @@ export default function FeasibilityContent({
         ))}
       </div>
 
-      <div className="rounded-2xl border border-divider bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-divider bg-surface p-6 shadow-sm">
         <FeasibilityStudyTabPanel tab={tab} res={res} />
       </div>
 
@@ -164,7 +164,7 @@ export default function FeasibilityContent({
         </div>
         <button
           type="button"
-          className="mb-2 w-full rounded-xl bg-white py-3 text-sm font-bold text-nile shadow-md md:w-auto md:px-10"
+          className="mb-2 w-full rounded-xl bg-surface py-3 text-sm font-bold text-heading shadow-md md:w-auto md:px-10"
         >
           تواصل مع خبير الآن
         </button>

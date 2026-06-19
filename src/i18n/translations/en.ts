@@ -25,6 +25,15 @@ const en: TranslationDictionary = {
     switchToArabic: 'العربية',
     aria: 'Change language',
   },
+  theme: {
+    light: 'Light',
+    dark: 'Dark',
+    aria: 'Change theme',
+    switchToLight: 'Switch to light mode',
+    switchToDark: 'Switch to dark mode',
+    sectionTitle: 'Appearance',
+    sectionDesc: 'Choose light or dark mode for the app interface',
+  },
   nav: {
     home: 'Home',
     about: 'Our Vision',
