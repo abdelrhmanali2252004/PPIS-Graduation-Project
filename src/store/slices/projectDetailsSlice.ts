@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios'
 import { apiClient } from '../../api/client'
-import type { FeasibilityStudyResponse } from './feasibilitySlice'
+import type { FeasibilityStudyResponse } from '../../types/feasibilityStudy'
 import type { FeasibilityStep3Response } from './feasibilitySlice'
 
 export type ProjectDetails = {

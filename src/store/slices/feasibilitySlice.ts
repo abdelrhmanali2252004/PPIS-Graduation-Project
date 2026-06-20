@@ -1,25 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios'
 import { apiClient } from '../../api/client'
+import type { FeasibilityStudyResponse } from '../../types/feasibilityStudy'
 
-/** Matches backend `feasibilityJsonOutputContract()` — Arabic copy in string fields. */
-export interface FeasibilityStudyCosts {
-  establishment: string
-  operating: string
-}
-
-export interface FeasibilityStudyResponse {
-  executiveSummary: string
-  marketAndCustomersAnalysis: string
-  competitorsAnalysis: string
-  operationsModel: string
-  marketingAndSalesPlan: string
-  costs: FeasibilityStudyCosts
-  revenueAndProfitOutlook: string
-  risksAndMitigation: string
-  recommendations: string
-  ninetyDayActionPlan: string
-}
+export type {
+  FeasibilityStudyCosts,
+  FeasibilityStudyResponse,
+  FinancialBreakdownItem,
+  FinancialDashboard,
+  FinancialKpis,
+  MonthlyFinancialProjection,
+} from '../../types/feasibilityStudy'
 
 export type FeasibilityStep3Response = {
   message: string

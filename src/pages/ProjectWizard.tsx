@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ProjectWizardContent from '../components/project-wizard/ProjectWizardContent'
 import { QUESTION_ITEMS } from '../components/project-wizard/questions'
-import { createEmptyProjectAnswers } from '../utils/wizardDefaults'
+import {  createEmptyProjectAnswers } from '../utils/wizardDefaults'
 import { AppShell } from '../layouts/AppShell'
 import {
   resetProjectWizardState,

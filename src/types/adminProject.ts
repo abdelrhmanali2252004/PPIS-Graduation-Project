@@ -17,10 +17,16 @@ export type AdminProjectRecord = {
   feasibilityResponse?: unknown
   logoUrl?: string | null
   logoPrompt?: string | null
+  marketResearchUsed?: boolean
 }
 
 export type AllAdminProjectsResponse = {
   message: string
   count: number
   data: AdminProjectRecord[]
+}
+
+export type AdminProjectByIdResponse = {
+  message?: string
+  data?: AdminProjectRecord
 }

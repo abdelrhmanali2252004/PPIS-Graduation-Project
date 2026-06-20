@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { SmartNotificationsBell } from '../components/dashboard/SmartNotificationsBell'
-import { parseFeasibilityMetrics } from '../utils/parseFeasibilityMetrics'
+import { resolveDashboardMetrics } from '../utils/parseFeasibilityMetrics'
 import FeasibilityContent, { type TabId } from '../components/feasibility/FeasibilityContent'
 import { AppShell } from '../layouts/AppShell'
 import {
@@ -17,7 +17,7 @@ export default function FeasibilityOutput() {
   const { loading, error, data } = useAppSelector((s) => s.feasibility)
   const projectId = readStoredProjectId()
   const metrics = useMemo(
-    () => (data?.res ? parseFeasibilityMetrics(data.res) : null),
+    () => (data?.res ? resolveDashboardMetrics(data.res) : null),
     [data],
   )
 

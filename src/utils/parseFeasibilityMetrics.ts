@@ -1,4 +1,10 @@
-import type { FeasibilityStudyResponse } from '../store/slices/feasibilitySlice'
+import type {
+  FeasibilityStudyResponse,
+  FinancialBreakdownItem,
+  FinancialDashboard,
+} from '../types/feasibilityStudy'
+
+export type { FeasibilityStudyResponse } from '../types/feasibilityStudy'
 
 export type DashboardAlert = {
   type: 'risk' | 'opportunity' | 'positive' | 'action'
@@ -33,6 +39,7 @@ export type DashboardMetrics = {
   reservePercent: number
   profitMarginPercent: number
   costsPercentOfRevenue: number
+  capitalBreakdown: MetricSlice[]
   revenueSources: MetricSlice[]
   operatingBreakdown: MetricSlice[]
   sixMonthForecast: MonthForecast[]
@@ -374,6 +381,20 @@ export function parseFeasibilityMetrics(
     reservePercent,
     profitMarginPercent,
     costsPercentOfRevenue,
+    capitalBreakdown: [
+      {
+        label: 'تكاليف التأسيس',
+        percent: startupPercent,
+        amount: startupCosts,
+        color: '#1B4C8C',
+      },
+      {
+        label: 'احتياطي تشغيل',
+        percent: reservePercent,
+        amount: operatingReserve,
+        color: '#C9A05D',
+      },
+    ],
     revenueSources: buildRevenueSources(study.marketingAndSalesPlan ?? '', monthlyRevenue),
     operatingBreakdown: buildOperatingBreakdown(operating, monthlyOperatingCosts),
     sixMonthForecast: buildSixMonthForecast(monthlyRevenue, costOfSales, monthlyNetProfit),
@@ -386,12 +407,134 @@ export function parseFeasibilityMetrics(
   return metrics
 }
 
+const BREAKDOWN_COLORS = ['#1B4C8C', '#C9A05D', '#059669', '#7C3AED', '#DC2626', '#0EA5E9']
+
+function isValidFinancialDashboard(
+  fd: FinancialDashboard | undefined,
+): fd is FinancialDashboard {
+  return Boolean(
+    fd?.kpis &&
+      fd.capitalDistribution?.items?.length &&
+      fd.revenueSources?.items?.length &&
+      fd.operatingCostsBreakdown?.items?.length &&
+      fd.monthlyProjections?.length,
+  )
+}
+
+function breakdownToMetricSlices(
+  items: FinancialBreakdownItem[],
+  groupTotal: number,
+): MetricSlice[] {
+  return items.map((item, index) => {
+    const percent =
+      item.percentage ??
+      (groupTotal > 0 ? Math.round((item.amount / groupTotal) * 100) : 0)
+
+    return {
+      label: item.labelAr,
+      percent,
+      amount: item.amount,
+      color: BREAKDOWN_COLORS[index % BREAKDOWN_COLORS.length],
+    }
+  })
+}
+
+function mapFinancialDashboardToMetrics(
+  study: FeasibilityStudyResponse,
+  fd: FinancialDashboard,
+): DashboardMetrics {
+  const { kpis, capitalDistribution, revenueSources, operatingCostsBreakdown, monthlyProjections } =
+    fd
+
+  const totalCapital = capitalDistribution.total
+  const capitalBreakdown = breakdownToMetricSlices(
+    capitalDistribution.items,
+    totalCapital,
+  )
+
+  const startupCosts = capitalBreakdown[0]?.amount ?? 0
+  const operatingReserve = capitalBreakdown[1]?.amount ?? 0
+  const startupPercent = capitalBreakdown[0]?.percent ?? 0
+  const reservePercent = capitalBreakdown[1]?.percent ?? 0
+
+  const monthlyRevenue = kpis.monthlyRevenue
+  const monthlyOperatingCosts = kpis.monthlyOperatingCosts
+  const monthlyNetProfit = kpis.monthlyNetProfit
+  const profitMarginPercent =
+    kpis.profitMarginPercent ??
+    (monthlyRevenue > 0 ? Math.round((monthlyNetProfit / monthlyRevenue) * 100) : 0)
+  const costsPercentOfRevenue =
+    monthlyRevenue > 0 ? Math.round((monthlyOperatingCosts / monthlyRevenue) * 100) : 0
+
+  const lastProjection = monthlyProjections[monthlyProjections.length - 1]
+  const costOfSales = lastProjection?.totalCost ?? monthlyOperatingCosts
+
+  const metrics: DashboardMetrics = {
+    totalCapital,
+    startupCosts,
+    operatingReserve,
+    monthlyRevenue,
+    monthlyOperatingCosts,
+    monthlyNetProfit,
+    costOfSales,
+    breakEvenWeeks: kpis.breakEvenPoint,
+    startupPercent,
+    reservePercent,
+    profitMarginPercent,
+    costsPercentOfRevenue,
+    capitalBreakdown,
+    revenueSources: breakdownToMetricSlices(
+      revenueSources.items,
+      revenueSources.totalMonthly,
+    ),
+    operatingBreakdown: breakdownToMetricSlices(
+      operatingCostsBreakdown.items,
+      operatingCostsBreakdown.totalMonthly,
+    ),
+    sixMonthForecast: monthlyProjections.map((row) => ({
+      month: row.labelAr,
+      revenue: row.revenue,
+      costs: row.totalCost,
+      profit: row.netProfit,
+    })),
+    alerts: [],
+    sectorLabel: inferSectorLabel(study),
+    teamSizeLabel: inferTeamSize(study),
+  }
+
+  metrics.alerts = buildAlerts(study, metrics)
+  return metrics
+}
+
+/** Prefer structured `financialDashboard` from API; fall back to text parsing. */
+export function resolveDashboardMetrics(
+  study: FeasibilityStudyResponse | null | undefined,
+): DashboardMetrics | null {
+  if (!study) return null
+
+  if (isValidFinancialDashboard(study.financialDashboard)) {
+    return mapFinancialDashboardToMetrics(study, study.financialDashboard)
+  }
+
+  return parseFeasibilityMetrics(study)
+}
+
 export function formatEgp(amount: number, compact = false): string {
-  if (compact && amount >= 1_000_000) {
-    return `${(amount / 1_000_000).toFixed(1).replace(/\.0$/, '')}M ج.م`
+  if (!Number.isFinite(amount)) {
+    return '—'
   }
-  if (compact && amount >= 1_000) {
-    return `${Math.round(amount / 1_000)}K ج.م`
+
+  const rounded = Math.round(amount)
+
+  if (compact) {
+    if (rounded >= 1_000_000) {
+      return `${(rounded / 1_000_000).toFixed(1).replace(/\.0$/, '')}M ج.م`
+    }
+    if (rounded >= 10_000) {
+      return `${Math.round(rounded / 1_000)}K ج.م`
+    }
   }
-  return `${amount.toLocaleString('ar-EG')} ج.م`
+
+  // Western digits — reliable in PDF export and progress-bar labels (ar-EG can render as "2" for ٢٬٠٠٠)
+  return `${rounded.toLocaleString('en-US')} ج.م`
 }

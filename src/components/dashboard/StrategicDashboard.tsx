@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Calendar, Download, Loader2, TrendingUp } from 'lucide-react'
 import type { FeasibilityStep3Response } from '../../store/slices/feasibilitySlice'
 import type { ProjectDetails } from '../../store/slices/projectDetailsSlice'
-import { formatEgp, parseFeasibilityMetrics } from '../../utils/parseFeasibilityMetrics'
+import { formatEgp, resolveDashboardMetrics } from '../../utils/parseFeasibilityMetrics'
 import {
   FEASIBILITY_STUDY_TABS,
   FeasibilityStudyTabPanel,
@@ -49,9 +49,11 @@ export default function StrategicDashboard({
   const logoUrl = project?.logoUrl ?? null
   const logoPrompt = project?.logoPrompt ?? null
 
+  const studyRes = study?.res ?? project?.feasibility ?? null
+
   const metrics = useMemo(
-    () => (study?.res ? parseFeasibilityMetrics(study.res) : null),
-    [study],
+    () => (studyRes ? resolveDashboardMetrics(studyRes) : null),
+    [studyRes],
   )
 
   if (loading && !project) {
@@ -81,7 +83,6 @@ export default function StrategicDashboard({
     )
   }
 
-  const studyRes = study?.res ?? project.feasibility
   const isStudyTab = (id: DashboardTabId): id is FeasibilityStudyTabId =>
     id !== 'dashboard' && id !== 'project'
 
@@ -299,7 +300,7 @@ function InfoRow({ label, value }: { label: string; value: string }) {
   )
 }
 
-type FeasibilityMetrics = NonNullable<ReturnType<typeof parseFeasibilityMetrics>>
+type FeasibilityMetrics = NonNullable<ReturnType<typeof resolveDashboardMetrics>>
 
 function FinancialDashboardPanel({ metrics }: { metrics: FeasibilityMetrics }) {
   return (
@@ -329,8 +330,9 @@ function FinancialDashboardPanel({ metrics }: { metrics: FeasibilityMetrics }) {
         <KpiCard
           title="نقطة التعادل"
           value={metrics.breakEvenWeeks}
-          badge="جدول زمني مباشر"
-          accent="text-body text-lg"
+          badge="توقع من دراسة الجدوى"
+          accent="text-body text-sm leading-snug"
+          multiline
         />
       </div>
 
@@ -338,28 +340,26 @@ function FinancialDashboardPanel({ metrics }: { metrics: FeasibilityMetrics }) {
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <ChartCard
           title={`توزيع رأس المال — ${formatEgp(metrics.totalCapital)}`}
-          footer="تشمل تكاليف التأسيس: تأمين الإيجار، المعدات، التراخيص، والتسويق الافتتاحي."
+          footer="مصادر تمويل رأس المال حسب مخرجات دراسة الجدوى."
         >
           <div className="flex flex-col items-center gap-6 md:flex-row md:items-center md:justify-between">
             <div className="w-full flex-1 space-y-4">
-              <MetricBar
-                label="تكاليف التأسيس"
-                percent={metrics.startupPercent}
-                amountLabel={formatEgp(metrics.startupCosts)}
-                color="#1B4C8C"
-              />
-              <MetricBar
-                label="احتياطي تشغيل"
-                percent={metrics.reservePercent}
-                amountLabel={formatEgp(metrics.operatingReserve)}
-                color="#C9A05D"
-              />
+              {metrics.capitalBreakdown.map((row) => (
+                <MetricBar
+                  key={row.label}
+                  label={row.label}
+                  percent={row.percent}
+                  amountLabel={formatEgp(row.amount)}
+                  color={row.color}
+                />
+              ))}
             </div>
             <DonutChart
-              segments={[
-                { label: 'startup', value: metrics.startupCosts, color: '#1B4C8C' },
-                { label: 'reserve', value: metrics.operatingReserve, color: '#C9A05D' },
-              ]}
+              segments={metrics.capitalBreakdown.map((row) => ({
+                label: row.label,
+                value: row.amount,
+                color: row.color,
+              }))}
               centerLabel={formatEgp(metrics.totalCapital, true)}
               centerSub="إجمالي"
             />
@@ -436,6 +436,7 @@ function KpiCard({
   progress,
   progressColor,
   accent,
+  multiline,
 }: {
   title: string
   value: string
@@ -444,11 +445,16 @@ function KpiCard({
   progress?: number
   progressColor?: string
   accent?: string
+  multiline?: boolean
 }) {
   return (
     <div className="rounded-2xl border border-divider bg-surface p-5 shadow-sm">
       <p className="text-xs font-semibold text-slateMuted">{title}</p>
-      <p className={`mt-2 text-2xl font-bold ${accent ?? 'text-heading'}`}>{value}</p>
+      <p
+        className={`mt-2 font-bold ${multiline ? 'text-sm leading-relaxed' : 'text-2xl'} ${accent ?? 'text-heading'}`}
+      >
+        {value}
+      </p>
       <div className="mt-3 flex items-center gap-1.5 text-[10px] font-semibold text-slateMuted">
         {badgeIcon}
         {badge}

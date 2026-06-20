@@ -30,6 +30,30 @@ function PdfSection({ title, text }: { title: string; text?: string | null }) {
   )
 }
 
+function PdfBreakdownBar({
+  label,
+  percent,
+  amount,
+}: {
+  label: string
+  percent: number
+  amount: number
+}) {
+  const width = `${Math.min(100, Math.max(0, percent))}%`
+
+  return (
+    <div className="mb-3 break-inside-avoid">
+      <div className="mb-1 flex items-center justify-between gap-2 text-sm">
+        <span className="font-semibold text-[#1a1a1a]">{label}</span>
+        <span className="shrink-0 font-bold text-[#1B4C8C]">{formatEgp(amount)}</span>
+      </div>
+      <div className="h-2 overflow-hidden rounded-full bg-[#f3f4f6]">
+        <div className="h-full rounded-full bg-[#1B4C8C]" style={{ width }} />
+      </div>
+      <p className="mt-0.5 text-xs font-semibold text-[#6b7280]">{percent}%</p>
+    </div>
+  )
+}
 function PdfMetricRow({ label, value }: { label: string; value: string }) {
   return (
     <tr className="border-b border-[#e5e7eb]">
@@ -101,40 +125,34 @@ const ProjectReportPdfDocument = forwardRef<HTMLDivElement, ProjectReportPdfDocu
                 />
                 <PdfMetricRow label="هامش الربح" value={`${metrics.profitMarginPercent}%`} />
                 <PdfMetricRow label="نقطة التعادل" value={metrics.breakEvenWeeks} />
-                <PdfMetricRow
-                  label="تكاليف التأسيس"
-                  value={formatEgp(metrics.startupCosts)}
-                />
-                <PdfMetricRow
-                  label="احتياطي التشغيل"
-                  value={formatEgp(metrics.operatingReserve)}
-                />
               </tbody>
             </table>
+
+            {metrics.capitalBreakdown.length > 0 ? (
+              <div className="mb-4">
+                <h3 className="mb-2 text-sm font-bold text-[#1B4C8C]">توزيع رأس المال</h3>
+                {metrics.capitalBreakdown.map((row) => (
+                  <PdfBreakdownBar
+                    key={row.label}
+                    label={row.label}
+                    percent={row.percent}
+                    amount={row.amount}
+                  />
+                ))}
+              </div>
+            ) : null}
 
             {metrics.revenueSources.length > 0 ? (
               <div className="mb-4">
                 <h3 className="mb-2 text-sm font-bold text-[#1B4C8C]">مصادر الإيرادات</h3>
-                <table className="w-full border-collapse text-sm">
-                  <thead>
-                    <tr className="bg-[#f9fafb] text-[#4b5563]">
-                      <th className="border border-[#e5e7eb] px-3 py-2 text-right">المصدر</th>
-                      <th className="border border-[#e5e7eb] px-3 py-2 text-right">النسبة</th>
-                      <th className="border border-[#e5e7eb] px-3 py-2 text-right">المبلغ</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {metrics.revenueSources.map((row) => (
-                      <tr key={row.label}>
-                        <td className="border border-[#e5e7eb] px-3 py-2">{row.label}</td>
-                        <td className="border border-[#e5e7eb] px-3 py-2">{row.percent}%</td>
-                        <td className="border border-[#e5e7eb] px-3 py-2 font-semibold">
-                          {formatEgp(row.amount)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                {metrics.revenueSources.map((row) => (
+                  <PdfBreakdownBar
+                    key={row.label}
+                    label={row.label}
+                    percent={row.percent}
+                    amount={row.amount}
+                  />
+                ))}
               </div>
             ) : null}
 
@@ -143,26 +161,14 @@ const ProjectReportPdfDocument = forwardRef<HTMLDivElement, ProjectReportPdfDocu
                 <h3 className="mb-2 text-sm font-bold text-[#1B4C8C]">
                   تفصيل التكاليف التشغيلية
                 </h3>
-                <table className="w-full border-collapse text-sm">
-                  <thead>
-                    <tr className="bg-[#f9fafb] text-[#4b5563]">
-                      <th className="border border-[#e5e7eb] px-3 py-2 text-right">البند</th>
-                      <th className="border border-[#e5e7eb] px-3 py-2 text-right">النسبة</th>
-                      <th className="border border-[#e5e7eb] px-3 py-2 text-right">المبلغ</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {metrics.operatingBreakdown.map((row) => (
-                      <tr key={row.label}>
-                        <td className="border border-[#e5e7eb] px-3 py-2">{row.label}</td>
-                        <td className="border border-[#e5e7eb] px-3 py-2">{row.percent}%</td>
-                        <td className="border border-[#e5e7eb] px-3 py-2 font-semibold">
-                          {formatEgp(row.amount)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                {metrics.operatingBreakdown.map((row) => (
+                  <PdfBreakdownBar
+                    key={row.label}
+                    label={row.label}
+                    percent={row.percent}
+                    amount={row.amount}
+                  />
+                ))}
               </div>
             ) : null}
 

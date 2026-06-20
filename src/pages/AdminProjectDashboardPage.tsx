@@ -14,7 +14,7 @@ export default function AdminProjectDashboardPage() {
       >
         ← {t('admin.backToProjects')}
       </Link>
-      <ProjectDashboardView projectId={projectId ?? null} />
+      <ProjectDashboardView projectId={projectId ?? null} mode="admin" />
     </section>
   )
 }
