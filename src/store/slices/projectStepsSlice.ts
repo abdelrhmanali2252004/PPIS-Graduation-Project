@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios'
 import { apiClient } from '../../api/client'
+import { extractSuggestedNames } from '../../utils/extractSuggestedNames'
 
 export const PROJECT_ID_STORAGE_KEY = 'ideaTechProjectId'
 
@@ -12,6 +13,8 @@ type ProjectStepsState = {
   sessionVersion: number
   creatingStep1: boolean
   uploadingMarketResearch: boolean
+  loadingSuggestedNames: boolean
+  suggestedProjectNames: string[]
   error: string | null
   marketResearchError: string | null
   steps: Record<1 | 2 | 3 | 4 | 5, StepStatus>
@@ -22,6 +25,8 @@ const initialState: ProjectStepsState = {
   sessionVersion: 0,
   creatingStep1: false,
   uploadingMarketResearch: false,
+  loadingSuggestedNames: false,
+  suggestedProjectNames: [],
   error: null,
   marketResearchError: null,
   steps: {
@@ -77,7 +82,7 @@ export const createStep1Project = createAsyncThunk<
 })
 
 export const uploadMarketResearchPdf = createAsyncThunk<
-  { message: string; projectId: string | null },
+  { message: string; projectId: string | null; suggestedNames: string[] },
   File,
   { rejectValue: string; state: { projectSteps: ProjectStepsState } }
 >('projectSteps/uploadMarketResearchPdf', async (file, { getState, rejectWithValue }) => {
@@ -102,11 +107,31 @@ export const uploadMarketResearchPdf = createAsyncThunk<
     const message =
       typeof data?.message === 'string' ? data.message : 'market research stored successfuly'
 
-    return { message, projectId }
+    return { message, projectId, suggestedNames: extractSuggestedNames(data) }
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>
     return rejectWithValue(
       axiosError.response?.data?.message ?? 'فشل رفع ملف دراسة السوق. حاول مرة أخرى.',
+    )
+  }
+})
+
+export const fetchSuggestedProjectNames = createAsyncThunk<
+  string[],
+  string,
+  { rejectValue: string }
+>('projectSteps/fetchSuggestedProjectNames', async (projectId, { rejectWithValue }) => {
+  try {
+    const response = await apiClient.get(`project/step2/suggested-names/${projectId}`)
+    return extractSuggestedNames(response.data)
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>
+    if (axiosError.response?.status === 404) {
+      return []
+    }
+    return rejectWithValue(
+      axiosError.response?.data?.message ??
+        'تعذر تحميل الأسماء المقترحة. حاول مرة أخرى.',
     )
   }
 })
@@ -123,6 +148,8 @@ const projectStepsSlice = createSlice({
       state.sessionVersion += 1
       state.creatingStep1 = false
       state.uploadingMarketResearch = false
+      state.loadingSuggestedNames = false
+      state.suggestedProjectNames = []
       state.error = null
       state.marketResearchError = null
       state.steps = { 1: 'idle', 2: 'idle', 3: 'idle', 4: 'idle', 5: 'idle' }
@@ -155,10 +182,25 @@ const projectStepsSlice = createSlice({
         if (action.payload.projectId) {
           state.projectId = action.payload.projectId
         }
+        if (action.payload.suggestedNames.length > 0) {
+          state.suggestedProjectNames = action.payload.suggestedNames
+        }
       })
       .addCase(uploadMarketResearchPdf.rejected, (state, action) => {
         state.uploadingMarketResearch = false
         state.marketResearchError = action.payload ?? 'فشل رفع ملف دراسة السوق. حاول مرة أخرى.'
+      })
+      .addCase(fetchSuggestedProjectNames.pending, (state) => {
+        state.loadingSuggestedNames = true
+      })
+      .addCase(fetchSuggestedProjectNames.fulfilled, (state, action) => {
+        state.loadingSuggestedNames = false
+        if (action.payload.length > 0) {
+          state.suggestedProjectNames = action.payload
+        }
+      })
+      .addCase(fetchSuggestedProjectNames.rejected, (state) => {
+        state.loadingSuggestedNames = false
       })
   },
 })

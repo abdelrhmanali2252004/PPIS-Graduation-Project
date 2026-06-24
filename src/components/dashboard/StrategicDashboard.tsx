@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, Download, Loader2, TrendingUp } from 'lucide-react'
+import { Calendar, ClipboardCheck, Download, Loader2, TrendingUp } from 'lucide-react'
 import type { FeasibilityStep3Response } from '../../store/slices/feasibilitySlice'
 import type { ProjectDetails } from '../../store/slices/projectDetailsSlice'
 import { formatEgp, resolveDashboardMetrics } from '../../utils/parseFeasibilityMetrics'
@@ -15,6 +15,7 @@ import { GroupedBarChart } from './charts/GroupedBarChart'
 import { MetricBar } from './charts/MetricBar'
 import FeasibilityLoading from '../feasibility/FeasibilityLoading'
 import DashboardTabBar from './DashboardTabBar'
+import ExpertBookingModal from './ExpertBookingModal'
 import ProjectReportPdfDocument from './ProjectReportPdfDocument'
 
 type DashboardTabId = 'dashboard' | 'project' | FeasibilityStudyTabId
@@ -42,6 +43,7 @@ export default function StrategicDashboard({
 }: StrategicDashboardProps) {
   const [activeTab, setActiveTab] = useState<DashboardTabId>('dashboard')
   const [pdfGenerating, setPdfGenerating] = useState(false)
+  const [showExpertBooking, setShowExpertBooking] = useState(false)
   const reportRef = useRef<HTMLDivElement>(null)
 
   const projectName = project?.name ?? 'مشروع'
@@ -165,7 +167,19 @@ export default function StrategicDashboard({
             </span>
           ) : null}
         </div>
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900">
+            <ClipboardCheck className="h-3.5 w-3.5 shrink-0" aria-hidden />
+            تحت المراجعة من قبل المتخصصين
+          </span>
+          <button
+            type="button"
+            onClick={() => setShowExpertBooking(true)}
+            className="inline-flex items-center gap-2 rounded-lg bg-nile px-4 py-2 text-xs font-bold text-white hover:bg-nile/90"
+          >
+            <Calendar className="h-4 w-4" />
+            حجز مراجعة خبير
+          </button>
           <button
             type="button"
             onClick={() => void handleDownloadPdf()}
@@ -179,15 +193,15 @@ export default function StrategicDashboard({
             )}
             {pdfGenerating ? 'جاري التحميل...' : 'تحميل PDF'}
           </button>
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 rounded-lg bg-nile px-4 py-2 text-xs font-bold text-white"
-          >
-            <Calendar className="h-4 w-4" />
-            حجز مراجعة خبير
-          </button>
         </div>
       </header>
+
+      {showExpertBooking ? (
+        <ExpertBookingModal
+          projectName={projectName}
+          onClose={() => setShowExpertBooking(false)}
+        />
+      ) : null}
 
       <div className="px-6 py-6 lg:px-8">
         <DashboardTabBar<DashboardTabId>
