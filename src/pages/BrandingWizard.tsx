@@ -4,6 +4,7 @@ import BrandingWizardContent from '../components/branding/BrandingWizardContent'
 import { AppShell } from '../layouts/AppShell'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { createServiceRequest } from '../store/slices/serviceRequestSlice'
+import { fetchProjectDetails } from '../store/slices/projectDetailsSlice'
 import { PROJECT_ID_STORAGE_KEY } from '../store/slices/projectStepsSlice'
 import { clearSavedBranding } from '../store/slices/brandingSlice'
 import { DEFAULT_BRANDING_FORM } from '../utils/wizardDefaults'
@@ -15,6 +16,7 @@ export default function BrandingWizard() {
   const { creating, error: requestError, lastRequestId } = useAppSelector((s) => s.serviceRequest)
   const { saved: savedBranding, generating: generatingLogo } = useAppSelector((s) => s.branding)
   const { projectId: stepsProjectId, sessionVersion } = useAppSelector((s) => s.projectSteps)
+  const projectName = useAppSelector((s) => s.projectDetails.data?.name)
   const projectId =
     stepsProjectId ?? localStorage.getItem(PROJECT_ID_STORAGE_KEY)
 
@@ -49,6 +51,19 @@ export default function BrandingWizard() {
     setAccordionOpen(DEFAULT_BRANDING_FORM.accordionOpen)
     setSent(DEFAULT_BRANDING_FORM.sent)
   }, [sessionVersion])
+
+  useEffect(() => {
+    if (!projectId) return
+    void dispatch(fetchProjectDetails(projectId))
+  }, [dispatch, projectId, sessionVersion])
+
+  useEffect(() => {
+    const fallbackName = projectName?.trim()
+    if (!fallbackName || fallbackName === 'مشروع بدون اسم') return
+    setBrandName((current) => (current.trim() ? current : fallbackName))
+  }, [projectName, sessionVersion])
+
+  const resolvedBrandName = brandName.trim() || projectName?.trim() || ''
 
   const leaveLogoStep = () => {
     if (sub === 2) dispatch(clearSavedBranding())
@@ -109,6 +124,7 @@ export default function BrandingWizard() {
         onSent={() => setSent(true)}
         // step 3 logo
         projectId={projectId}
+        resolvedBrandName={resolvedBrandName}
         generatingLogo={generatingLogo}
         // finish
         submitting={creating}
@@ -117,7 +133,7 @@ export default function BrandingWizard() {
         onFinish={() => void handleFinish()}
         // navigation — steps 2 & 3 locked until step 1 has a brand name
         onSubChange={(i) => {
-          if (i > 0 && !brandName.trim()) return  // lock: must fill step 1 first
+          if (i > 0 && !resolvedBrandName) return
           if (sub === 2 && i !== 2) dispatch(clearSavedBranding())
           setSub(i)
         }}
@@ -126,7 +142,7 @@ export default function BrandingWizard() {
           setSub((s) => Math.max(0, s - 1))
         }}
         onNext={() => {
-          if (sub === 0 && !brandName.trim()) return  // lock: must fill brand name
+          if (sub === 0 && !resolvedBrandName) return
           setSub((s) => s + 1)
         }}
       />

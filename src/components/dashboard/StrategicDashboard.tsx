@@ -49,7 +49,6 @@ export default function StrategicDashboard({
   const projectName = project?.name ?? 'مشروع'
   const projectStep = project?.step
   const logoUrl = project?.logoUrl ?? null
-  const logoPrompt = project?.logoPrompt ?? null
 
   const studyRes = study?.res ?? project?.feasibility ?? null
 
@@ -223,7 +222,6 @@ export default function StrategicDashboard({
             <ProjectInfoPanel
               project={project}
               logoUrl={logoUrl}
-              logoPrompt={logoPrompt}
             />
           ) : null}
 
@@ -259,11 +257,9 @@ function TabEmptyState({ message }: { message: string }) {
 function ProjectInfoPanel({
   project,
   logoUrl,
-  logoPrompt,
 }: {
   project: ProjectDetails
   logoUrl: string | null
-  logoPrompt: string | null
 }) {
   return (
     <article className="rounded-2xl border border-divider bg-surface p-6 shadow-sm">
@@ -294,13 +290,6 @@ function ProjectInfoPanel({
           لم يُرفع شعار للمشروع بعد.
         </p>
       )}
-
-      {logoPrompt?.trim() ? (
-        <div className="mt-6 border-t border-divider pt-6">
-          <h3 className="mb-2 text-sm font-bold text-heading">وصف الشعار (Prompt)</h3>
-          <p className="whitespace-pre-wrap text-sm leading-7 text-body/90">{logoPrompt}</p>
-        </div>
-      ) : null}
     </article>
   )
 }

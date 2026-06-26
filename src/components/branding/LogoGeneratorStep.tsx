@@ -18,7 +18,7 @@ export type LogoGeneratorStepProps = {
 
 type Phase =
   | { kind: "generating" }
-  | { kind: "done"; displayUrl: string; storedUrl: string; prompt: string }
+  | { kind: "done"; displayUrl: string; storedUrl: string }
   | { kind: "error"; msg: string };
 
 export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
@@ -28,7 +28,6 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
   const { generating } = useAppSelector((s) => s.branding);
 
   const [phase, setPhase] = useState<Phase>({ kind: "generating" });
-  const [imagePrompt, setImagePrompt] = useState("");
 
   const runIdRef = useRef(0);
 
@@ -41,7 +40,6 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
     }
 
     setPhase({ kind: "generating" });
-    setImagePrompt("");
     
     const result = await dispatch(
       generateLogo({
@@ -50,6 +48,7 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
         tagline: props.tagline,
         businessType: props.businessType,
         audience: props.audience,
+        symbolHint: props.symbolHint,
         vibe: props.vibe,
         logoStyle: props.logoStyle,
         palette: props.palette,
@@ -59,13 +58,11 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
     if (runId !== runIdRef.current) return;
 
     if (generateLogo.fulfilled.match(result)) {
-      const { logoUrl, logoPrompt } = result.payload;
-      setImagePrompt(logoPrompt);
+      const { logoUrl } = result.payload;
       setPhase({
         kind: "done",
         displayUrl: resolveLogoUrl(logoUrl),
         storedUrl: logoUrl,
-        prompt: logoPrompt,
       });
       return;
     }
@@ -81,6 +78,7 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
     props.tagline,
     props.businessType,
     props.audience,
+    props.symbolHint,
     props.vibe,
     props.logoStyle,
     props.palette,
@@ -123,7 +121,7 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
         {isLoading && (
           <div className="flex flex-col items-center gap-3 py-10">
             <Loader2 className="h-10 w-10 animate-spin text-heading" />
-            <p className="text-sm font-semibold text-heading">جاري تصميم لوجوك...</p>
+            <p className="text-sm font-semibold text-heading">جاري تصميم اللوجو الخاص بك...</p>
             <div className="h-1.5 w-48 overflow-hidden rounded-full bg-divider">
               <div className="h-full w-3/4 animate-pulse rounded-full bg-gradient-to-l from-gold to-nile" />
             </div>
@@ -152,14 +150,6 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
         )}
         {displayTagline && (
           <p className="mt-1 text-center text-xs text-slateMuted">{displayTagline}</p>
-        )}
-        {imagePrompt && (
-          <p
-            className="mt-3 rounded-lg bg-offwhite px-3 py-2 text-center text-[10px] leading-relaxed text-slateMuted"
-            dir="ltr"
-          >
-            {imagePrompt}
-          </p>
         )}
       </div>
 

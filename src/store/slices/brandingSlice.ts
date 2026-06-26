@@ -9,6 +9,7 @@ import {
   type Step4LogoResponse,
 } from '../../api/branding'
 import { apiClient } from '../../api/client'
+import { buildLogoPromptFromUserInputs, optionalTrim } from '../../utils/buildLogoPromptFromUserInputs'
 
 export const BRANDING_STORAGE_KEY = 'ideaTechBrandingData'
 
@@ -48,12 +49,13 @@ const initialState: BrandingState = {
 
 export type GenerateLogoPayload = Omit<
   Step4LogoRequest,
-  'audience' | 'vibe' | 'logoStyle' | 'palette'
+  'audience' | 'vibe' | 'logoStyle' | 'palette' | 'logoPrompt'
 > & {
   audience: string
   vibe: string
   logoStyle: string
   palette: string
+  symbolHint: string
 }
 
 export const generateLogo = createAsyncThunk<
@@ -63,16 +65,33 @@ export const generateLogo = createAsyncThunk<
 >('branding/generateLogo', async (payload, { rejectWithValue }) => {
   try {
     const audienceLabel = audienceIdToApiValue(payload.audience)
+    const brandName = optionalTrim(payload.brandName)
+    const tagline = optionalTrim(payload.tagline)
+    const businessType = optionalTrim(payload.businessType)
+    const symbolHint = optionalTrim(payload.symbolHint)
+
+    const logoPrompt = buildLogoPromptFromUserInputs({
+      brandName: brandName ?? '',
+      tagline: tagline ?? '',
+      businessType: businessType ?? '',
+      audience: payload.audience,
+      symbolHint: symbolHint ?? '',
+      vibe: payload.vibe,
+      logoStyle: payload.logoStyle,
+      palette: payload.palette,
+    }).trim()
 
     const body: Step4LogoRequest = {
       projectId: payload.projectId,
-      brandName: payload.brandName,
-      tagline: payload.tagline,
-      businessType: payload.businessType,
       audience: audienceLabel,
       vibe: payload.vibe as BrandVibe,
       logoStyle: payload.logoStyle as LogoStyle,
       palette: payload.palette as BrandPalette,
+      ...(brandName ? { brandName } : {}),
+      ...(tagline ? { tagline } : {}),
+      ...(businessType ? { businessType } : {}),
+      ...(symbolHint ? { symbolHint } : {}),
+      ...(logoPrompt ? { logoPrompt } : {}),
     }
 
     const response = await apiClient.post<Step4LogoResponse>(
@@ -82,7 +101,6 @@ export const generateLogo = createAsyncThunk<
     )
 
     const logoUrl = response.data.logoUrl ?? response.data.relativeUrl ?? ''
-    const logoPrompt = response.data.logoPrompt ?? response.data.data?.logoPrompt ?? ''
 
     if (!logoUrl) {
       return rejectWithValue('لم يُرجع الخادم رابط اللوجو.')
@@ -90,9 +108,9 @@ export const generateLogo = createAsyncThunk<
 
     const saved: SavedBranding = {
       logoUrl,
-      logoPrompt,
-      brandName: payload.brandName,
-      tagline: payload.tagline,
+      logoPrompt: logoPrompt || brandName || '',
+      brandName: brandName ?? '',
+      tagline: tagline ?? '',
     }
     persistBranding(saved)
     return saved

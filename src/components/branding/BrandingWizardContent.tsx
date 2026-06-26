@@ -52,6 +52,7 @@ type BrandingWizardContentProps = {
 
   // step 3 logo
   projectId?: string | null;
+  resolvedBrandName?: string;
   generatingLogo?: boolean;
 
   // navigation
@@ -71,11 +72,12 @@ export default function BrandingWizardContent({
   submitting = false, submitError = null, submitSuccess = false,
   generatingLogo = false,
   projectId,
+  resolvedBrandName = '',
   onFinish,
   onSubChange, onPrev, onNext,
 }: BrandingWizardContentProps) {
   // Steps 2 & 3 are locked until the user fills in a brand name
-  const step1Complete = brandName.trim().length > 0;
+  const step1Complete = (resolvedBrandName || brandName).trim().length > 0;
   return (
     <div className="px-8 py-8 pb-20 font-cairo md:px-10" dir="rtl">
       <header className="mb-6">
@@ -360,7 +362,7 @@ export default function BrandingWizardContent({
         {sub === 2 && (
           <LogoGeneratorStep
             projectId={projectId ?? null}
-            brandName={brandName}
+            brandName={resolvedBrandName || brandName}
             tagline={tagline}
             businessType={businessType}
             audience={audience}

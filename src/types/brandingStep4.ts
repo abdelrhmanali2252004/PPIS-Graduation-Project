@@ -99,14 +99,18 @@ export type BrandingStep1Fields = {
 
 export type Step4LogoRequest = {
   projectId: string
-  brandName: string
-  tagline: string
-  businessType: string
+  brandName?: string
+  tagline?: string
+  businessType?: string
+  /** Optional symbol the user wants in the logo */
+  symbolHint?: string
   /** Arabic label — see AudienceApiValue */
   audience: AudienceApiValue | string
   vibe: BrandVibe
   logoStyle: LogoStyle
   palette: BrandPalette
+  /** Short prompt built from user answers; backend uses it when provided */
+  logoPrompt?: string
 }
 
 export type Step4LogoResponse = {
