@@ -66,24 +66,34 @@ export const BRAND_PALETTE_IDS: BrandPalette[] = ['as', 'nile', 'sun', 'ai']
 export const DEFAULT_BRAND_PALETTE: BrandPalette = 'as'
 
 // ─── Target audience (جمهورك مين؟) ───────────────────────────────────────────
-// UI stores `AudienceId`; API receives Arabic `AudienceApiValue`.
+// UI stores `AudienceId`; API receives the same English slug (not Arabic labels).
 
 export type AudienceId = 'youth' | 'kids' | 'business' | 'all'
 
-export type AudienceApiValue = 'شباب' | 'أطفال' | 'رجال أعمال' | 'عامة الناس'
+/** English values sent to POST /project/step4 */
+export type AudienceApiValue = AudienceId
 
 export const AUDIENCE_OPTIONS = [
-  { id: 'youth' as const, labelAr: 'شباب', apiValue: 'شباب' as const },
-  { id: 'kids' as const, labelAr: 'أطفال', apiValue: 'أطفال' as const },
-  { id: 'business' as const, labelAr: 'رجال أعمال', apiValue: 'رجال أعمال' as const },
-  { id: 'all' as const, labelAr: 'عامة الناس', apiValue: 'عامة الناس' as const },
+  { id: 'youth' as const, labelAr: 'شباب', labelEn: 'youth' },
+  { id: 'kids' as const, labelAr: 'أطفال', labelEn: 'kids' },
+  { id: 'business' as const, labelAr: 'رجال أعمال', labelEn: 'business' },
+  { id: 'all' as const, labelAr: 'عامة الناس', labelEn: 'all' },
 ] as const
 
+/** UI id → English API value */
 export const AUDIENCE_ID_TO_API: Record<AudienceId, AudienceApiValue> = {
-  youth: 'شباب',
-  kids: 'أطفال',
-  business: 'رجال أعمال',
-  all: 'عامة الناس',
+  youth: 'youth',
+  kids: 'kids',
+  business: 'business',
+  all: 'all',
+}
+
+/** Legacy: Arabic label → English id (if old state stored Arabic) */
+export const AUDIENCE_AR_TO_ID: Record<string, AudienceId> = {
+  شباب: 'youth',
+  أطفال: 'kids',
+  'رجال أعمال': 'business',
+  'عامة الناس': 'all',
 }
 
 // ─── Step 1 free text ──────────────────────────────────────────────────────────
@@ -104,7 +114,7 @@ export type Step4LogoRequest = {
   businessType?: string
   /** Optional symbol the user wants in the logo */
   symbolHint?: string
-  /** Arabic label — see AudienceApiValue */
+  /** English audience slug — see AudienceApiValue */
   audience: AudienceApiValue | string
   vibe: BrandVibe
   logoStyle: LogoStyle

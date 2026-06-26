@@ -1,4 +1,9 @@
-import { AUDIENCE_ID_TO_API, type AudienceId, type Step4LogoRequest } from '../types/brandingStep4'
+import {
+  AUDIENCE_AR_TO_ID,
+  AUDIENCE_ID_TO_API,
+  type AudienceApiValue,
+  type Step4LogoRequest,
+} from '../types/brandingStep4'
 
 export type { Step4LogoRequest, Step4LogoResponse } from '../types/brandingStep4'
 export type {
@@ -21,6 +26,7 @@ export {
   DEFAULT_BRAND_PALETTE,
   AUDIENCE_OPTIONS,
   AUDIENCE_ID_TO_API,
+  AUDIENCE_AR_TO_ID,
 } from '../types/brandingStep4'
 
 /** @deprecated Use AUDIENCE_ID_TO_API */
@@ -39,8 +45,16 @@ export function resolveLogoUrl(logoUrl: string): string {
   return `${origin}${logoUrl.startsWith('/') ? logoUrl : `/${logoUrl}`}`
 }
 
-export function audienceIdToApiValue(audienceId: string): string {
-  return AUDIENCE_ID_TO_API[audienceId as AudienceId] ?? audienceId
+/** Normalize UI selection to English API slug (youth | kids | business | all). */
+export function audienceIdToApiValue(audienceId: string): AudienceApiValue {
+  if (audienceId in AUDIENCE_ID_TO_API) {
+    return audienceId as AudienceApiValue
+  }
+  const fromArabic = AUDIENCE_AR_TO_ID[audienceId]
+  if (fromArabic) {
+    return fromArabic
+  }
+  return audienceId as AudienceApiValue
 }
 
 export async function downloadLogoFile(displayUrl: string, filename: string): Promise<void> {

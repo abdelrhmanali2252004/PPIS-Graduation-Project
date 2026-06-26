@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Loader2, Download, RefreshCw, ImageOff } from "lucide-react";
 import { downloadLogoFile, resolveLogoUrl } from "../../api/branding";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
@@ -21,91 +21,83 @@ type Phase =
   | { kind: "done"; displayUrl: string; storedUrl: string }
   | { kind: "error"; msg: string };
 
+function donePhase(logoUrl: string): Phase {
+  return {
+    kind: "done",
+    displayUrl: resolveLogoUrl(logoUrl),
+    storedUrl: logoUrl,
+  };
+}
+
+function resolvePhase(
+  projectId: string | null,
+  generating: boolean,
+  savedLogoUrl: string | undefined,
+  error: string | null,
+): Phase {
+  if (!projectId) {
+    return { kind: "error", msg: "لم يتم العثور على المشروع. أكمل الخطوات السابقة أولاً." };
+  }
+  if (generating) {
+    return { kind: "generating" };
+  }
+  if (savedLogoUrl) {
+    return donePhase(savedLogoUrl);
+  }
+  if (error) {
+    return { kind: "error", msg: error };
+  }
+  return { kind: "generating" };
+}
+
 export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
   const { projectId } = props;
 
+  const propsRef = useRef(props);
+  propsRef.current = props;
+
+  const hasAutoStarted = useRef(false);
+
   const dispatch = useAppDispatch();
-  const { generating } = useAppSelector((s) => s.branding);
+  const { generating, saved, error } = useAppSelector((s) => s.branding);
 
-  const [phase, setPhase] = useState<Phase>({ kind: "generating" });
+  const phase = resolvePhase(projectId, generating, saved?.logoUrl, error);
 
-  const runIdRef = useRef(0);
+  const runGenerate = useCallback(() => {
+    const current = propsRef.current;
+    if (!projectId) return;
 
-  const runGenerate = useCallback(async () => {
-    const runId = ++runIdRef.current;
-
-    if (!projectId) {
-      setPhase({ kind: "error", msg: "لم يتم العثور على المشروع. أكمل الخطوات السابقة أولاً." });
-      return;
-    }
-
-    setPhase({ kind: "generating" });
-    
-    const result = await dispatch(
+    void dispatch(
       generateLogo({
         projectId,
-        brandName: props.brandName,
-        tagline: props.tagline,
-        businessType: props.businessType,
-        audience: props.audience,
-        symbolHint: props.symbolHint,
-        vibe: props.vibe,
-        logoStyle: props.logoStyle,
-        palette: props.palette,
+        brandName: current.brandName,
+        tagline: current.tagline,
+        businessType: current.businessType,
+        audience: current.audience,
+        symbolHint: current.symbolHint,
+        vibe: current.vibe,
+        logoStyle: current.logoStyle,
+        palette: current.palette,
       }),
     );
-
-    if (runId !== runIdRef.current) return;
-
-    if (generateLogo.fulfilled.match(result)) {
-      const { logoUrl } = result.payload;
-      setPhase({
-        kind: "done",
-        displayUrl: resolveLogoUrl(logoUrl),
-        storedUrl: logoUrl,
-      });
-      return;
-    }
-
-    const msg =
-      (generateLogo.rejected.match(result) ? result.payload : null) ??
-      "حدث خطأ غير متوقع";
-    setPhase({ kind: "error", msg });
-  }, [
-    dispatch,
-    projectId,
-    props.brandName,
-    props.tagline,
-    props.businessType,
-    props.audience,
-    props.symbolHint,
-    props.vibe,
-    props.logoStyle,
-    props.palette,
-  ]);
+  }, [dispatch, projectId]);
 
   useEffect(() => {
-    dispatch(clearSavedBranding());
-    void runGenerate();
-
-    return () => {
-      runIdRef.current += 1;
-    };
-  }, [dispatch, runGenerate]);
+    if (saved?.logoUrl || !projectId) return;
+    if (hasAutoStarted.current) return;
+    hasAutoStarted.current = true;
+    runGenerate();
+  }, [projectId, runGenerate, saved?.logoUrl]);
 
   const handleRetry = () => {
     dispatch(clearSavedBranding());
-    void runGenerate();
+    runGenerate();
   };
 
   const handleDownload = async () => {
     if (phase.kind !== "done") return;
     await downloadLogoFile(phase.displayUrl, `${props.brandName || "logo"}-logo.png`);
   };
-
-  const isLoading = phase.kind === "generating" || generating;
-  const isDone = phase.kind === "done";
-  const isError = phase.kind === "error";
 
   const displayName = props.brandName || "";
   const displayTagline = props.tagline || "";
@@ -118,7 +110,7 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
       </div>
 
       <div className="w-full max-w-sm rounded-2xl border border-divider bg-surface p-6 shadow-md">
-        {isLoading && (
+        {phase.kind === "generating" && (
           <div className="flex flex-col items-center gap-3 py-10">
             <Loader2 className="h-10 w-10 animate-spin text-heading" />
             <p className="text-sm font-semibold text-heading">جاري تصميم اللوجو الخاص بك...</p>
@@ -129,7 +121,7 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
           </div>
         )}
 
-        {isDone && phase.kind === "done" && (
+        {phase.kind === "done" && (
           <img
             src={phase.displayUrl}
             alt="generated logo"
@@ -137,7 +129,7 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
           />
         )}
 
-        {isError && phase.kind === "error" && (
+        {phase.kind === "error" && (
           <div className="flex flex-col items-center gap-3 py-8 text-center">
             <ImageOff className="h-10 w-10 text-slateMuted" />
             <p className="text-sm font-semibold text-red-500">فشل توليد اللوجو</p>
@@ -156,7 +148,7 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
       <div className="flex flex-wrap justify-center gap-3">
         <button
           type="button"
-          disabled={isLoading}
+          disabled={phase.kind === "generating"}
           onClick={handleRetry}
           className="flex items-center gap-2 rounded-xl border border-divider bg-surface px-5 py-2.5 text-sm font-semibold text-body shadow-sm transition-all hover:border-nile disabled:opacity-40"
         >
@@ -166,7 +158,7 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
 
         <button
           type="button"
-          disabled={!isDone}
+          disabled={phase.kind !== "done"}
           onClick={() => void handleDownload()}
           className="flex items-center gap-2 rounded-xl bg-nile px-5 py-2.5 text-sm font-bold text-white shadow-md transition-all hover:bg-nile/90 disabled:opacity-40"
         >

@@ -61,7 +61,7 @@ export type GenerateLogoPayload = Omit<
 export const generateLogo = createAsyncThunk<
   SavedBranding,
   GenerateLogoPayload,
-  { rejectValue: string }
+  { rejectValue: string; state: { branding: BrandingState } }
 >('branding/generateLogo', async (payload, { rejectWithValue }) => {
   try {
     const audienceLabel = audienceIdToApiValue(payload.audience)
@@ -120,6 +120,8 @@ export const generateLogo = createAsyncThunk<
       axiosError.response?.data?.message ?? 'فشل توليد اللوجو. حاول مرة أخرى.',
     )
   }
+}, {
+  condition: (_, { getState }) => !getState().branding.generating,
 })
 
 type SaveLogoPayload = {

@@ -1,5 +1,51 @@
-import { Briefcase, Star, Crown, Square, Check, Loader2 } from "lucide-react";
+import { Briefcase, Star, Crown, Square, Check, Loader2, Info } from "lucide-react";
+import { AUDIENCE_OPTIONS } from "../../types/brandingStep4";
 import LogoGeneratorStep from "./LogoGeneratorStep";
+
+const ARABIC_SCRIPT = /[\u0600-\u06FF]/
+
+function BrandNameGuidanceAlert({ brandName }: { brandName: string }) {
+  const hasArabic = ARABIC_SCRIPT.test(brandName)
+  const isLong = brandName.trim().split(/\s+/).filter(Boolean).length > 2
+
+  return (
+    <div
+      className={`rounded-xl border px-4 py-3 text-xs leading-6 ${
+        hasArabic || isLong
+          ? "border-amber-200 bg-amber-50 text-amber-950"
+          : "border-nile/20 bg-nile/5 text-body"
+      }`}
+      role="note"
+    >
+      <div className="mb-2 flex items-start gap-2">
+        <Info className="mt-0.5 h-4 w-4 shrink-0 text-heading" aria-hidden />
+        <p className="font-bold text-heading">نصائح لاسم يظهر بشكل أفضل في اللوجو</p>
+      </div>
+      <ul className="list-inside list-disc space-y-1 text-body/90">
+        <li>يفضّل كتابة الاسم <span className="font-semibold">بالإنجليزية</span> لنتائج أوضح من الذكاء الاصطناعي.</li>
+        <li>استخدم <span className="font-semibold">كلمة واحدة</span> أو كلمتين قصيرتين كحد أقصى.</li>
+        <li>اجعله <span className="font-semibold">قصيراً</span> — من ٤ إلى ١٢ حرفاً تقريباً.</li>
+        <li>تجنّب الجمل الطويلة، الأرقام الكثيرة، والرموز المعقدة.</li>
+      </ul>
+      <p className="mt-2 text-[11px] text-slateMuted">
+        أمثلة جيدة:{" "}
+        <span className="font-semibold text-heading" dir="ltr">
+          Nova · FreshBite · NileCup
+        </span>
+      </p>
+      {hasArabic ? (
+        <p className="mt-2 font-semibold text-amber-900">
+          يبدو أن الاسم بالعربية — جرّب نسخة إنجليزية مختصرة لتحسين جودة الشعار.
+        </p>
+      ) : null}
+      {!hasArabic && isLong ? (
+        <p className="mt-2 font-semibold text-amber-900">
+          الاسم طويل — اختصره إلى كلمة أو كلمتين ليظهر أوضح على الشعار.
+        </p>
+      ) : null}
+    </div>
+  )
+}
 
 const VIBES = [
   { id: "pro", title: "احترافي",    desc: "ثقة ومؤسسية",   Icon: Briefcase },
@@ -136,16 +182,21 @@ export default function BrandingWizardContent({
                   type="text"
                   value={brandName}
                   onChange={(e) => onBrandNameChange(e.target.value)}
-                  placeholder="مثال: بصمة ستور"
-                  className="w-full rounded-xl border border-divider bg-surface px-3 py-2 text-sm"
+                  placeholder="e.g. Nova"
+                  dir="ltr"
+                  className="w-full rounded-xl border border-divider bg-surface px-3 py-2 text-sm text-left"
+                  aria-describedby="brand-name-guidance"
                 />
                 <input
                   type="text"
                   value={tagline}
                   onChange={(e) => onTaglineChange(e.target.value)}
-                  placeholder="شعار اختياري: جودة في كل تفصيلة"
+                  placeholder="شعار اختياري: Quality in every detail"
                   className="w-full rounded-xl border border-divider bg-surface px-3 py-2 text-sm"
                 />
+              </div>
+              <div id="brand-name-guidance">
+                <BrandNameGuidanceAlert brandName={brandName} />
               </div>
             </div>
 
@@ -167,12 +218,7 @@ export default function BrandingWizardContent({
               <label className="block text-sm font-bold text-body">جمهورك مين؟</label>
               <p className="text-xs text-slateMuted">مين أكثر ناس هتشترى منك؟</p>
               <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-                {[
-                  { id: "youth",    label: "شباب"        },
-                  { id: "kids",     label: "أطفال"       },
-                  { id: "business", label: "رجال أعمال"  },
-                  { id: "all",      label: "عامة الناس"  },
-                ].map((a) => (
+                {AUDIENCE_OPTIONS.map((a) => (
                   <button
                     key={a.id}
                     type="button"
@@ -183,7 +229,7 @@ export default function BrandingWizardContent({
                         : "border-divider bg-surface text-body"
                     }`}
                   >
-                    {a.label}
+                    {a.labelAr}
                   </button>
                 ))}
               </div>

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import BrandingWizardContent from '../components/branding/BrandingWizardContent'
 import { AppShell } from '../layouts/AppShell'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
-import { createServiceRequest } from '../store/slices/serviceRequestSlice'
 import { fetchProjectDetails } from '../store/slices/projectDetailsSlice'
 import { PROJECT_ID_STORAGE_KEY } from '../store/slices/projectStepsSlice'
 import { clearSavedBranding } from '../store/slices/brandingSlice'
@@ -13,7 +12,6 @@ export default function BrandingWizard() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
-  const { creating, error: requestError, lastRequestId } = useAppSelector((s) => s.serviceRequest)
   const { saved: savedBranding, generating: generatingLogo } = useAppSelector((s) => s.branding)
   const { projectId: stepsProjectId, sessionVersion } = useAppSelector((s) => s.projectSteps)
   const projectName = useAppSelector((s) => s.projectDetails.data?.name)
@@ -69,18 +67,8 @@ export default function BrandingWizard() {
     if (sub === 2) dispatch(clearSavedBranding())
   }
 
-  const handleFinish = async () => {
-    const projectId = localStorage.getItem(PROJECT_ID_STORAGE_KEY)
-    if (!projectId) {
-      navigate('/app/step5')
-      return
-    }
-    const result = await dispatch(
-      createServiceRequest({ projectId, type: 'MANUAL_LOGO' }),
-    )
-    if (createServiceRequest.fulfilled.match(result)) {
-      navigate('/app/step5')
-    }
+  const handleFinish = () => {
+    navigate('/app/step5')
   }
 
   const aiTip =
@@ -127,10 +115,7 @@ export default function BrandingWizard() {
         resolvedBrandName={resolvedBrandName}
         generatingLogo={generatingLogo}
         // finish
-        submitting={creating}
-        submitError={requestError}
-        submitSuccess={!!lastRequestId}
-        onFinish={() => void handleFinish()}
+        onFinish={handleFinish}
         // navigation — steps 2 & 3 locked until step 1 has a brand name
         onSubChange={(i) => {
           if (i > 0 && !resolvedBrandName) return

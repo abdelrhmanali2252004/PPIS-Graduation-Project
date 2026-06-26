@@ -1,5 +1,6 @@
 import {
   audienceIdToApiValue,
+  type AudienceId,
   type BrandPalette,
   type BrandVibe,
   type LogoStyle,
@@ -14,6 +15,13 @@ export type LogoUserInputs = {
   vibe: string
   logoStyle: string
   palette: string
+}
+
+const AUDIENCE_PROMPT_LABELS: Record<AudienceId, string> = {
+  youth: 'Youth',
+  kids: 'Children',
+  business: 'Business professionals',
+  all: 'General public',
 }
 
 const VIBE_PROMPT_LABELS: Record<BrandVibe, string> = {
@@ -57,9 +65,10 @@ export function buildLogoPromptFromUserInputs(input: LogoUserInputs): string {
     segments.push(`Business type: ${businessType}`)
   }
 
-  const audience = audienceIdToApiValue(input.audience) || input.audience.trim()
-  if (audience) {
-    segments.push(`Audience: ${audience}`)
+  const audienceKey = audienceIdToApiValue(input.audience)
+  const audienceLabel = AUDIENCE_PROMPT_LABELS[audienceKey as AudienceId]
+  if (audienceLabel) {
+    segments.push(`Audience: ${audienceLabel}`)
   }
 
   const symbolHint = input.symbolHint.trim()
