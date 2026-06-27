@@ -101,6 +101,10 @@ export const generateLogo = createAsyncThunk<
     )
 
     const logoUrl = response.data.logoUrl ?? response.data.relativeUrl ?? ''
+    const apiLogoPrompt =
+      response.data.logoPrompt?.trim() ||
+      response.data.data?.logoPrompt?.trim() ||
+      ''
 
     if (!logoUrl) {
       return rejectWithValue('لم يُرجع الخادم رابط اللوجو.')
@@ -108,7 +112,7 @@ export const generateLogo = createAsyncThunk<
 
     const saved: SavedBranding = {
       logoUrl,
-      logoPrompt: logoPrompt || brandName || '',
+      logoPrompt: apiLogoPrompt || logoPrompt || brandName || '',
       brandName: brandName ?? '',
       tagline: tagline ?? '',
     }

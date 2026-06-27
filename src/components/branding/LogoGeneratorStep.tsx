@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Loader2, Download, RefreshCw, ImageOff } from "lucide-react";
 import { downloadLogoFile, resolveLogoUrl } from "../../api/branding";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
@@ -48,6 +48,53 @@ function resolvePhase(
     return { kind: "error", msg: error };
   }
   return { kind: "generating" };
+}
+
+function LogoPromptBox({ prompt }: { prompt: string }) {
+  const promptRef = useRef<HTMLParagraphElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const [overflows, setOverflows] = useState(false);
+
+  useEffect(() => {
+    setExpanded(false);
+  }, [prompt]);
+
+  useEffect(() => {
+    const el = promptRef.current;
+    if (!el || expanded) return;
+
+    const checkOverflow = () => {
+      setOverflows(el.scrollHeight > el.clientHeight + 1);
+    };
+
+    checkOverflow();
+    window.addEventListener("resize", checkOverflow);
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, [prompt, expanded]);
+
+  return (
+    <div className="mt-4 w-full rounded-xl border border-divider bg-offwhite/80 p-4">
+      <p className="mb-2 text-xs font-bold text-heading">وصف اللوجو (Prompt)</p>
+      <p
+        ref={promptRef}
+        className={`break-words text-left text-xs leading-relaxed text-slateMuted ${
+          expanded ? "" : "line-clamp-5"
+        }`}
+        dir="ltr"
+      >
+        {prompt}
+      </p>
+      {(overflows || expanded) && (
+        <button
+          type="button"
+          onClick={() => setExpanded((value) => !value)}
+          className="mt-2 text-xs font-bold text-nile hover:underline"
+        >
+          {expanded ? "عرض أقل" : "عرض المزيد"}
+        </button>
+      )}
+    </div>
+  );
 }
 
 export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
@@ -101,6 +148,7 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
 
   const displayName = props.brandName || "";
   const displayTagline = props.tagline || "";
+  const displayLogoPrompt = saved?.logoPrompt?.trim() ?? "";
 
   return (
     <div className="flex flex-col items-center gap-6 py-4 font-cairo" dir="rtl">
@@ -109,7 +157,7 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
         <p className="mt-1 text-xs text-slateMuted">تم توليد اللوجو بناءً على بيانات مشروعك</p>
       </div>
 
-      <div className="w-full max-w-sm rounded-2xl border border-divider bg-surface p-6 shadow-md">
+      <div className="w-full max-w-2xl rounded-2xl border border-divider bg-surface p-6 shadow-md">
         {phase.kind === "generating" && (
           <div className="flex flex-col items-center gap-3 py-10">
             <Loader2 className="h-10 w-10 animate-spin text-heading" />
@@ -122,11 +170,13 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
         )}
 
         {phase.kind === "done" && (
-          <img
-            src={phase.displayUrl}
-            alt="generated logo"
-            className="mx-auto w-full rounded-xl object-contain"
-          />
+          <div className="mx-auto w-full max-w-xs sm:max-w-sm">
+            <img
+              src={phase.displayUrl}
+              alt="generated logo"
+              className="mx-auto w-full rounded-xl object-contain"
+            />
+          </div>
         )}
 
         {phase.kind === "error" && (
@@ -142,6 +192,9 @@ export default function LogoGeneratorStep(props: LogoGeneratorStepProps) {
         )}
         {displayTagline && (
           <p className="mt-1 text-center text-xs text-slateMuted">{displayTagline}</p>
+        )}
+        {displayLogoPrompt && phase.kind === "done" && (
+          <LogoPromptBox prompt={displayLogoPrompt} />
         )}
       </div>
 
